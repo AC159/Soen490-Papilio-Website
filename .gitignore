@@ -1,6 +1,7 @@
 # Files
 .env
-.idea
+LICENSE
 
 # Folder
+/.idea
 /node_modules
