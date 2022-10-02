@@ -18,5 +18,5 @@
       ]
   }
   },
-  "include": ["app.ts", "route/**/*"]
+  "include": ["app.ts", "route/**/*", "frontend/**/*"]
 }

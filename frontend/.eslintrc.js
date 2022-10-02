@@ -19,6 +19,5 @@ module.exports = {
   plugins: ["react", "@typescript-eslint"],
   rules: {
     semi: ["error", "always"],
-    "eol-last": ["error", "always"],
   },
 };
