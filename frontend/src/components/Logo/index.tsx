@@ -1,7 +1,5 @@
-import classNames from "classnames";
-
 export declare type LogoInterface = {
-  hasText: boolean
+  hasText?: boolean
   size?: 'sm'|'md'|'lg'
 }
 
