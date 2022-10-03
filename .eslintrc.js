@@ -2,23 +2,63 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true,
-    jest: true,
   },
-  parser: "@typescript-eslint/parser",
-  extends: [
-    "eslint:recommended",
-    "react-app",
-    // "plugin:react/recommended"
-  ],
+  extends: ['plugin:react/recommended', 'standard-with-typescript'],
   overrides: [],
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json'],
   },
-  plugins: ["react", "@typescript-eslint"],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  plugins: ['react'],
   rules: {
-    semi: ["error", "always"],
-    "eol-last": ["error", "always"],
+    quotes: ['error', 'single', { avoidEscape: true }],
+    'react/react-in-jsx-scope': 'off',
+    'comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'never',
+        exports: 'never',
+        functions: 'never',
+      },
+    ],
+    '@typescript-eslint/comma-dangle': [
+      'error',
+      {
+        arrays: 'always-multiline',
+        objects: 'always-multiline',
+        imports: 'never',
+        exports: 'never',
+        functions: 'never',
+      },
+    ],
+    '@typescript-eslint/quotes': [
+      'error',
+      'single',
+      {
+        avoidEscape: true,
+        allowTemplateLiterals: true,
+      },
+    ],
+    semi: ['error', 'always'],
+    '@typescript-eslint/semi': ['error', 'always'],
+    '@typescript-eslint/consistent-type-assertions': [
+      'error',
+      {
+        assertionStyle: 'as',
+        objectLiteralTypeAssertions: 'allow',
+      },
+    ],
+    '@typescript-eslint/triple-slash-reference': [
+      'error',
+      { lib: 'always', path: 'never', types: 'always' },
+    ],
   },
 };
