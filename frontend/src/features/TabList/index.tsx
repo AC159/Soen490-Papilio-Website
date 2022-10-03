@@ -22,7 +22,7 @@ const TabList = ({tabs, horizontal=false}: TabListInterface): JSX.Element => {
   const onClick = (label: string) => {setSelected(label);};
   return (
     <div className={className} >
-      {tabs.map(({label, icon}) => (
+      {tabs.length > 0 && tabs.map(({label, icon}) => (
         <Tab key={label} icon={icon} label={label} onClick={() => {onClick(label);}} horizontal={horizontal} isSelected={selected === label}/>
       ))}
     </div>
