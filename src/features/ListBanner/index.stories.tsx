@@ -30,6 +30,6 @@ export const WithRightHandSide = Template.bind({});
 WithRightHandSide.args = {
   ...Basic.args,
   rhs: (
-    <Button text='Add employee' primary={false} onClick={() => {}}/>
+    <Button text='Add employee' variant='outline' onClick={() => {}}/>
   ),
 };
