@@ -8,6 +8,7 @@ export declare interface IDashboardContainer {
   header: string
   subtitle?: string
   tabs?: ITab[]
+  rhs?: React.ReactNode
 }
 
 const DashboardContainer = ({ header, subtitle, tabs, children }: IDashboardContainer): JSX.Element => {
