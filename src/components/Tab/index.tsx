@@ -1,5 +1,7 @@
 import classNames from 'classnames';
 
+import Icon, { IconNames } from '../Icon';
+
 export declare interface TabInterface {
   label: string
   onClick: () => void
@@ -15,17 +17,19 @@ const Tab = ({ label, isSelected, icon, horizontal = false, onClick }: TabInterf
     'border-transparent': !isSelected,
   });
 
-  const icons = {
-    ad: 'confirmation_number',
-    home: 'home',
-    event: 'event_note',
-    employee: 'Badge',
+  const icons: { [key: string]: IconNames } = {
+    ad: IconNames.AD,
+    home: IconNames.HOME,
+    event: IconNames.EVENT,
+    employee: IconNames.EMPLOYEE,
   };
 
   return (
     <div className={className} onClick={onClick}>
-      {icon !== undefined && <span className="material-symbols-outlined text-base mr-3">{icons[icon]}</span>}
-      <span>{label}</span>
+      {icon !== undefined && <Icon name={icons[icon]} size='sm'/>}
+      <span className={icon !== undefined ? 'ml-3' : ''}>
+        {label}
+      </span>
     </div>
   );
 };

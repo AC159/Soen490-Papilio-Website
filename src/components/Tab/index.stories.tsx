@@ -13,7 +13,7 @@ export const VerticalTab = Template.bind({});
 VerticalTab.args = {
   label: 'Employees',
   isSelected: true,
-  icon: 'ad',
+  icon: 'employee',
 };
 
 export const HorizontalTab = Template.bind({});
