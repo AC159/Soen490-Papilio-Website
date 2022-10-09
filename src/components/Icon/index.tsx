@@ -11,7 +11,8 @@ export enum IconNames {
   EVENT = 'event_note',
   EMPLOYEE = 'badge',
   EDIT = 'edit',
-  DONE = 'done'
+  DONE = 'done',
+  SEARCH = 'search'
 }
 
 const Icon = ({ size, name }: IconInterface): JSX.Element => {
