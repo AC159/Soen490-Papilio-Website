@@ -31,7 +31,7 @@ const Button = ({ text, onClick, variant = 'primary', size = 'md', hasText = tru
   });
 
   const className = classNames(
-    'rounded-md', 'flex', 'cursor-pointer',
+    'rounded-sm', 'flex', 'cursor-pointer',
     'justify-center', 'w-max', 'box-content', 'items-center',
     {
       'bg-brand-orange text-white': variant === 'primary',
@@ -43,9 +43,13 @@ const Button = ({ text, onClick, variant = 'primary', size = 'md', hasText = tru
       'ml-1': margin === 'left',
     });
 
-  const textStyle = classNames({
+  const withIconStyle = classNames({
     'mr-2': iconPosition === 'rhs',
     'ml-2': iconPosition === 'lhs',
+  });
+
+  const textStyle = classNames({
+    [withIconStyle]: hasIcon,
   });
 
   return (

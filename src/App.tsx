@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import Dashboard from './pages/Dashboard';
+import EmployeeDashboard from './pages/Dashboard/Employees';
+import ErrorPage from './pages/Error';
+import LoginPage from './pages/Login';
+
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (<LoginPage type='business' />),
+    errorElement: (<ErrorPage />),
+  },
+  {
+    path: ':businessId/dashboard/',
+    element: (<Dashboard />),
+    children: [{
+      path: 'employees',
+      element: <EmployeeDashboard />,
+    }],
+  },
+]);
 
 const App = (): JSX.Element => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RouterProvider router={router}/>
   );
 };
 
