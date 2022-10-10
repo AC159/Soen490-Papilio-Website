@@ -20,7 +20,7 @@ const SearchBar = ({ placeholder, size = 'md', margin, onClick }: ISearchBar): J
     }
   );
 
-  const style = classNames('relative w-1/4', {
+  const style = classNames('relative', {
     'mr-2': margin === 'right',
     'ml-2': margin === 'left',
   });

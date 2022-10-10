@@ -11,7 +11,7 @@ const ListBanner = ({ tabs = [], rhs }: ListBannerInterface): JSX.Element => {
     <Container border="bottom" paddingClass="px-3 pt-1">
       <TabList tabs={tabs} horizontal/>
       {rhs !== undefined && (
-        <div>{rhs}</div>
+        <div className='flex justify-end items-center pb-1'>{rhs}</div>
       )}
     </Container>
   );
