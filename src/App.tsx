@@ -14,10 +14,23 @@ const router = createBrowserRouter([
   {
     path: ':businessId/dashboard/',
     element: (<Dashboard />),
-    children: [{
-      path: 'employees',
-      element: <EmployeeDashboard />,
-    }],
+    children: [
+      {
+        element: <div>Home</div>,
+      },
+      {
+        path: 'employees',
+        element: <EmployeeDashboard />,
+      },
+      {
+        path: 'events',
+        element: <div>Event Manager</div>,
+      },
+      {
+        path: 'ads',
+        element: <div>Ad center</div>,
+      },
+    ],
   },
 ]);
 

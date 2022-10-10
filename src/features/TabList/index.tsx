@@ -5,14 +5,16 @@ import Tab from '../../components/Tab';
 export declare interface TabListInterface {
   tabs: ITab[]
   horizontal?: boolean
+  type?: 'link' | 'button'
 }
 
 export declare interface ITab {
   label: string
   icon?: 'ad' | 'home' | 'event' | 'employee'
+  path?: string
 }
 
-const TabList = ({ tabs, horizontal = false }: TabListInterface): JSX.Element => {
+const TabList = ({ tabs, horizontal = false, type = 'button' }: TabListInterface): JSX.Element => {
   const [selected, setSelected] = useState<string>(tabs[0].label);
   const className = classNames('flex', {
     'flex-row': horizontal,
@@ -22,8 +24,16 @@ const TabList = ({ tabs, horizontal = false }: TabListInterface): JSX.Element =>
   const onClick = (label: string): void => { setSelected(label); };
   return (
     <div className={className} >
-      {tabs.length > 0 && tabs.map(({ label, icon }) => (
-        <Tab key={label} icon={icon} label={label} onClick={() => { onClick(label); }} horizontal={horizontal} isSelected={selected === label}/>
+      {tabs.length > 0 && tabs.map(({ label, icon, path }) => (
+        <Tab
+          key={label}
+          type={type}
+          icon={icon}
+          to={path}
+          label={label}
+          onClick={() => { onClick(label); }}
+          horizontal={horizontal}
+          isSelected={selected === label}/>
       ))}
     </div>
   );
