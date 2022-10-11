@@ -1,7 +1,6 @@
-import { useState } from 'react';
-
 import Input from '../../../components/Input';
 import BoxForm from '../../../features/BoxForm';
+import useFormData from '../../../hooks/useFormData';
 
 export declare interface IAdminForm {
   onSubmit: (data: IFormData) => void
@@ -20,14 +19,7 @@ const initialState: IFormData = {
 };
 
 const AdminForm = ({ onSubmit }: IAdminForm): JSX.Element => {
-  const [formData, setFormData] = useState<IFormData>(initialState);
-
-  const submit = (): void => onSubmit(formData);
-  const onValueChange = (e: React.FormEvent<HTMLInputElement>): void => {
-    const name = e.currentTarget.name;
-    const value = e.currentTarget.value;
-    setFormData((data: IFormData) => ({ ...data, [name]: value }));
-  };
+  const [formData, onValueChange, submit] = useFormData<IFormData>({ initialState, onSubmit });
 
   return (
     <BoxForm

@@ -1,7 +1,6 @@
-import { useState } from 'react';
-
 import Input from '../../../components/Input';
 import BoxForm from '../../../features/BoxForm';
+import useFormData from '../../../hooks/useFormData';
 
 export declare interface IBusinessForm {
   onSubmit: (data: IFormData) => void
@@ -16,13 +15,7 @@ const initialState: IFormData = {
 };
 
 const BusinessForm = ({ onSubmit }: IBusinessForm): JSX.Element => {
-  const [formData, setFormData] = useState<IFormData>(initialState);
-
-  const submit = (): void => onSubmit(formData);
-  const onValueChange = (e: React.FormEvent<HTMLInputElement>): void => {
-    const value = e.currentTarget.value;
-    setFormData({ businessId: value });
-  };
+  const [formData, onValueChange, submit] = useFormData<IFormData>({ initialState, onSubmit });
 
   return (
     <BoxForm
