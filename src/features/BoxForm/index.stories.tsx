@@ -17,9 +17,9 @@ FormCard.args = {
   hasBack: true,
   children: (
     <>
-      <Input placeholder='Administrator full name' label='Full name' hasLabel/>
-      <Input placeholder='Administrator email' label='Email' hasLabel/>
-      <Input placeholder='Administrator password' label='Password' hasLabel/>
+      <Input name='' value='1' placeholder='Administrator full name' label='Full name' onChange={() => {}} hasLabel/>
+      <Input name='' value='' placeholder='Administrator email' label='Email' onChange={() => {}} hasLabel/>
+      <Input name='' value='' placeholder='Administrator password' label='Password' onChange={() => {}} hasLabel/>
     </>
   ),
 };
@@ -32,7 +32,7 @@ FormCardNoBack.args = {
   buttonText: 'Create business',
   children: (
     <>
-      <Input placeholder='Insert your business ID' />
+      <Input name='' value={''} placeholder='Insert your business ID' onChange={() => {}} />
     </>
   ),
 };

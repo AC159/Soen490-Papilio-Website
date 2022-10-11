@@ -1,8 +1,11 @@
+import { useState } from 'react';
+
 import Table from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
 import ListBanner from '../../../features/ListBanner';
+import AddForm from './AddForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 
@@ -12,11 +15,14 @@ const tabs: ITab[] = [
   { label: 'Normal' },
 ];
 
+// TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
   <div className='border rounded-sm p-8 pt-1.5 pb-1.5 border-gray-300'>User</div>
 );
 
 const EmployeeDashboard = (): JSX.Element => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
       <PageHeader
@@ -36,15 +42,12 @@ const EmployeeDashboard = (): JSX.Element => {
         icon={IconNames.ADD}
         iconPosition='lhs'
         variant='outline'
-        onClick={() => {}}
+        onClick={() => { setIsOpen(!isOpen); }}
         size='sm'
       />
       }/>
       <div className='p-3'>
-        {/* <div className="flex justify-between items-center mb-4 mt-1">
-
-        </div> */}
-        <Table />
+        {isOpen ? (<AddForm onSubmit={() => {}}/>) : (<Table />)}
       </div>
     </>
   );

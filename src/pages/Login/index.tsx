@@ -7,14 +7,14 @@ export declare interface ILoginPage {
 }
 
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
-  let content;
+  let content: React.ReactNode;
 
   switch (type) {
     case 'business':
-      content = (<BusinessForm />);
+      content = (<BusinessForm onSubmit={() => {}}/>);
       break;
     case 'admin':
-      content = (<AdminForm />);
+      content = (<AdminForm onSubmit={() => {}}/>);
       break;
     case 'login':
       content = null;
