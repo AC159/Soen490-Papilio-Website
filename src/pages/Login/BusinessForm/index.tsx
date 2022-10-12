@@ -10,7 +10,7 @@ export declare interface IFormData {
   businessId: string
 }
 
-const initialState: IFormData = {
+export const initialState: IFormData = {
   businessId: '',
 };
 

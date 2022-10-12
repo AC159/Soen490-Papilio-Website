@@ -12,7 +12,7 @@ export interface IFormData {
   adminPassword: string
 };
 
-const initialState: IFormData = {
+export const initialState: IFormData = {
   adminName: '',
   adminEmail: '',
   adminPassword: '',
