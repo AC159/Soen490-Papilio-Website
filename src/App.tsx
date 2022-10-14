@@ -12,6 +12,11 @@ const router = createBrowserRouter([
     errorElement: (<ErrorPage />),
   },
   {
+    path: '/admin',
+    element: (<LoginPage type='admin' />),
+    errorElement: (<ErrorPage />),
+  },
+  {
     path: ':businessId/dashboard/',
     element: (<Dashboard />),
     children: [

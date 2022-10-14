@@ -1,3 +1,4 @@
+import { Link, LinkProps } from 'react-router-dom';
 import Logo from '../../components/Logo';
 import Button from '../../components/Button';
 import { BACK_BUTTON_TEXT, BACK_BUTTON_ICON } from './constant';
@@ -8,10 +9,10 @@ export declare interface BoxFormInterface {
   buttonText: string
   buttonOnClick: () => void
   hasBack?: boolean
-  backButtonOnClick?: () => void
+  backButtonTo?: LinkProps['to']
 }
 
-const BoxForm = ({ heading, buttonText, hasBack = false, buttonOnClick, children }: BoxFormInterface): JSX.Element => {
+const BoxForm = ({ heading, buttonText, hasBack = false, buttonOnClick, backButtonTo = '', children }: BoxFormInterface): JSX.Element => {
   return (
     <div className="border-2 border-gray-200 p-6 max-w-xl">
       <Logo size="md" hasText />
@@ -21,12 +22,12 @@ const BoxForm = ({ heading, buttonText, hasBack = false, buttonOnClick, children
         <span>
         {hasBack && (
           // TODO: Extract it
-          <a href="/" className='flex justify-center'>
+          <Link to={backButtonTo} className='flex justify-center'>
             <span className="material-symbols-outlined">
               {BACK_BUTTON_ICON}
             </span>
             {BACK_BUTTON_TEXT}
-          </a>
+          </Link>
         )}
         </span>
         <Button text={buttonText} onClick={buttonOnClick}></Button>

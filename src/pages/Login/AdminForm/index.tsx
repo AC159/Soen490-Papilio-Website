@@ -1,6 +1,7 @@
 import Input from '../../../components/Input';
 import BoxForm from '../../../features/BoxForm';
 import useFormData from '../../../hooks/useFormData';
+import * as constant from './constant';
 
 export declare interface IAdminForm {
   onSubmit: (data: IFormData) => void
@@ -23,31 +24,31 @@ const AdminForm = ({ onSubmit }: IAdminForm): JSX.Element => {
 
   return (
     <BoxForm
-      heading="Let's create your business root administrator"
-      buttonText='Create account'
+      heading={constant.FORM_HEADING}
+      buttonText={constant.SUBMIT_BUTTON_TEXT}
       buttonOnClick={submit}
-      backButtonOnClick={() => {}}
+      backButtonTo=''
       hasBack
     >
       <Input
-        name='adminName'
+        name={constant.INPUT_ADMIN_NAME}
         value={formData.adminName}
-        placeholder='Administrator full name'
-        label='Full name'
+        placeholder={constant.INPUT_ADMIN_NAME_PLACEHOLDER}
+        label={constant.INPUT_ADMIN_NAME_LABEL}
         onChange={onValueChange}
         hasLabel/>
       <Input
-        name='adminEmail'
+        name={constant.INPUT_ADMIN_EMAIL}
         value={formData.adminEmail}
-        placeholder='Administrator email'
-        label='Email'
+        placeholder={constant.INPUT_ADMIN_EMAIL_PLACEHOLDER}
+        label={constant.INPUT_ADMIN_EMAIL_LABEL}
         onChange={onValueChange}
         hasLabel/>
       <Input
-        name='adminPassword'
+        name={constant.INPUT_ADMIN_PASSWORD}
         value={formData.adminPassword}
-        placeholder='Administrator password'
-        label='Password'
+        placeholder={constant.INPUT_ADMIN_PASSWORD_PLACEHOLDER}
+        label={constant.INPUT_ADMIN_PASSWORD_LABEL}
         onChange={onValueChange}
         type="password"
         hasLabel/>

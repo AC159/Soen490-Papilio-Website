@@ -11,9 +11,10 @@ export declare interface TabInterface {
   isSelected: boolean
   icon?: 'ad' | 'home' | 'event' | 'employee'
   type?: 'button' | 'link'
+  testId?: string
 }
 
-const Tab = ({ label, isSelected, icon, horizontal = false, onClick, type = 'button', to = '' }: TabInterface): JSX.Element => {
+const Tab = ({ label, isSelected, icon, horizontal = false, onClick, type = 'button', to = '', testId }: TabInterface): JSX.Element => {
   const className = classNames('flex py-2 px-3 items-center cursor-pointer', {
     'border-l-4 flex-1': !horizontal,
     'border-b-4 justify-center w-max': horizontal,
@@ -38,14 +39,14 @@ const Tab = ({ label, isSelected, icon, horizontal = false, onClick, type = 'but
 
   if (type === 'button') {
     return (
-      <div className={className} onClick={onClick}>
+      <div data-testid={testId} className={className} onClick={onClick}>
         {Content}
       </div>
     );
   }
 
   return (
-    <Link className={className} to={to} onClick={onClick}>
+    <Link data-testid={testId} className={className} to={to} onClick={onClick}>
       {Content}
     </Link>
   );

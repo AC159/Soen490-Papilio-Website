@@ -1,6 +1,7 @@
 import Input from '../../../components/Input';
 import BoxForm from '../../../features/BoxForm';
 import useFormData from '../../../hooks/useFormData';
+import * as constant from './constant';
 
 export declare interface IBusinessForm {
   onSubmit: (data: IFormData) => void
@@ -19,13 +20,13 @@ const BusinessForm = ({ onSubmit }: IBusinessForm): JSX.Element => {
 
   return (
     <BoxForm
-      heading='How would you like to name your business?'
-      buttonText='Create business'
+      heading={constant.FORM_HEADING}
+      buttonText={constant.SUBMIT_BUTTON_TEXT}
       buttonOnClick={submit}
     >
       <Input
-        name="businessId"
-        placeholder='Insert your business ID'
+        name={constant.INPUT_BUSINESS_ID}
+        placeholder={constant.INPUT_BUSINESS_PLACEHOLDER}
         value={formData.businessId}
         onChange={onValueChange}
       />

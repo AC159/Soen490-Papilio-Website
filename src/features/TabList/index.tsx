@@ -31,6 +31,7 @@ const TabList = ({ tabs, horizontal = false, type = 'button' }: TabListInterface
           icon={icon}
           to={path}
           label={label}
+          testId="tab-test-id"
           onClick={() => { onClick(label); }}
           horizontal={horizontal}
           isSelected={selected === label}/>

@@ -12,10 +12,15 @@ export declare interface ButtonInterface {
   icon?: IconNames
   iconPosition?: 'rhs' | 'lhs'
   margin?: 'right' | 'left'
+  testId?: string
   onClick: () => void
 }
 
-const Button = ({ text, onClick, variant = 'primary', size = 'md', hasText = true, margin, icon = IconNames.SEARCH, hasIcon = false, iconPosition = 'rhs', iconSize = 'md' }: ButtonInterface): JSX.Element => {
+const Button = ({
+  text, margin, testId, onClick, variant = 'primary',
+  hasText = true, icon = IconNames.SEARCH, size = 'md',
+  hasIcon = false, iconPosition = 'rhs', iconSize = 'md',
+}: ButtonInterface): JSX.Element => {
   const OutlineStyle = classNames(
     'border-2 border-brand-orange text-brand-orange',
     {
@@ -53,7 +58,7 @@ const Button = ({ text, onClick, variant = 'primary', size = 'md', hasText = tru
   });
 
   return (
-    <div onClick={onClick} className={className}>
+    <div data-testid={testId} onClick={onClick} className={className}>
       {hasIcon && iconPosition === 'lhs' && <Icon name={icon} size={iconSize}/>}
       {hasText && <span className={textStyle}>{text}</span>}
       {hasIcon && iconPosition === 'rhs' && <Icon name={icon} size={iconSize}/>}

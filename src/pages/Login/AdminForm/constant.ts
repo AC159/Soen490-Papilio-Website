@@ -1,0 +1,11 @@
+export const FORM_HEADING = "Let's create your business root administrator";
+export const SUBMIT_BUTTON_TEXT = 'Create account';
+export const INPUT_ADMIN_NAME = 'adminName';
+export const INPUT_ADMIN_NAME_LABEL = 'Full name';
+export const INPUT_ADMIN_NAME_PLACEHOLDER = 'Administrator full name';
+export const INPUT_ADMIN_EMAIL = 'adminEmail';
+export const INPUT_ADMIN_EMAIL_LABEL = 'Email';
+export const INPUT_ADMIN_EMAIL_PLACEHOLDER = 'Administrator email';
+export const INPUT_ADMIN_PASSWORD = 'adminPassword';
+export const INPUT_ADMIN_PASSWORD_LABEL = 'Password';
+export const INPUT_ADMIN_PASSWORD_PLACEHOLDER = 'Administrator password';

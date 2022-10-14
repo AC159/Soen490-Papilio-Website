@@ -8,10 +8,11 @@ export declare interface InputInterface {
   name: string
   value: any
   type?: 'text' | 'password'
+  testId?: string
   onChange: (data: React.FormEvent<HTMLInputElement>) => void
 }
 
-const Input = ({ name, value, label, hasLabel = false, placeholder, onChange, type = 'text' }: InputInterface): JSX.Element => {
+const Input = ({ name, value, label, hasLabel = false, placeholder, onChange, type = 'text', testId }: InputInterface): JSX.Element => {
   const className = classNames('flex relative mb-2', {
     'pt-5': hasLabel,
     'pt-2': !hasLabel,
@@ -22,6 +23,7 @@ const Input = ({ name, value, label, hasLabel = false, placeholder, onChange, ty
       <input
         name={name}
         className="border-2 rounded px-3 py-2 flex-1 focus:border-gray-400 focus:outline-none placeholder-gray-300"
+        data-testid={testId}
         placeholder={placeholder}
         value={value}
         type={type}
