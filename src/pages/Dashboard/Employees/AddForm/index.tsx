@@ -1,12 +1,10 @@
 import Button from '../../../../components/Button';
 import Input from '../../../../components/Input';
-
 import useFormData from '../../../../hooks/useFormData';
-
 import * as constant from './constant';
 
 export declare interface AddFormInterface {
-  onSubmit: (data: IFormData) => void
+  onSubmit: (data: IFormData) => Promise<void>
 }
 
 export declare interface IFormData {

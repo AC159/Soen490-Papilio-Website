@@ -13,7 +13,7 @@ export declare interface ButtonInterface {
   iconPosition?: 'rhs' | 'lhs'
   margin?: 'right' | 'left'
   testId?: string
-  onClick: () => void
+  onClick: () => void | Promise<void>
 }
 
 const Button = ({
@@ -58,6 +58,7 @@ const Button = ({
   });
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <div data-testid={testId} onClick={onClick} className={className}>
       {hasIcon && iconPosition === 'lhs' && <Icon name={icon} size={iconSize}/>}
       {hasText && <span className={textStyle}>{text}</span>}

@@ -7,7 +7,7 @@ export declare interface BoxFormInterface {
   heading: string
   children: React.ReactNode
   buttonText: string
-  buttonOnClick: () => void
+  buttonOnClick: () => Promise<void>
   hasBack?: boolean
   backButtonTo?: LinkProps['to']
 }

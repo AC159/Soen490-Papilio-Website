@@ -11,7 +11,7 @@ const ButtonBoxForm = (): JSX.Element => {
       <BoxForm
         heading='Heading'
         buttonText='Create'
-        buttonOnClick={() => setIsClicked(!isClicked)}
+        buttonOnClick={async () => await new Promise(() => setIsClicked(!isClicked))}
       >
         <div>Form</div>
       </BoxForm>
@@ -41,7 +41,7 @@ describe('logic test', () => {
               <BoxForm
                 heading='Heading'
                 buttonText='Create'
-                buttonOnClick={() => {}}
+                buttonOnClick={async () => {}}
                 backButtonTo='/back'
                 hasBack
               >

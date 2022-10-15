@@ -4,7 +4,7 @@ import useFormData from '../../../hooks/useFormData';
 import * as constant from './constant';
 
 export declare interface IAdminForm {
-  onSubmit: (data: IFormData) => void
+  onSubmit: (data: IFormData) => Promise<void>
 }
 
 export interface IFormData {

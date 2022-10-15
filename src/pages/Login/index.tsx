@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-// import { createUserWithEmailAndPassword } from 'firebase/auth';
-// import { auth } from '../../firebase';
-// import axios from 'axios';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
+import { auth } from '../../firebase';
 import AdminForm, { IFormData as AdminFormData } from './AdminForm';
 import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
 
@@ -17,36 +16,59 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
 
   switch (type) {
     case 'business':
-      onSubmit = (data: BusinessFormData) => {
-        console.log(data);
-        navigate('admin', {
-          replace: true,
+      onSubmit = async (data: BusinessFormData) => {
+        await fetch('/business', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ businessId: data.businessId }),
+        }).then(res => {
+          if (res.status === 201) {
+            navigate('admin', {
+              replace: true,
+            });
+          }
+          if (res.status === 400) {
+            console.log(res);
+          }
         });
       };
       content = (<BusinessForm onSubmit={onSubmit}/>);
       break;
     case 'admin':
-      onSubmit = (data: AdminFormData) => {
-        // if (data.adminEmail === 'jeffB@myAmazingBillionDollarCompanie.com') { // TODO: REMOVE THIS IF STATEMENT
-        //   createUserWithEmailAndPassword(auth, data.adminEmail, data.adminPassword)
-        //     .then((userCredential) => {
-        //       // Signed in
-        //       const user = userCredential.user;
-        //       console.log(user);
-        //       // TODO: SAVE USER CREDENTIALS TO MEMORY
-        //       // ...
-        //     })
-        //     .catch((error) => {
-        //       const errorCode = error.code;
-        //       const errorMessage = error.message;
-        //       console.log(errorCode, errorMessage);
-        //     });
-        // }
-        console.log(data);
-        navigate('/1234/dashboard', {
-          replace: true,
-          relative: 'route',
-        });
+      onSubmit = async (data: AdminFormData) => {
+        const businessId = 1234;
+        createUserWithEmailAndPassword(auth, data.adminEmail, data.adminPassword)
+          .then(async (userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            const reqData = {
+              firebaseId: user.uid,
+              email: data.adminEmail,
+              name: data.adminName,
+              businessId,
+              root: true, // True only while creating the business
+            };
+            await fetch(`/business/${businessId}/user`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(reqData),
+            }).then(res => {
+              console.log(res);
+              navigate('/1234/dashboard', {
+                replace: true,
+                relative: 'route',
+              });
+            });
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+          });
       };
       content = (<AdminForm onSubmit={onSubmit}/>);
       break;

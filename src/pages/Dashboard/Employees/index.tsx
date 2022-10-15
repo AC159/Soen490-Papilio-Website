@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { sendSignInLinkToEmail } from 'firebase/auth';
+// import axios from 'axios';
 
+import { auth } from '../../../firebase';
 import Table from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
@@ -27,6 +30,43 @@ const Box = (): JSX.Element => (
 
 const EmployeeDashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
+  const businessId = 1234; // TODO: REPLACE THIS WITH A GLOBAL VARIABLE
+
+  const onSubmit = async (data: IFormData): Promise<void> => {
+    const reqData = {
+      firebaseId: '',
+      email: data.employeeEmail,
+      name: data.employeeName,
+      businessId,
+      root: false, // True only while creating the business
+    };
+    await fetch('', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqData),
+    }).then(async () => {
+      await sendSignInLinkToEmail(auth, data.employeeEmail, {
+        url: 'https://localhost:3000/email-signin',
+      }).then(() => {
+        setIsOpen(false);
+      });
+    });
+    // await axios.post(`business/${businessId}/user`, {
+    //   firebaseId: '',
+    //   email: data.employeeEmail,
+    //   name: data.employeeName,
+    //   businessId,
+    //   root: false, // True only while creating the business
+    // }).then(async () => {
+    //   await sendSignInLinkToEmail(auth, data.employeeEmail, {
+    //     url: 'https://localhost:3000/email-signin',
+    //   });
+    // }).then(() => {
+    //   setIsOpen(false);
+    // });
+  };
 
   return (
     <>
@@ -55,7 +95,7 @@ const EmployeeDashboard = (): JSX.Element => {
         }
       />
       <div className='p-3'>
-        {isOpen ? (<AddForm onSubmit={(data: IFormData) => { console.log(data); }}/>) : (<Table />)}
+        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table />)}
       </div>
     </>
   );

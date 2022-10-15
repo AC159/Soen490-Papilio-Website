@@ -3,19 +3,21 @@ module.exports = {
     browser: true,
     es2021: true,
   },
+  parser: '@typescript-eslint/parser',
   extends: ['plugin:react/recommended', 'standard-with-typescript'],
   overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: ['./tsconfig.json'],
+    project: './tsconfig.json',
   },
   settings: {
     react: {
       version: 'detect',
     },
   },
-  plugins: ['react'],
+  ignorePatterns: ['.eslintrc.js', 'jest.config.js'],
+  plugins: ['react', '@typescript-eslint'],
   rules: {
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/react-in-jsx-scope': 'off',
@@ -59,6 +61,14 @@ module.exports = {
     '@typescript-eslint/triple-slash-reference': [
       'error',
       { lib: 'always', path: 'never', types: 'always' },
+    ],
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: {
+          arguments: false,
+        },
+      },
     ],
   },
 };

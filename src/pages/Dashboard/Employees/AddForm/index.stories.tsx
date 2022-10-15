@@ -14,5 +14,5 @@ const Template: ComponentStory<typeof AddForm> = (args: AddFormInterface) => <Ad
 
 export const Basic = Template.bind({});
 Basic.args = {
-  onSubmit: (data) => { alert(data); },
+  onSubmit: async (data) => { alert(data); },
 };
