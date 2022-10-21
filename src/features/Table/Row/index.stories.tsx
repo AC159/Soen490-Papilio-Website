@@ -8,12 +8,24 @@ export default {
 } as ComponentMeta<typeof Row>;
 
 const Template: ComponentStory<typeof Row> = (args: RowInterface) => (
-  <div className='h-screen'>
+  <div className='h-screen bg-brand-blue-dark'>
     <Row {...args} />
   </div>
 );
 
 export const Primary = Template.bind({});
 Primary.args = {
-  data: ['a', 'b', 'c'],
+  data: [{ value: 'a' }, { value: 'b' }, { value: 'c' }],
+};
+
+export const Events = Template.bind({});
+Events.args = {
+  head: true,
+  data: [
+    { value: 'Event name' },
+    { value: 'Created' },
+    { value: 'Launched' },
+    { value: 'Closed' },
+    { value: 'State' },
+  ],
 };

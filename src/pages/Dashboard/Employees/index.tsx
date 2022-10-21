@@ -13,6 +13,7 @@ import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
 import { useParams } from 'react-router-dom';
+import { employeeHeader } from '../../../features/Table/headers';
 
 const tabs: ITab[] = [
   { label: constant.ALL_EMPLOYEES_LABEL },
@@ -31,7 +32,7 @@ const Box = (): JSX.Element => (
 
 const EmployeeDashboard = (): JSX.Element => {
   const { businessId } = useParams();
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState([[]]);
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (data: IFormData): Promise<void> => {
@@ -96,7 +97,7 @@ const EmployeeDashboard = (): JSX.Element => {
         }
       />
       <div className='p-3'>
-        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table />)}
+        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table headContent={employeeHeader} bodyContent={employees}/>)}
       </div>
     </>
   );

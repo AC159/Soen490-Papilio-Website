@@ -1,3 +1,4 @@
+x;
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
@@ -9,6 +10,7 @@ module.exports = {
           DEFAULT: '#F27F0C',
         },
         'brand-blue': {
+          white: '#E7F6FE',
           light: '#9FE7F5',
           DEFAULT: '#429EBD',
           'light-dark': '#165B7E',

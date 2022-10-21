@@ -16,7 +16,7 @@ module.exports = {
       version: 'detect',
     },
   },
-  ignorePatterns: ['.eslintrc.js', 'jest.config.js'],
+  ignorePatterns: ['.eslintrc.js', 'tailwind.config.js'],
   plugins: ['react', '@typescript-eslint'],
   rules: {
     quotes: ['error', 'single', { avoidEscape: true }],
