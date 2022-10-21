@@ -12,6 +12,7 @@ import AddForm, { IFormData } from './AddForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
+import { employeeHeader } from '../../../features/Table/headers';
 
 const tabs: ITab[] = [
   { label: constant.ALL_EMPLOYEES_LABEL },
@@ -29,6 +30,7 @@ const Box = (): JSX.Element => (
 );
 
 const EmployeeDashboard = (): JSX.Element => {
+  const [employees] = useState([[]]);
   const [isOpen, setIsOpen] = useState(false);
   const businessId = 1234; // TODO: REPLACE THIS WITH A GLOBAL VARIABLE
 
@@ -53,19 +55,6 @@ const EmployeeDashboard = (): JSX.Element => {
         setIsOpen(false);
       });
     });
-    // await axios.post(`business/${businessId}/user`, {
-    //   firebaseId: '',
-    //   email: data.employeeEmail,
-    //   name: data.employeeName,
-    //   businessId,
-    //   root: false, // True only while creating the business
-    // }).then(async () => {
-    //   await sendSignInLinkToEmail(auth, data.employeeEmail, {
-    //     url: 'https://localhost:3000/email-signin',
-    //   });
-    // }).then(() => {
-    //   setIsOpen(false);
-    // });
   };
 
   return (
@@ -95,7 +84,7 @@ const EmployeeDashboard = (): JSX.Element => {
         }
       />
       <div className='p-3'>
-        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table />)}
+        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table headContent={employeeHeader} bodyContent={employees}/>)}
       </div>
     </>
   );

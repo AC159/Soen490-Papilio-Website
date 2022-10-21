@@ -9,9 +9,10 @@ module.exports = {
           DEFAULT: '#F27F0C',
         },
         'brand-blue': {
+          white: '#E7F6FE',
           light: '#9FE7F5',
           DEFAULT: '#429EBD',
-          dark: '#O53F5C',
+          dark: '#053F5C',
         },
       },
       spacing: {
