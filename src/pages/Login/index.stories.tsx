@@ -17,5 +17,5 @@ BusinessCreation.args = {
 export const AdminCreation = Template.bind({});
 AdminCreation.args = {
   ...BusinessCreation.args,
-  type: 'admin',
+  type: 'businessLogic',
 };
