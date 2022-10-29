@@ -16,4 +16,13 @@ const Template: ComponentStory<typeof ProfileForm> = (args: IProfileForm) => (
 export const Basic = Template.bind({});
 Basic.args = {
   onSubmit: async () => {},
+  initialState: {
+    businessName: '',
+    addressLineOne: '',
+    addressLineTwo: '',
+    postalCode: '',
+    city: '',
+    country: '',
+    province: '',
+  },
 };
