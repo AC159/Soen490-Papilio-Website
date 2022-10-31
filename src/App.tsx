@@ -37,6 +37,11 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '/login',
+    element: (<LoginPage type='login' />),
+    errorElement: (<ErrorPage />),
+  },
 ]);
 
 const App = (): JSX.Element => {
