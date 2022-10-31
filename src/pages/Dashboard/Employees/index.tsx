@@ -40,6 +40,7 @@ const EmployeeDashboard = (): JSX.Element => {
       businessId,
       root: false, // True only while creating the business
     };
+
     await fetch('', {
       method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -53,6 +54,7 @@ const EmployeeDashboard = (): JSX.Element => {
         setIsOpen(false);
       });
     });
+
     // await axios.post(`business/${businessId}/user`, {
     //   firebaseId: '',
     //   email: data.employeeEmail,
