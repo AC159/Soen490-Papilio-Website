@@ -1,2 +1,1 @@
-export const FORM_TITLE =
-  'Who will control the root admin account of your business ?';
+export const FORM_TITLE = 'What information describe your business?';

@@ -14,7 +14,7 @@ const progress: Progress[] = [
   },
   {
     icon: 'admin_panel_settings',
-    text: 'Root accout',
+    text: 'Root account',
   },
   {
     icon: 'done_all',
