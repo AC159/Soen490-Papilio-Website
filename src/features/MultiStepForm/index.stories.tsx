@@ -51,4 +51,5 @@ export const Basic = Template.bind({});
 Basic.args = {
   steps,
   progress,
+  onSubmit: async (): Promise<void> => { console.log('data'); },
 };

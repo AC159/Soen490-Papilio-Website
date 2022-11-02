@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 import MultiStepForm, { Progress, Step } from '.';
 import * as AdminConstant from './AdminForm/constant';
 import * as ProfileConstant from './ProfileForm/constant';
@@ -40,7 +41,12 @@ const steps: Step[] = [
 
 describe('multi step form test', () => {
   it('should have the business profile as first page and admin form on the second and validation as last page', () => {
-    render(<MultiStepForm steps={steps} progress={progress} />);
+    const mockOnSubmit = jest.fn();
+    render(
+      <MemoryRouter initialEntries={[{ state: { businessId: 'business1' } }]}>
+        <MultiStepForm steps={steps} progress={progress} onSubmit={mockOnSubmit}/>
+      </MemoryRouter>
+    );
 
     expect(screen.getByText(ProfileConstant.FORM_TITLE)).toBeInTheDocument();
     userEvent.click(screen.getByText('Next'));
@@ -50,7 +56,11 @@ describe('multi step form test', () => {
   });
 
   it('should save the data and display them on back', () => {
-    render(<MultiStepForm steps={steps} progress={progress} />);
+    const mockOnSubmit = jest.fn();
+    render(
+      <MemoryRouter initialEntries={[{ state: { businessId: 'business1' } }]}>
+        <MultiStepForm steps={steps} progress={progress} onSubmit={mockOnSubmit} />
+      </MemoryRouter>);
 
     const name = 'My Awesome Business';
     userEvent.type(screen.getByRole('textbox', { name: 'Business name' }), name);

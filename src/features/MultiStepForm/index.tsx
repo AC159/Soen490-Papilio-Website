@@ -1,13 +1,15 @@
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminForm, { IFormData as AdminData } from './AdminForm';
 import ProfileForm, { IFormData as ProfileData } from './ProfileForm';
 
 import Button from '../../components/Button';
+import { useLocation } from 'react-router-dom';
 
 export declare interface IMultiStepForm {
   progress: Progress[]
   steps: Step[]
+  onSubmit: (data: IFormData) => Promise<void>
 }
 
 export declare interface Progress {
@@ -51,11 +53,13 @@ const ProgressBall = ({ icon, text, selected }: IProgressBall): JSX.Element => {
 };
 
 export interface IFormData {
+  businessId: string
   profile: ProfileData
   adminAccount: AdminData
 }
 
 export const initialState: IFormData = {
+  businessId: '',
   profile: {
     businessName: '',
     addressLineOne: '',
@@ -73,10 +77,11 @@ export const initialState: IFormData = {
   },
 };
 
-const MultiStepForm = ({ progress, steps }: IMultiStepForm): JSX.Element => {
+const MultiStepForm = ({ progress, steps, onSubmit }: IMultiStepForm): JSX.Element => {
+  const location = useLocation();
   const [formData, setFormData] = useState(initialState);
   let onStepChange = async (data: any): Promise<void> => { console.log(data); setStep(prev => prev + 1); };
-  const onSubmit = async (): Promise<void> => { console.log('data'); };
+  const submit = async (): Promise<void> => await onSubmit(formData);
   let onBack = async (data: any): Promise<void> => { console.log(data); setStep(prev => prev - 1); };
 
   const [step, setStep] = useState(0);
@@ -100,9 +105,16 @@ const MultiStepForm = ({ progress, steps }: IMultiStepForm): JSX.Element => {
     Body = <AdminForm initialState={formData.adminAccount} onSubmit={onStepChange} onBack={onBack}/>;
   } else {
     Body = <div>Finish Yeah!!!
-      <Button text='submit' onClick={onSubmit} />
+      <Button text='submit' onClick={submit} />
     </div>;
   }
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      businessId: location.state.businessId,
+    }));
+  }, []);
 
   return (
     <div className="flex flex-row border border-brand-blue-dark w-4/6">
@@ -121,6 +133,7 @@ const MultiStepForm = ({ progress, steps }: IMultiStepForm): JSX.Element => {
         </div>
       </div>
       <div className='p-9 flex flex-1 flex-col'>
+        {formData.businessId}
         {Body}
       </div>
     </div>

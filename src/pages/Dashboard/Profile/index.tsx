@@ -1,29 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import PageHeader from '../../../features/PageHeader';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import { IconNames } from '../../../components/Icon';
+import { useParams } from 'react-router-dom';
 
 const ProfileInformation: { [key: string]: string } = {
-  'Business name': 'My Awesome Billion Dollar Business ',
-  Address: '1234 Rich St',
-  '': 'App. 2',
-  'Postal Code': 'G6T 3G6',
-  City: 'Montreal',
-  Province: 'QC',
-  Country: 'Canada',
+  'Business name': '',
+  Address: '',
+  '': '',
+  'Postal Code': '',
+  City: '',
+  Province: '',
+  Country: '',
 };
 
 const ProfileDashboard = (): JSX.Element => {
+  const { businessId } = useParams();
+  const [profile, setProfile] = useState(ProfileInformation);
+
+  useEffect(() => {
+    void (async function getProfile () {
+      await fetch(`/api/business/get/${businessId ?? ''}`, {
+        method: 'GET',
+      }).then(res => {
+        // @ts-expect-error
+        setProfile(res.body);
+      });
+    })();
+  }, []);
+
   return (
     <div className='flex flex-col h-full'>
       <PageHeader
         header='Business profile'
       />
       <div className='m-4 flex-1 p-4'>
-        {Object.entries(ProfileInformation).map((entry) => {
+        {Object.entries(profile).map((entry) => {
           const [isEditing, setIsEditing] = useState(false);
+          const onSubmit = async (): Promise<void> => {
+            setIsEditing(false);
+          };
 
           return (
           <div key={entry[0]} className='flex flex-row items-center mb-2'>
@@ -41,7 +59,7 @@ const ProfileDashboard = (): JSX.Element => {
                   <Button
                     variant='ghost'
                     icon={IconNames.SAVE}
-                    onClick={() => { setIsEditing(false); }}
+                    onClick={onSubmit}
                     hasIcon
                   />
                 </div>
