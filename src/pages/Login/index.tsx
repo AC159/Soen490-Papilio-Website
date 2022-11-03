@@ -76,7 +76,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
                 email: data.adminAccount.adminEmail,
                 firebase_id: user.uid,
                 role: data.adminAccount.role,
-                root: true,
+                // root: true,  // TODO: Uncomment when problem is fix in backend
               },
             };
             await fetch('/api/business/createBusiness', {

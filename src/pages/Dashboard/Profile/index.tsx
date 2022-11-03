@@ -24,9 +24,9 @@ const ProfileDashboard = (): JSX.Element => {
     void (async function getProfile () {
       await fetch(`/api/business/get/${businessId ?? ''}`, {
         method: 'GET',
-      }).then(res => {
-        // @ts-expect-error
-        setProfile(res.body);
+      }).then(() => {
+        // TODO: Setup profile the fetch response
+        setProfile(ProfileInformation);
       });
     })();
   }, []);
