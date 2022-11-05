@@ -47,11 +47,11 @@ const Table = ({ headContent, bodyContent }: TableInterface): JSX.Element => {
     <div className='rounded-sm overflow-hidden border border-brand-blue-dark'>
       <table className="table-auto border-collapse w-full">
         <thead className="bg-brand-blue-dark">
-          <Row data={headContent} onClick={onChangeFilter} head/>
+          <Row id='header' data={headContent} onClick={onChangeFilter} head/>
         </thead>
         <tbody>
-          {tableRows.map((cellData) => (
-            <Row key={cellData[0].value} data={cellData} />
+          {tableRows.map((cellData, index) => (
+            <Row id={`row-${index}`} key={`row-${index}`} data={cellData} />
           ))}
         </tbody>
       </table>

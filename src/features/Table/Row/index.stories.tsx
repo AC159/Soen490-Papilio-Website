@@ -15,11 +15,13 @@ const Template: ComponentStory<typeof Row> = (args: RowInterface) => (
 
 export const Primary = Template.bind({});
 Primary.args = {
+  id: 'row',
   data: [{ value: 'a' }, { value: 'b' }, { value: 'c' }],
 };
 
 export const Events = Template.bind({});
 Events.args = {
+  id: 'row',
   head: true,
   data: [
     { value: 'Event name' },

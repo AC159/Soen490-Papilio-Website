@@ -1,8 +1,10 @@
 import { useState } from 'react';
 
 import Cell from '../Cell';
+import PopoverButton from '../PopoverButton';
 
 export declare interface RowInterface {
+  id: string
   data: CellData[]
   head?: boolean
   onClick?: (data: number) => void
@@ -13,7 +15,7 @@ export declare interface CellData {
   center?: boolean
 }
 
-const Row = ({ data, head = false, onClick }: RowInterface): JSX.Element => {
+const Row = ({ data, head = false, id, onClick }: RowInterface): JSX.Element => {
   const [isSelected, setIsSelected] = useState(false);
   return (
     <tr className='border-b border-brand-blue-dark last:border-b-0 cursor-pointer' onClick={() => setIsSelected(prev => !prev)}>
@@ -39,7 +41,7 @@ const Row = ({ data, head = false, onClick }: RowInterface): JSX.Element => {
         value={
           head
             ? ''
-            : (<span className="material-symbols-outlined align-text-top">more_vert</span>)
+            : (<PopoverButton id={id} onClick={() => { console.log('clicked'); }} />)
         }
         head={head}
         index={-2}
