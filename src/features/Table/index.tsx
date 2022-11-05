@@ -3,7 +3,12 @@ import Row, { CellData } from './Row';
 
 export declare interface TableInterface {
   headContent: CellData[]
-  bodyContent: CellData[][]
+  bodyContent: IBodyContent[]
+}
+
+export declare interface IBodyContent {
+  id: string
+  content: CellData[]
 }
 
 const initialState = 'asc';
@@ -37,7 +42,7 @@ const Table = ({ headContent, bodyContent }: TableInterface): JSX.Element => {
 
   const handleSorting = (index: number, order: string): void => {
     const rows = [...tableRows]
-      .sort((a, b) => a[index].value.toString().localeCompare(b[index].value.toString(), 'en', {
+      .sort((a, b) => a.content[index].value.toString().localeCompare(b.content[index].value.toString(), 'en', {
         numeric: true,
       }) * orderValue[order]);
     setTableRows(rows);
@@ -50,8 +55,8 @@ const Table = ({ headContent, bodyContent }: TableInterface): JSX.Element => {
           <Row id='header' data={headContent} onClick={onChangeFilter} head/>
         </thead>
         <tbody>
-          {tableRows.map((cellData, index) => (
-            <Row id={`row-${index}`} key={`row-${index}`} data={cellData} />
+          {tableRows.map(({ id, content }) => (
+            <Row id={id} key={id} data={content} />
           ))}
         </tbody>
       </table>

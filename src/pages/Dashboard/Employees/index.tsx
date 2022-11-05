@@ -3,7 +3,7 @@ import { sendSignInLinkToEmail } from 'firebase/auth';
 // import axios from 'axios';
 
 import { auth } from '../../../firebase';
-import Table from '../../../features/Table';
+import Table, { IBodyContent } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -21,6 +21,24 @@ const tabs: ITab[] = [
   { label: constant.NORMAL_LABEL },
 ];
 
+declare interface IEmployee {
+  firebase_id: string
+  firstName: string
+  lastName: string
+  email: string
+  role: string
+  createdAt: string
+  updatedAt: string
+  root: boolean
+  business_id: string
+}
+
+declare interface IBody {
+  'businessId': string
+  'count': number
+  'employees': IEmployee[]
+}
+
 // TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
   <div className='border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white'>
@@ -32,17 +50,20 @@ const Box = (): JSX.Element => (
 
 const EmployeeDashboard = (): JSX.Element => {
   const { businessId } = useParams();
-  const [employees, setEmployees] = useState([[]]);
+  const [employees, setEmployees] = useState<IBodyContent[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (data: IFormData): Promise<void> => {
     const reqData = {
       firebaseId: '',
       email: data.employeeEmail,
-      name: data.employeeName,
+      firstName: data.employeeName.split(' ')[0],
+      lastName: data.employeeName.split(' ')[1],
       businessId,
+      role: data.role,
       root: false, // True only while creating the business
     };
+
     await fetch(`/api/business/addEmployee/${businessId ?? ''}`, {
       method: 'POST',
       headers: {
@@ -62,9 +83,25 @@ const EmployeeDashboard = (): JSX.Element => {
     void (async function getEmployees () {
       await fetch(`/api/business/get/${businessId ?? ''}/employees`, {
         method: 'GET',
-      }).then(res => {
-        // @ts-expect-error
-        setEmployees(res.body);
+      }).then((res: Response) => {
+        const body = res.body as unknown as IBody;
+        const employeesRes = body.employees.map(({
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          firebase_id,
+          firstName,
+          lastName,
+          email,
+          role,
+        }): IBodyContent => ({
+          id: firebase_id,
+          content: [
+            { value: `${firstName} ${lastName}` },
+            { value: email },
+            { value: role, center: true },
+          ],
+        }));
+
+        setEmployees(employeesRes);
       });
     })();
   }, []);

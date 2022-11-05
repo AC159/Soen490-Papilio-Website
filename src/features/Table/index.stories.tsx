@@ -21,21 +21,30 @@ Primary.args = {
     { value: 'Role', center: true },
   ],
   bodyContent: [
-    [
-      { value: 'John Doe' },
-      { value: 'j.doe@email.com' },
-      { value: 'Admin', center: true },
-    ],
-    [
-      { value: 'John Doe' },
-      { value: 'j.doe@email.com' },
-      { value: 'Admin', center: true },
-    ],
-    [
-      { value: 'John Doe' },
-      { value: 'j.doe@email.com' },
-      { value: 'Admin', center: true },
-    ],
+    {
+      id: '1',
+      content: [
+        { value: 'John Doe' },
+        { value: 'j.doe@email.com' },
+        { value: 'Admin', center: true },
+      ],
+    },
+    {
+      id: '2',
+      content: [
+        { value: 'John Doe' },
+        { value: 'j.doe@email.com' },
+        { value: 'Admin', center: true },
+      ],
+    },
+    {
+      id: '3',
+      content: [
+        { value: 'John Doe' },
+        { value: 'j.doe@email.com' },
+        { value: 'Admin', center: true },
+      ],
+    },
   ],
 };
 
@@ -49,26 +58,35 @@ Events.args = {
     { value: 'State', center: true },
   ],
   bodyContent: [
-    [
-      { value: 'Special Friday Night Event' },
-      { value: '10-10-2022', center: true },
-      { value: '10-10-2022', center: true },
-      { value: '10-10-2022', center: true },
-      { value: 'Active', center: true },
-    ],
-    [
-      { value: "Ladies' Night" },
-      { value: '10-10-2022', center: true },
-      { value: '10-10-2022', center: true },
-      { value: '10-10-2022', center: true },
-      { value: 'Draft', center: true },
-    ],
-    [
-      { value: 'Mystery Thursday' },
-      { value: '10-10-2022', center: true },
-      { value: '10-10-2022', center: true },
-      { value: '10-10-2022', center: true },
-      { value: 'Closed', center: true },
-    ],
+    {
+      id: '1',
+      content: [
+        { value: 'Special Friday Night Event' },
+        { value: '10-10-2022', center: true },
+        { value: '10-10-2022', center: true },
+        { value: '10-10-2022', center: true },
+        { value: 'Active', center: true },
+      ],
+    },
+    {
+      id: '2',
+      content: [
+        { value: "Ladies' Night" },
+        { value: '10-10-2022', center: true },
+        { value: '10-10-2022', center: true },
+        { value: '10-10-2022', center: true },
+        { value: 'Draft', center: true },
+      ],
+    },
+    {
+      id: '3',
+      content: [
+        { value: 'Mystery Thursday' },
+        { value: '10-10-2022', center: true },
+        { value: '10-10-2022', center: true },
+        { value: '10-10-2022', center: true },
+        { value: 'Closed', center: true },
+      ],
+    },
   ],
 };

@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState, useRef } from 'react';
 import Portal from '../../../components/Portal';
 
 export declare interface IPopoverButton {
   id: string
   onClick: () => void
+  onDelete: () => Promise<void>
+  onUpdate: (data: any) => Promise<void>
 }
 
-const PopoverButton = ({ id, onClick }: IPopoverButton): JSX.Element => {
+const PopoverButton = ({ id, onClick, onUpdate, onDelete }: IPopoverButton): JSX.Element => {
   const [showModal, setShowModal] = useState(false);
   const divRef = useRef() as React.MutableRefObject<HTMLDivElement>;
 
@@ -25,8 +28,8 @@ const PopoverButton = ({ id, onClick }: IPopoverButton): JSX.Element => {
       {showModal && (
         <Portal wrapper={`popover=-${id}`}>
           <div className='bg-white shadow-md border rounded-sm absolute py-1 right-0 mt-1 z-50 w-36'>
-            <div className='bg-white border-y p-1'>Update</div>
-            <div className='bg-white border-y p-1'>Delete</div>
+            <div className='bg-white border-y p-1' onClick={onUpdate}>Update</div>
+            <div className='bg-white border-y p-1' onClick={onDelete}>Delete</div>
           </div>
         </Portal>
       )}
