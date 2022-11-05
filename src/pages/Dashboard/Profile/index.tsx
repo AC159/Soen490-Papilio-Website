@@ -5,8 +5,19 @@ import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import { IconNames } from '../../../components/Icon';
 import { useParams } from 'react-router-dom';
+import useFormData from '../../../hooks/useFormData';
 
-const ProfileInformation: { [key: string]: string } = {
+declare interface IProfileInformation {
+  'Business name': string
+  Address: string
+  '': string
+  'Postal Code': string
+  City: string
+  Province: string
+  Country: string
+}
+
+const ProfileInformation: IProfileInformation = {
   'Business name': '',
   Address: '',
   '': '',
@@ -39,9 +50,11 @@ const ProfileDashboard = (): JSX.Element => {
       <div className='m-4 flex-1 p-4'>
         {Object.entries(profile).map((entry) => {
           const [isEditing, setIsEditing] = useState(false);
-          const onSubmit = async (): Promise<void> => {
+          const onSubmit = async (data: IProfileInformation): Promise<void> => {
+            setProfile(data);
             setIsEditing(false);
           };
+          const [formData, onValueChange, submit] = useFormData({ initialState: profile, onSubmit });
 
           return (
           <div key={entry[0]} className='flex flex-row items-center mb-2'>
@@ -51,15 +64,16 @@ const ProfileDashboard = (): JSX.Element => {
                 <div className='border rounded-sm border-brand-blue-dark bg-brand-blue-light p-4 flex-1 group flex flex-row items-center justify-between'>
                   <Input
                     name={entry[0]}
-                    value={entry[1]}
+                    // @ts-expect-error
+                    value={formData[entry[0]]}
                     placeholder=''
                     variant='ghost'
-                    onChange={() => {}}
+                    onChange={onValueChange}
                     />
                   <Button
                     variant='ghost'
                     icon={IconNames.SAVE}
-                    onClick={onSubmit}
+                    onClick={submit}
                     hasIcon
                   />
                 </div>
