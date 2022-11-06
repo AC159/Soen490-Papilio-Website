@@ -18,3 +18,9 @@ InputWithLabel.args = {
 
 export const InputNoLabel = Template.bind({});
 InputNoLabel.args = { ...InputWithLabel.args, hasLabel: false };
+
+export const GhostInput = Template.bind({});
+GhostInput.args = {
+  ...InputWithLabel.args,
+  variant: 'ghost',
+};

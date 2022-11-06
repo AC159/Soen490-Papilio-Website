@@ -10,7 +10,7 @@ export declare interface TabListInterface {
 
 export declare interface ITab {
   label: string
-  icon?: 'ad' | 'home' | 'event' | 'employee'
+  icon?: 'ad' | 'home' | 'event' | 'employee' | 'feed'
   path?: string
 }
 

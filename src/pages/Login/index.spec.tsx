@@ -1,12 +1,12 @@
-// import React, { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
-import * as auth from 'firebase/auth';
 
 import LoginPage from '.';
 import * as businessConstant from './BusinessForm/constant';
-import * as adminConstant from './AdminForm/constant';
+import * as auth from 'firebase/auth';
+import * as ProfileConstant from '../../features/MultiStepForm/ProfileForm/constant';
+import * as AdminConstant from '../../features/MultiStepForm/AdminForm/constant';
 
 jest.mock('firebase/auth');
 
@@ -25,7 +25,7 @@ describe('logic test', () => {
   test('login page business test', async () => {
     // @ts-expect-error
     fetch.mockResolvedValueOnce({
-      status: 201,
+      status: 200,
     });
 
     render(
@@ -47,7 +47,7 @@ describe('logic test', () => {
   test('login page admin test', async () => {
     // @ts-expect-error
     fetch.mockResolvedValueOnce({
-      status: 201,
+      status: 200,
     });
     // @ts-expect-error
     auth.createUserWithEmailAndPassword.mockResolvedValueOnce({
@@ -57,20 +57,20 @@ describe('logic test', () => {
     });
 
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[{ state: { businessId: '1234' } }]}>
         <Routes>
-          <Route path="" element={<LoginPage type='admin' />} />
-          {/* // TODO: REMOVE HARD CODED PATH */}
+          <Route path="" element={<LoginPage type='businessLogic' />} />
           <Route path="/1234/dashboard" element={<div>DASHBOARD PAGE</div>} />
         </Routes>
       </MemoryRouter>
     );
 
-    expect(screen.getByText(adminConstant.FORM_HEADING)).toBeInTheDocument();
-
-    expect(screen.getByText(adminConstant.FORM_HEADING)).toBeInTheDocument();
-    userEvent.click(screen.getByText(adminConstant.SUBMIT_BUTTON_TEXT));
-
+    expect(screen.getByRole('heading', { name: ProfileConstant.FORM_TITLE })).toBeInTheDocument();
+    userEvent.click(screen.getByText(/Next/));
+    expect(await screen.findByRole('heading', { name: AdminConstant.FORM_TITLE })).toBeInTheDocument();
+    userEvent.click(await screen.findByText(/Next/));
+    expect(await screen.findByText(/submit/)).toBeInTheDocument();
+    userEvent.click(await screen.findByText(/submit/));
     expect(auth.createUserWithEmailAndPassword).toHaveBeenCalled();
     expect(await screen.findByText(/DASHBOARD PAGE/)).toBeInTheDocument();
   });

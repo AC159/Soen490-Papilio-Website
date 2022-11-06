@@ -9,7 +9,7 @@ export declare interface TabInterface {
   horizontal?: boolean
   to?: LinkProps['to']
   isSelected: boolean
-  icon?: 'ad' | 'home' | 'event' | 'employee'
+  icon?: 'ad' | 'home' | 'event' | 'employee' | 'feed'
   type?: 'button' | 'link'
   testId?: string
 }
@@ -26,6 +26,7 @@ const Tab = ({ label, isSelected, icon, horizontal = false, onClick, type = 'but
     home: IconNames.HOME,
     event: IconNames.EVENT,
     employee: IconNames.EMPLOYEE,
+    feed: IconNames.FEED,
   };
 
   const Content: React.ReactNode = (
