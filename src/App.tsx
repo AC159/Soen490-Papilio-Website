@@ -1,5 +1,6 @@
 import Dashboard from './pages/Dashboard';
 import EmployeeDashboard from './pages/Dashboard/Employees';
+import ActivityDashboard from './pages/Dashboard/Activities';
 import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
 
@@ -28,8 +29,8 @@ const router = createBrowserRouter([
         element: <EmployeeDashboard />,
       },
       {
-        path: 'events',
-        element: <div>Event Manager</div>,
+        path: 'activities',
+        element: <ActivityDashboard />,
       },
       {
         path: 'ads',

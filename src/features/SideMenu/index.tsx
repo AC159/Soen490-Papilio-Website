@@ -8,12 +8,12 @@ const tabs: ITab[] = [
     path: '',
   },
   {
-    label: 'Event manager',
+    label: 'Activity Manager',
     icon: 'event',
-    path: 'events',
+    path: 'activities',
   },
   {
-    label: 'Ad center',
+    label: 'Ad Center',
     icon: 'ad',
     path: 'ads',
   },
