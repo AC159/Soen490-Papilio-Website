@@ -43,8 +43,6 @@ const steps: Step[] = [
   },
 ];
 
-// const BASE_URL = process.env.REACT_FETCH_BASE_URL ?? 'localhost:1337';
-
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
   const navigate = useNavigate();
   let content: React.ReactNode;
@@ -76,7 +74,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
                 email: data.adminAccount.adminEmail,
                 firebase_id: user.uid,
                 role: data.adminAccount.role,
-                // root: true,  // TODO: Uncomment when problem is fix in backend
+                root: true,
               },
             };
             await fetch('/api/business/createBusiness', {

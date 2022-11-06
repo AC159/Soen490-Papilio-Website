@@ -133,7 +133,6 @@ const MultiStepForm = ({ progress, steps, onSubmit }: IMultiStepForm): JSX.Eleme
         </div>
       </div>
       <div className='p-9 flex flex-1 flex-col'>
-        {formData.businessId}
         {Body}
       </div>
     </div>
