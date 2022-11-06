@@ -11,9 +11,9 @@ declare interface IProfileInformation {
   'Business name': string
   Address: string
   '': string
-  'Postal Code': string
   City: string
   Province: string
+  'Postal Code': string
   Country: string
 }
 

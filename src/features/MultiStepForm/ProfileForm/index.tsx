@@ -34,16 +34,16 @@ const inputs: InputInterface[] = [
     label: '',
   },
   {
-    name: 'postalCode',
-    label: 'Postal code',
-  },
-  {
     name: 'city',
     label: 'City',
   },
   {
     name: 'province',
     label: 'Province',
+  },
+  {
+    name: 'postalCode',
+    label: 'Postal code',
   },
   {
     name: 'country',
