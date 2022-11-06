@@ -1,6 +1,7 @@
 import Dashboard from './pages/Dashboard';
 import EmployeeDashboard from './pages/Dashboard/Employees';
 import ActivityDashboard from './pages/Dashboard/Activities';
+import ProfileDashboard from './pages/Dashboard/Profile';
 import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
 
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/admin',
-    element: (<LoginPage type='admin' />),
+    element: (<LoginPage type='businessLogic' />),
     errorElement: (<ErrorPage />),
   },
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: 'ads',
         element: <div>Ad center</div>,
+      },
+      {
+        path: 'profile',
+        element: <ProfileDashboard />,
       },
     ],
   },

@@ -22,6 +22,11 @@ const tabs: ITab[] = [
     icon: 'employee',
     path: 'employees',
   },
+  {
+    label: 'Profile',
+    icon: 'feed',
+    path: 'profile',
+  },
 ];
 
 const SideMenu = (): JSX.Element => {
