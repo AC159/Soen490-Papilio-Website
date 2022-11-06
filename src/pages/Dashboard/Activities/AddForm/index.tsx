@@ -12,12 +12,24 @@ export declare interface IFormData {
   activityTitle: string
   activityLocation: string
   activityDescription: string
+  activityStart: string
+  activityEnd: string
+  activityCostIndv: string
+  activityGroupSize: string
+  activityCostGroup: string
+  activityImage: string
 };
 
 const initialState: IFormData = {
   activityTitle: '',
   activityLocation: '',
   activityDescription: '',
+  activityStart: '',
+  activityEnd: '',
+  activityCostIndv: '',
+  activityGroupSize: '',
+  activityCostGroup: '',
+  activityImage: '',
 };
 
 const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
@@ -46,7 +58,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         <div className='pr-10'>
           <Input
             name={constant.INPUT_ACTIVITY_START}
-            value={formData.activityDescription}
+            value={formData.activityStart}
             placeholder={constant.INPUT_ACTIVITY_START_PLACEHOLDER}
             label={constant.INPUT_ACTIVITY_START_LABEL}
             onChange={onValueChange}
@@ -56,7 +68,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         <div>
           <Input
             name={constant.INPUT_ACTIVITY_END}
-            value={formData.activityDescription}
+            value={formData.activityEnd}
             placeholder={constant.INPUT_ACTIVITY_END_PLACEHOLDER}
             label={constant.INPUT_ACTIVITY_END_LABEL}
             onChange={onValueChange}
@@ -76,7 +88,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         <div className='pr-10'>
           <Input
             name={constant.INPUT_ACTIVITY_COST_INDV}
-            value={formData.activityDescription}
+            value={formData.activityCostIndv}
             placeholder={constant.INPUT_ACTIVITY_COST_INDV_PLACEHOLDER}
             label={constant.INPUT_ACTIVITY_COST_INDV_LABEL}
             onChange={onValueChange}
@@ -86,7 +98,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         <div className='pr-10'>
         <Input
             name={constant.INPUT_ACTIVITY_COST_GROUP}
-            value={formData.activityDescription}
+            value={formData.activityCostGroup}
             placeholder={constant.INPUT_ACTIVITY_COST_GROUP_PLACEHOLDER}
             label={constant.INPUT_ACTIVITY_COST_GROUP_LABEL}
             onChange={onValueChange}
@@ -96,7 +108,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         <div>
         <Input
             name={constant.INPUT_ACTIVITY_GROUP}
-            value={formData.activityDescription}
+            value={formData.activityGroupSize}
             placeholder={constant.INPUT_ACTIVITY_GROUP_PLACEHOLDER}
             label={constant.INPUT_ACTIVITY_GROUP_LABEL}
             onChange={onValueChange}
@@ -104,6 +116,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
           />
         </div>
       </div>
+      {/* TODO: Add value for image */}
       <UploadImage/>
       <br></br>
       <Button text={constant.BUTTON_TEXT} onClick={submit}/>

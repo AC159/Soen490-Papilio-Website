@@ -3,6 +3,13 @@ import { useState } from 'react';
 const UploadImage = (): JSX.Element => {
   const [imageFile, setImageFile] = useState<string>('');
 
+  // TODO: Add the correct logic in the future
+  function formSubmit (e: React.FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
+    console.log({ imageFile });
+    alert("here you'd submit the form using\n the imageFile like any other field");
+  };
+
   function convertFile (files: FileList | null): void {
     if (files != null) {
       const fileRef = files[0];
@@ -25,13 +32,8 @@ const UploadImage = (): JSX.Element => {
         </h2>
         <br></br>
         <div className="flex pl-5 text-sm font-semibold text-gray-600">
-          <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            console.log({ imageFile });
-            alert("here you'd submit the form using\n the filebase64 like any other field");
-          }}>
+          <form onSubmit={formSubmit}>
             <input type="file" onChange={(e) => convertFile(e.target.files)} />
-
             {
               <>
               {(imageFile.includes('image/')) &&

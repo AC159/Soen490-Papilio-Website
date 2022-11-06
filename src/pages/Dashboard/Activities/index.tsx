@@ -1,8 +1,6 @@
 import { useState } from 'react';
-// import { sendSignInLinkToEmail } from 'firebase/auth';
-// import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-// import { auth } from '../../../firebase';
 import Table from '../Activities/ActivityTable';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
@@ -28,43 +26,30 @@ const Box = (): JSX.Element => (
 
 const ActivityDashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  const businessId = 1234; // TODO: REPLACE THIS WITH A GLOBAL VARIABLE
+  const { businessId } = useParams();
 
   const onSubmit = async (data: IFormData): Promise<void> => {
+    // TODO: Add endpoints for following values
     const reqData = {
-      firebaseId: '',
-      email: data.activityLocation,
-      name: data.activityTitle,
+      activityId: '',
+      title: data.activityTitle,
+      location: data.activityLocation,
+      startDate: data.activityStart,
+      endDate: data.activityEnd,
+      description: data.activityDescription,
+      costPerPerson: data.activityCostIndv,
+      costPerGroup: data.activityCostGroup,
+      groupSize: data.activityGroupSize,
+      image: data.activityImage,
       businessId,
-      root: false, // True only while creating the business
     };
     await fetch('', {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      method: 'POST', // TODO: --- THIS IS A PLACEHOLDER --- Add correct endpoints for activities
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(reqData),
     });
-    // .then(async () => {
-    // await sendSignInLinkToEmail(auth, data.employeeEmail, {
-    // url: 'https://localhost:3000/email-signin',
-    // }).then(() => {
-    //  setIsOpen(false);
-    // });
-    // });
-    // await axios.post(`business/${businessId}/user`, {
-    //   firebaseId: '',
-    //   email: data.employeeEmail,
-    //   name: data.employeeName,
-    //   businessId,
-    //   root: false, // True only while creating the business
-    // }).then(async () => {
-    //   await sendSignInLinkToEmail(auth, data.employeeEmail, {
-    //     url: 'https://localhost:3000/email-signin',
-    //   });
-    // }).then(() => {
-    //   setIsOpen(false);
-    // });
   };
 
   return (
