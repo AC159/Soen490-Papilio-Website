@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
 import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
+import LoginForm, { IFormData as LoginFormData } from './LoginForm';
 import { auth } from '../../firebase';
 
 export declare interface ILoginPage {
@@ -119,7 +120,41 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       content = (<BusinessForm onSubmit={onSubmit}/>);
       break;
     case 'login':
-      content = null;
+      onSubmit = async (data: LoginFormData) => {
+        const businessId = 1234;
+        signInWithEmailAndPassword(auth, data.Email, data.Password)
+          .then(async (userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            const reqData = {
+              firebaseId: user.uid,
+              email: data.Email,
+              password: data.Password,
+              businessId,
+              root: true, // True only while creating the business
+            };
+            await fetch(`/business/${businessId}/user`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(reqData),
+            }).then(res => {
+              console.log(res);
+              navigate('/1234/dashboard', {
+                replace: true,
+                relative: 'route',
+              });
+            });
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+          });
+      };
+      content = (<LoginForm onSubmit={onSubmit}/>);
+      break;
   }
 
   return (
