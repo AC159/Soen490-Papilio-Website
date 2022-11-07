@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+
 import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
 import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
 import LoginForm, { IFormData as LoginFormData } from './LoginForm';
@@ -118,32 +119,39 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       };
       content = (<BusinessForm onSubmit={onSubmit}/>);
       break;
-
-      case 'login':
-        onSubmit = async (data: LoginFormData) => {
-          signInWithEmailAndPassword(auth, data.email, data.password)
-            .then(async () => {
-              // Signed in
-              await fetch(`/business/${data.businessId}/user`, {
-                method: 'GET',
-                mode: 'no-cors',
-              }).then(res => {
-                console.log(res);
-                navigate('{data.businessId}/dashboard', {
-                  replace: true,
-                  relative: 'route',
-                });
+    case 'login':
+      onSubmit = async (data: LoginFormData) => {
+        signInWithEmailAndPassword(auth, data.email, data.password)
+          .then(async (userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            const reqData = {
+              firebaseId: user.uid,
+              email: data.email,
+              password: data.password,
+              root: true, // True only while creating the business
+            };
+            await fetch(`/business/${data.businessId}/user`, {
+              method: 'GET',
+              mode: 'no-cors',
+              body: JSON.stringify(reqData),
+            }).then(res => {
+              console.log(res);
+              navigate('{data.businessId}/dashboard', {
+                replace: true,
+                relative: 'route',
               });
-            })
-            .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log(errorCode, errorMessage);
             });
-        };
-        content = (<LoginForm onSubmit={onSubmit}/>);
-        break;
-    }
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+          });
+      };
+      content = (<LoginForm onSubmit={onSubmit}/>);
+      break;
+  }
 
   return (
     <div className='flex flex-col h-screen'>

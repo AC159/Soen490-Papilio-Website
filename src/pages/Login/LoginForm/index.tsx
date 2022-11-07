@@ -16,7 +16,7 @@ export interface IFormData {
 export const initialState: IFormData = {
   email: '',
   password: '',
-  businessId:'',
+  businessId: '',
 };
 
 const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
