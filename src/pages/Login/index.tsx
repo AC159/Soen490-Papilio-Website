@@ -37,7 +37,6 @@ const steps: Step[] = [
   },
   {
     stepId: 'validation',
-    // title: 'Your business is being created',
     caption: "Let's create your business",
     last: true,
   },
