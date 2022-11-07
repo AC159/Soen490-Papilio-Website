@@ -10,11 +10,13 @@ export declare interface ILoginForm {
 export interface IFormData {
   email: string
   password: string
+  businessId: string
 };
 
 export const initialState: IFormData = {
   email: '',
   password: '',
+  businessId:'',
 };
 
 const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
@@ -43,6 +45,14 @@ const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
         onChange={onValueChange}
         type='password'
         hasLabel/>
+      <Input
+       name={constant.INPUT_BUSINESS_ID}
+       value={formData.businessId}
+       placeholder={constant.INPUT_BUSINESS_ID_PLACEHOLDER}
+       label={constant.INPUT_BUSINESS_ID_LABEL}
+       onChange={onValueChange}
+       hasLabel/>
+
     </BoxForm>
   );
 };
