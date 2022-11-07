@@ -1,13 +1,47 @@
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase';
-import AdminForm, { IFormData as AdminFormData } from './AdminForm';
 import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
+import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
 import LoginForm, { IFormData as LoginFormData } from './LoginForm';
+import { auth } from '../../firebase';
 
 export declare interface ILoginPage {
-  type: 'business' | 'admin' | 'login'
+  type: 'business' | 'businessLogic' | 'login'
 }
+
+const progress: Progress[] = [
+  {
+    icon: 'feed',
+    text: 'Business profile',
+  },
+  {
+    icon: 'admin_panel_settings',
+    text: 'Root account',
+  },
+  {
+    icon: 'done_all',
+    text: 'Validation',
+  },
+];
+
+const steps: Step[] = [
+  {
+    stepId: 'profile',
+    caption: "Let's create your business profile",
+    last: false,
+  },
+  {
+    stepId: 'adminAccount',
+    caption: "Let's create your main account",
+    last: false,
+  },
+  {
+    stepId: 'validation',
+    // title: 'Your business is being created',
+    caption: "Let's create your business",
+    last: true,
+  },
+];
 
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
   const navigate = useNavigate();
@@ -15,42 +49,35 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
   let onSubmit;
 
   switch (type) {
-    case 'business':
-      onSubmit = async (data: BusinessFormData) => {
-        await fetch('/business', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ businessId: data.businessId }),
-        }).then(res => {
-          if (res.status === 201) {
-            navigate('admin', {
-              replace: true,
-            });
-          }
-          if (res.status === 400) {
-            console.log(res);
-          }
-        });
-      };
-      content = (<BusinessForm onSubmit={onSubmit}/>);
-      break;
-    case 'admin':
-      onSubmit = async (data: AdminFormData) => {
-        const businessId = 1234;
-        createUserWithEmailAndPassword(auth, data.adminEmail, data.adminPassword)
+    case 'businessLogic':
+      onSubmit = async (data: InfoFormData) => {
+        createUserWithEmailAndPassword(auth, data.adminAccount.adminEmail, data.adminAccount.adminPassword)
           .then(async (userCredential) => {
             // Signed in
             const user = userCredential.user;
+            const { businessName, addressLineOne, addressLineTwo, province, ...rest } = data.profile;
             const reqData = {
-              firebaseId: user.uid,
-              email: data.adminEmail,
-              name: data.adminName,
-              businessId,
-              root: true, // True only while creating the business
+              business: {
+                businessId: data.businessId,
+                name: businessName,
+              },
+              address: {
+                mention: businessName,
+                lineOne: addressLineOne,
+                lineTwo: addressLineTwo,
+                state: province,
+                ...rest,
+              },
+              employee: {
+                firstName: data.adminAccount.adminName.split(' ')[0],
+                lastName: data.adminAccount.adminName.split(' ')[1],
+                email: data.adminAccount.adminEmail,
+                firebase_id: user.uid,
+                role: data.adminAccount.role,
+                root: true,
+              },
             };
-            await fetch(`/business/${businessId}/user`, {
+            await fetch('/api/business/createBusiness', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +85,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
               body: JSON.stringify(reqData),
             }).then(res => {
               console.log(res);
-              navigate('/1234/dashboard', {
+              navigate(`/${data.businessId}/dashboard`, {
                 replace: true,
                 relative: 'route',
               });
@@ -70,19 +97,38 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             console.log(errorCode, errorMessage);
           });
       };
-      content = (<AdminForm onSubmit={onSubmit}/>);
+      content = (<MultiStepForm steps={steps} progress={progress} onSubmit={onSubmit}/>);
+      break;
+    case 'business':
+      onSubmit = async (data: BusinessFormData) => {
+        await fetch(`/api/business/get/${data.businessId}`, {
+          method: 'GET',
+          mode: 'no-cors',
+        }).then(res => {
+          if (res.status === 200) {
+            navigate('admin', {
+              replace: true,
+              state: { businessId: data.businessId },
+            });
+          }
+          if (res.status === 400) {
+            console.log(res);
+          }
+        });
+      };
+      content = (<BusinessForm onSubmit={onSubmit}/>);
       break;
     case 'login':
       onSubmit = async (data: LoginFormData) => {
         const businessId = 1234;
-        signInWithEmailAndPassword(auth, data.Email, data.Password)
+        signInWithEmailAndPassword(auth, data.email, data.password)
           .then(async (userCredential) => {
             // Signed in
             const user = userCredential.user;
             const reqData = {
               firebaseId: user.uid,
-              email: data.Email,
-              password: data.Password,
+              email: data.email,
+              password: data.password,
               businessId,
               root: true, // True only while creating the business
             };

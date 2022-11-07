@@ -11,11 +11,21 @@ module.exports = {
         'brand-blue': {
           light: '#9FE7F5',
           DEFAULT: '#429EBD',
-          dark: '#O53F5C',
+          'light-dark': '#165B7E',
+          dark: '#053F5C',
         },
       },
       spacing: {
         4.5: '1rem',
+      },
+      lineHeight: {
+        null: '0',
+      },
+      fontFamily: {
+        display: ['Merienda', 'cursive'],
+      },
+      fontSize: {
+        ultra: ['200px', '170px'],
       },
     },
   },

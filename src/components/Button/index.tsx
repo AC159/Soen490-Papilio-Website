@@ -39,7 +39,7 @@ const Button = ({
     'rounded-sm', 'flex', 'cursor-pointer',
     'justify-center', 'w-max', 'box-content', 'items-center',
     {
-      'bg-brand-orange text-white': variant === 'primary',
+      'bg-brand-blue-dark text-white': variant === 'primary',
       'bg-brand-blue text-white': variant === 'secondary',
       [NormalStyle]: variant === 'primary' || variant === 'secondary',
       [OutlineStyle]: variant === 'outline',

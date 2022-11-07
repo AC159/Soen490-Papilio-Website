@@ -8,13 +8,13 @@ export declare interface ILoginForm {
 }
 
 export interface IFormData {
-  Email: string
-  Password: string
+  email: string
+  password: string
 };
 
 export const initialState: IFormData = {
-  Email: '',
-  Password: '',
+  email: '',
+  password: '',
 };
 
 const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
@@ -22,26 +22,26 @@ const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
 
   return (
     <BoxForm
-      heading={constant.FORM_HEADING}
-      buttonText={constant.SUBMIT_BUTTON_TEXT}
-      buttonOnClick={submit}
-      backButtonTo=''
-      hasBack
+        heading={constant.FORM_HEADING}
+        buttonText={constant.SUBMIT_BUTTON_TEXT}
+        buttonOnClick={submit}
+        backButtonTo=''
+        hasBack
     >
       <Input
         name={constant.INPUT_EMAIL}
-        value={formData.Email}
+        value={formData.email}
         placeholder={constant.INPUT_EMAIL_PLACEHOLDER}
         label={constant.INPUT_EMAIL_LABEL}
         onChange={onValueChange}
         hasLabel/>
       <Input
         name={constant.INPUT_PASSWORD}
-        value={formData.Password}
+        value={formData.password}
         placeholder={constant.INPUT_PASSWORD_PLACEHOLDER}
         label={constant.INPUT_PASSWORD_LABEL}
         onChange={onValueChange}
-        type="password"
+        type='password'
         hasLabel/>
     </BoxForm>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 // import axios from 'axios';
 
@@ -12,6 +12,7 @@ import AddForm, { IFormData } from './AddForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
+import { useParams } from 'react-router-dom';
 
 const tabs: ITab[] = [
   { label: constant.ALL_EMPLOYEES_LABEL },
@@ -29,8 +30,9 @@ const Box = (): JSX.Element => (
 );
 
 const EmployeeDashboard = (): JSX.Element => {
+  const { businessId } = useParams();
+  const [employees, setEmployees] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const businessId = 1234; // TODO: REPLACE THIS WITH A GLOBAL VARIABLE
 
   const onSubmit = async (data: IFormData): Promise<void> => {
     const reqData = {
@@ -40,9 +42,8 @@ const EmployeeDashboard = (): JSX.Element => {
       businessId,
       root: false, // True only while creating the business
     };
-
-    await fetch('', {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    await fetch(`/api/business/addEmployee/${businessId ?? ''}`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -54,22 +55,20 @@ const EmployeeDashboard = (): JSX.Element => {
         setIsOpen(false);
       });
     });
-
-    // await axios.post(`business/${businessId}/user`, {
-    //   firebaseId: '',
-    //   email: data.employeeEmail,
-    //   name: data.employeeName,
-    //   businessId,
-    //   root: false, // True only while creating the business
-    // }).then(async () => {
-    //   await sendSignInLinkToEmail(auth, data.employeeEmail, {
-    //     url: 'https://localhost:3000/email-signin',
-    //   });
-    // }).then(() => {
-    //   setIsOpen(false);
-    // });
   };
 
+  useEffect(() => {
+    void (async function getEmployees () {
+      await fetch(`/api/business/get/${businessId ?? ''}/employees`, {
+        method: 'GET',
+      }).then(res => {
+        // @ts-expect-error
+        setEmployees(res.body);
+      });
+    })();
+  }, []);
+
+  console.log(employees);
   return (
     <>
       <PageHeader
