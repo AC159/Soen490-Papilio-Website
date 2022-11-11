@@ -1,11 +1,11 @@
 export const FORM_HEADING = 'Login to your dashboard';
 export const SUBMIT_BUTTON_TEXT = 'Login';
-export const INPUT_EMAIL = 'Email';
+export const INPUT_EMAIL = 'email';
 export const INPUT_EMAIL_LABEL = 'Email';
 export const INPUT_EMAIL_PLACEHOLDER = 'Email';
-export const INPUT_PASSWORD = 'Password';
+export const INPUT_PASSWORD = 'password';
 export const INPUT_PASSWORD_LABEL = 'Password';
 export const INPUT_PASSWORD_PLACEHOLDER = 'Password';
-export const INPUT_BUSINESS_ID = 'Business ID';
+export const INPUT_BUSINESS_ID = 'businessId';
 export const INPUT_BUSINESS_ID_LABEL = 'Business ID';
 export const INPUT_BUSINESS_ID_PLACEHOLDER = 'Business ID';

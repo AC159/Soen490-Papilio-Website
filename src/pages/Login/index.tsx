@@ -128,8 +128,6 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             const reqData = {
               firebaseId: user.uid,
               email: data.email,
-              password: data.password,
-              root: true, // True only while creating the business
             };
             await fetch(`/business/${data.businessId}/user`, {
               method: 'GET',

@@ -46,13 +46,12 @@ const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
         type='password'
         hasLabel/>
       <Input
-       name={constant.INPUT_BUSINESS_ID}
-       value={formData.businessId}
-       placeholder={constant.INPUT_BUSINESS_ID_PLACEHOLDER}
-       label={constant.INPUT_BUSINESS_ID_LABEL}
-       onChange={onValueChange}
-       hasLabel/>
-
+        name={constant.INPUT_BUSINESS_ID}
+        value={formData.businessId}
+        placeholder={constant.INPUT_BUSINESS_ID_PLACEHOLDER}
+        label={constant.INPUT_BUSINESS_ID_LABEL}
+        onChange={onValueChange}
+        hasLabel/>
     </BoxForm>
   );
 };
