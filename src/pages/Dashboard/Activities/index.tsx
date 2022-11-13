@@ -29,26 +29,25 @@ const ActivityDashboard = (): JSX.Element => {
   const { businessId } = useParams();
 
   const onSubmit = async (data: IFormData): Promise<void> => {
-    // TODO: Add endpoints for following values
     const reqData = {
-      activityId: '',
       title: data.activityTitle,
       location: data.activityLocation,
-      startDate: data.activityStart,
-      endDate: data.activityEnd,
+      startTime: data.activityStart,
+      endTime: data.activityEnd,
       description: data.activityDescription,
-      costPerPerson: data.activityCostIndv,
-      costPerGroup: data.activityCostGroup,
-      groupSize: data.activityGroupSize,
+      costPerIndividual: +data.activityCostIndv,
+      costPerGroup: +data.activityCostGroup,
+      groupSize: +data.activityGroupSize,
       image: data.activityImage,
       businessId,
     };
-    await fetch('', {
-      method: 'POST', // TODO: --- THIS IS A PLACEHOLDER --- Add correct endpoints for activities
+
+    await fetch(`/api/business/addActivity/${businessId ?? ''}`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(reqData),
+      body: JSON.stringify({ activity: reqData }),
     });
   };
 
