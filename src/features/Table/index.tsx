@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Row, { CellData } from './Row';
 
 export declare interface TableInterface {
@@ -27,6 +27,10 @@ const Table = ({ headContent, bodyContent }: TableInterface): JSX.Element => {
   const [tableRows, setTableRows] = useState(bodyContent);
   const [index, setIndex] = useState<number>();
   const [order, setOrder] = useState(initialState);
+
+  useEffect(() => {
+    setTableRows(bodyContent);
+  }, [bodyContent]);
 
   const onChangeFilter = (fieldIndex: number): void => {
     let newOrder = order;

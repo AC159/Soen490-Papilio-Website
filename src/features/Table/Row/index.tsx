@@ -76,7 +76,6 @@ const Row = ({ data, head = false, id, onClick }: RowInterface): JSX.Element => 
             : (
                 <PopoverButton
                   id={id}
-                  onClick={() => { console.log('clicked'); }}
                   onUpdate={onUpdate}
                   onDelete={onDelete}
                 />

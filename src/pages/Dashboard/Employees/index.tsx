@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { sendSignInLinkToEmail } from 'firebase/auth';
-// import axios from 'axios';
 
 import { auth } from '../../../firebase';
 import Table, { IBodyContent } from '../../../features/Table';
@@ -39,6 +38,10 @@ declare interface IBody {
   'employees': IEmployee[]
 }
 
+export declare interface IResponse {
+  body: IBody
+}
+
 // TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
   <div className='border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white'>
@@ -63,6 +66,7 @@ const EmployeeDashboard = (): JSX.Element => {
       role: data.role,
       root: false, // True only while creating the business
     };
+    console.log(reqData);
 
     await fetch(`/api/business/addEmployee/${businessId ?? ''}`, {
       method: 'POST',
@@ -83,8 +87,8 @@ const EmployeeDashboard = (): JSX.Element => {
     void (async function getEmployees () {
       await fetch(`/api/business/get/${businessId ?? ''}/employees`, {
         method: 'GET',
-      }).then((res: Response) => {
-        const body = res.body as unknown as IBody;
+      }).then(async (res: Response) => {
+        const body = (await res.json() as unknown as IResponse).body;
         const employeesRes = body.employees.map(({
           // eslint-disable-next-line @typescript-eslint/naming-convention
           firebase_id,
@@ -106,7 +110,6 @@ const EmployeeDashboard = (): JSX.Element => {
     })();
   }, []);
 
-  console.log(employees);
   return (
     <>
       <PageHeader
