@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { sendSignInLinkToEmail } from 'firebase/auth';
-// import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 import { auth } from '../../../firebase';
 import Table from '../../../features/Table';
@@ -12,7 +12,8 @@ import AddForm, { IFormData } from './AddForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
-import { useParams } from 'react-router-dom';
+import { addEmployee, getEmployees } from '../../../api/apiLayer';
+import { IEmployeeData } from '../../../interfaces';
 
 const tabs: ITab[] = [
   { label: constant.ALL_EMPLOYEES_LABEL },
@@ -35,20 +36,16 @@ const EmployeeDashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (data: IFormData): Promise<void> => {
-    const reqData = {
+    const reqData: IEmployeeData = {
       firebaseId: '',
       email: data.employeeEmail,
       name: data.employeeName,
-      businessId,
+      businessId: (businessId ?? ''),
+      role: data.role,
       root: false, // True only while creating the business
     };
-    await fetch(`/api/business/addEmployee/${businessId ?? ''}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(reqData),
-    }).then(async () => {
+
+    await addEmployee((businessId ?? ''), reqData).then(async () => {
       await sendSignInLinkToEmail(auth, data.employeeEmail, {
         url: 'https://localhost:3000/email-signin',
       }).then(() => {
@@ -58,10 +55,8 @@ const EmployeeDashboard = (): JSX.Element => {
   };
 
   useEffect(() => {
-    void (async function getEmployees () {
-      await fetch(`/api/business/get/${businessId ?? ''}/employees`, {
-        method: 'GET',
-      }).then(res => {
+    void (async function getAllEmployees() {
+      await getEmployees((businessId ?? '')).then(res => {
         // @ts-expect-error
         setEmployees(res.body);
       });

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 import PageHeader from '../../../features/PageHeader';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import { IconNames } from '../../../components/Icon';
-import { useParams } from 'react-router-dom';
 import useFormData from '../../../hooks/useFormData';
+import { getProfile } from '../../../api/apiLayer';
 
 declare interface IProfileInformation {
   'Business name': string
@@ -32,10 +33,8 @@ const ProfileDashboard = (): JSX.Element => {
   const [profile, setProfile] = useState(ProfileInformation);
 
   useEffect(() => {
-    void (async function getProfile () {
-      await fetch(`/api/business/get/${businessId ?? ''}`, {
-        method: 'GET',
-      }).then(() => {
+    void (async function get() {
+      await getProfile((businessId ?? '')).then(() => {
         // TODO: Setup profile the fetch response
         setProfile(ProfileInformation);
       });

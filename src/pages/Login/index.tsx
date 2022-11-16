@@ -1,9 +1,11 @@
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
 import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
 import { auth } from '../../firebase';
+import { addBusiness, getBusiness } from '../../api/apiLayer';
 
 export declare interface ILoginPage {
   type: 'business' | 'businessLogic' | 'login'
@@ -76,13 +78,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
                 root: true,
               },
             };
-            await fetch('/api/business/createBusiness', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(reqData),
-            }).then(res => {
+            await addBusiness(reqData).then(res => {
               console.log(res);
               navigate(`/${data.businessId}/dashboard`, {
                 replace: true,
@@ -100,10 +96,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       break;
     case 'business':
       onSubmit = async (data: BusinessFormData) => {
-        await fetch(`/api/business/get/${data.businessId}`, {
-          method: 'GET',
-          mode: 'no-cors',
-        }).then(res => {
+        await getBusiness(data.businessId).then(res => {
           if (res.status === 200) {
             navigate('admin', {
               replace: true,
