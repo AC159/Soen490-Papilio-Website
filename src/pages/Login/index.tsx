@@ -121,21 +121,23 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       break;
     case 'login':
       onSubmit = async (data: LoginFormData) => {
-        signInWithEmailAndPassword(auth, data.email, data.password)
+        const email = data.email;
+        const password = data.password;
+        signInWithEmailAndPassword(auth, email, password)
           .then(async (userCredential) => {
             // Signed in
             const user = userCredential.user;
             const reqData = {
               firebaseId: user.uid,
               email: data.email,
+              password: data.password,
             };
             await fetch(`/business/${data.businessId}/user`, {
-              method: 'GET',
-              mode: 'no-cors',
+              method: 'POST',
               body: JSON.stringify(reqData),
             }).then(res => {
               console.log(res);
-              navigate('{data.businessId}/dashboard', {
+              navigate('{data.businessId/dashboard', {
                 replace: true,
                 relative: 'route',
               });
