@@ -6,6 +6,7 @@ declare interface IEmployee {
   name: string
   firebaseId: string
   businessId: string
+  role: string
 }
 
 // @ts-expect-error
@@ -16,6 +17,7 @@ const initialState: IEmployee = {
   name: '',
   firebaseId: '',
   businessId: '',
+  role: '',
 };
 
 const AuthProvider = (props: any): JSX.Element => {
@@ -29,9 +31,10 @@ const AuthProvider = (props: any): JSX.Element => {
     async (form: IEmployee) => await ApiLayer.register(form).then((data: IEmployee) => setEmployee(data)),
     [setEmployee]
   );
-  const logout = useCallback(() => {
+  const logout = useCallback((callback: Function) => {
     ApiLayer.logout();
     setEmployee(initialState);
+    callback();
   }, [setEmployee]);
 
   const value = useMemo(

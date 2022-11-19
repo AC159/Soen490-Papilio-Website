@@ -7,6 +7,7 @@ import * as businessConstant from './BusinessForm/constant';
 import * as auth from 'firebase/auth';
 import * as ProfileConstant from '../../features/MultiStepForm/ProfileForm/constant';
 import * as AdminConstant from '../../features/MultiStepForm/AdminForm/constant';
+import { AuthProvider } from '../../context/employeeContext';
 
 jest.mock('firebase/auth');
 
@@ -29,12 +30,14 @@ describe('logic test', () => {
     });
 
     render(
-      <MemoryRouter>
-        <Routes>
-          <Route path='' element={<LoginPage type='business' />} />
-          <Route path='admin' element={<div>ADMIN PAGE</div>} />
-        </Routes>
-      </MemoryRouter>
+      <AuthProvider>
+        <MemoryRouter>
+          <Routes>
+            <Route path='' element={<LoginPage type='business' />} />
+            <Route path='admin' element={<div>ADMIN PAGE</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     expect(screen.getByText(businessConstant.FORM_HEADING)).toBeInTheDocument();
@@ -57,12 +60,14 @@ describe('logic test', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={[{ state: { businessId: '1234' } }]}>
-        <Routes>
-          <Route path="" element={<LoginPage type='businessLogic' />} />
-          <Route path="/1234/dashboard" element={<div>DASHBOARD PAGE</div>} />
-        </Routes>
-      </MemoryRouter>
+      <AuthProvider>
+        <MemoryRouter initialEntries={[{ state: { businessId: '1234' } }]}>
+          <Routes>
+            <Route path="" element={<LoginPage type='businessLogic' />} />
+            <Route path="/1234/dashboard" element={<div>DASHBOARD PAGE</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     expect(screen.getByRole('heading', { name: ProfileConstant.FORM_TITLE })).toBeInTheDocument();

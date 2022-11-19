@@ -6,6 +6,7 @@ import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
 import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
 import { auth } from '../../firebase';
 import { addBusiness, getBusiness } from '../../api/apiLayer';
+import { useAuth } from '../../hooks/useEmployee';
 
 export declare interface ILoginPage {
   type: 'business' | 'businessLogic' | 'login'
@@ -45,6 +46,7 @@ const steps: Step[] = [
 ];
 
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
+  const { register } = useAuth();
   const navigate = useNavigate();
   let content: React.ReactNode;
   let onSubmit;
@@ -79,11 +81,15 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
               },
             };
             await addBusiness(reqData).then(res => {
-              console.log(res);
-              navigate(`/${data.businessId}/dashboard`, {
-                replace: true,
-                relative: 'route',
-              });
+              if (res.status === 400) {
+                console.log(res);
+              } else {
+                register(res);
+                navigate(`/${data.businessId}/dashboard`, {
+                  replace: true,
+                  relative: 'route',
+                });
+              }
             });
           })
           .catch((error) => {

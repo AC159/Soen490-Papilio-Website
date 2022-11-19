@@ -14,6 +14,7 @@ import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
 import { addEmployee, getEmployees } from '../../../api/apiLayer';
 import { IEmployeeData } from '../../../interfaces';
+import { useAuth } from '../../../hooks/useEmployee';
 
 const tabs: ITab[] = [
   { label: constant.ALL_EMPLOYEES_LABEL },
@@ -31,6 +32,7 @@ const Box = (): JSX.Element => (
 );
 
 const EmployeeDashboard = (): JSX.Element => {
+  const { employee } = useAuth();
   const { businessId } = useParams();
   const [employees, setEmployees] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -54,14 +56,40 @@ const EmployeeDashboard = (): JSX.Element => {
     });
   };
 
+  const ActionList = (): JSX.Element => {
+    if (employee.role !== 'Admin') { return <></>; }
+    return (<Button
+      text={constant.ADD_EMPLOYEE_BUTTON}
+      hasIcon={true}
+      icon={IconNames.ADD}
+      iconPosition='lhs'
+      variant='outline'
+      onClick={() => { setIsOpen(!isOpen); }}
+      size='sm'
+    />);
+  };
+
   useEffect(() => {
     void (async function getAllEmployees() {
-      await getEmployees((businessId ?? '')).then(res => {
+      await getEmployees((businessId ?? '')).then(async (res) => {
         // @ts-expect-error
-        setEmployees(res.body);
+        const { employees } = res;
+        // @ts-expect-error
+        const employeeArray = employees.map(employee => ({
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          name: `${employee.firstName} ${employee.lastName}`,
+          email: employee.email,
+          role: employee.role,
+        }));
+        setEmployees(employeeArray);
+      }).catch(error => {
+        console.log(error);
+        if (error?.option.cause !== 1) {
+          alert(error.message);
+        }
       });
     })();
-  }, []);
+  }, [businessId]);
 
   console.log(employees);
   return (
@@ -78,17 +106,7 @@ const EmployeeDashboard = (): JSX.Element => {
       />
       <ListBanner
         tabs={tabs}
-        rhs={
-          <Button
-            text={constant.ADD_EMPLOYEE_BUTTON}
-            hasIcon={true}
-            icon={IconNames.ADD}
-            iconPosition='lhs'
-            variant='outline'
-            onClick={() => { setIsOpen(!isOpen); }}
-            size='sm'
-          />
-        }
+        rhs={<ActionList />}
       />
       <div className='p-3'>
         {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table />)}
