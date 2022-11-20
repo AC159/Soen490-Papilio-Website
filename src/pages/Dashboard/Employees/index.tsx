@@ -83,8 +83,7 @@ const EmployeeDashboard = (): JSX.Element => {
         }));
         setEmployees(employeeArray);
       }).catch(error => {
-        console.log(error);
-        if (error?.option.cause !== 1) {
+        if (error?.cause !== 1) {
           alert(error.message);
         }
       });
