@@ -1,7 +1,7 @@
 import Dashboard from './pages/Dashboard';
 import EmployeeDashboard from './pages/Dashboard/Employees';
-import ProfileDashboard from './pages/Dashboard/Profile';
 import ActivityDashboard from './pages/Dashboard/Activities';
+import ProfileDashboard from './pages/Dashboard/Profile';
 import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
 
