@@ -17,9 +17,31 @@ export async function login(data: { businessId: string, firebaseId: string, name
 }
 export async function register(data: any): Promise<any> { console.log(data); }
 export function logout(): void {}
-export function getActivites(): void {}
+export async function getActivites(businessId: string): Promise<Interfaces.IActivitiesResponse> {
+  if (businessId === '') {
+    return await Promise.reject(new Error('No business Id', { cause: 1 }));
+  }
+
+  return await fetch(`/api/business/get/${businessId}/activities`, {
+    method: 'GET',
+  })
+    .then(async (res) => await res.json())
+    .catch(async error => await Promise.reject(new Error(error.message, { cause: 0 })));
+}
 export function getActivity(): void {}
-export function addActivity(): void {}
+export async function addActivity(businessId: string, data: Interfaces.IActivityData): Promise<Response> {
+  if (businessId === '') {
+    return await Promise.reject(new Error('No business Id'));
+  }
+
+  return await fetch(`/api/business/addActivity/${businessId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+}
 export function updateActivity(): void {}
 export function updateProfile(): void {}
 export async function getProfile(businessId: string): Promise<Response> {
