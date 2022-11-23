@@ -6,11 +6,11 @@ import LoginForm from '.';
 import * as constant from './constant';
 
 test('logic test', () => {
-  const mockOnSubmit = jest.fn();
+  const mockonSubmit= jest.fn();
 
   render(
     <MemoryRouter>
-      <LoginForm onSubmit={mockOnSubmit} />
+      <LoginForm onSubmit={mockonSubmit} />
     </MemoryRouter>
   );
 
@@ -19,7 +19,7 @@ test('logic test', () => {
   userEvent.type(screen.getByPlaceholderText(constant.INPUT_PASSWORD_PLACEHOLDER), 'password');
   userEvent.click(screen.getByText(constant.SUBMIT_BUTTON_TEXT));
 
-  expect(mockOnSubmit).toHaveBeenCalledWith(
+  expect(mockonSubmit).toHaveBeenCalledWith(
     expect.objectContaining({
       [constant.INPUT_EMAIL]: 'login@email.com',
       [constant.INPUT_PASSWORD]: 'password',

@@ -125,22 +125,13 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
         const password = data.password;
         signInWithEmailAndPassword(auth, email, password)
           .then(async (userCredential) => {
-            // Signed in
             const user = userCredential.user;
-            const reqData = {
-              firebaseId: user.uid,
-              email: data.email,
-              password: data.password,
-            };
-            await fetch(`/business/${data.businessId}/user`, {
-              method: 'POST',
-              body: JSON.stringify(reqData),
-            }).then(res => {
-              console.log(res);
-              navigate('{data.businessId/dashboard', {
-                replace: true,
-                relative: 'route',
-              });
+            // added to clear the error user is not used
+            console.log(user);
+
+            navigate('{data.businessId/dashboard', {
+              replace: true,
+              relative: 'route',
             });
           })
           .catch((error) => {
