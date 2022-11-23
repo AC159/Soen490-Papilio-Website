@@ -1,6 +1,6 @@
 import Button from '../../../../components/Button';
 import Input from '../../../../components/Input';
-import useFormData from '../../../../hooks/useFormData';
+import useFormData, { IErrorTemplate } from '../../../../hooks/useFormData';
 import * as constant from './constant';
 
 export declare interface AddFormInterface {
@@ -19,8 +19,11 @@ const initialState: IFormData = {
   role: '',
 };
 
+const errorTemplate: IErrorTemplate = {};
+
 const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
-  const [formData, onValueChange, submit] = useFormData<IFormData>({ initialState, onSubmit });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [formData, _, __, onValueChange, submit] = useFormData<IFormData>({ initialState, errorTemplate, onSubmit });
 
   return (
     <div>

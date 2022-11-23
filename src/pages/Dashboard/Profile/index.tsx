@@ -5,7 +5,7 @@ import PageHeader from '../../../features/PageHeader';
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 import { IconNames } from '../../../components/Icon';
-import useFormData from '../../../hooks/useFormData';
+import useFormData, { IErrorTemplate } from '../../../hooks/useFormData';
 import { getProfile } from '../../../api/apiLayer';
 
 declare interface IProfileInformation {
@@ -27,6 +27,8 @@ const ProfileInformation: IProfileInformation = {
   Province: '',
   Country: '',
 };
+
+const errorTemplate: IErrorTemplate = {};
 
 const ProfileDashboard = (): JSX.Element => {
   const { businessId } = useParams();
@@ -50,10 +52,12 @@ const ProfileDashboard = (): JSX.Element => {
         {Object.entries(profile).map((entry) => {
           const [isEditing, setIsEditing] = useState(false);
           const onSubmit = async (data: IProfileInformation): Promise<void> => {
+            console.log('object');
             setProfile(data);
             setIsEditing(false);
           };
-          const [formData, onValueChange, submit] = useFormData({ initialState: profile, onSubmit });
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const [formData, _, __, onValueChange, submit] = useFormData({ initialState: profile, errorTemplate, onSubmit });
 
           return (
           <div key={entry[0]} className='flex flex-row items-center mb-2'>

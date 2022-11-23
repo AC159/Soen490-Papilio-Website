@@ -2,7 +2,7 @@
 import type { InputInterface } from '..';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
-import useFormData from '../../../hooks/useFormData';
+import useFormData, { IErrorTemplate } from '../../../hooks/useFormData';
 import * as constant from './constant';
 
 export declare interface IAdminForm {
@@ -37,8 +37,11 @@ const inputs: InputInterface[] = [
   },
 ];
 
+const errorTemplate: IErrorTemplate = {};
+
 const AdminForm = ({ initialState, onSubmit, onBack }: IAdminForm): JSX.Element => {
-  const [formData, onValueChange, submit] = useFormData<any>({ initialState, onSubmit });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [formData, _, __, onValueChange, submit] = useFormData<any>({ initialState, errorTemplate, onSubmit });
 
   return (
     <>

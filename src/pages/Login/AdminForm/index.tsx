@@ -1,6 +1,6 @@
 import Input from '../../../components/Input';
 import BoxForm from '../../../features/BoxForm';
-import useFormData from '../../../hooks/useFormData';
+import useFormData, { IErrorTemplate } from '../../../hooks/useFormData';
 import * as constant from './constant';
 
 export declare interface IAdminForm {
@@ -19,8 +19,11 @@ export const initialState: IFormData = {
   adminPassword: '',
 };
 
+const errorTemplate: IErrorTemplate = {};
+
 const AdminForm = ({ onSubmit }: IAdminForm): JSX.Element => {
-  const [formData, onValueChange, submit] = useFormData<IFormData>({ initialState, onSubmit });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [formData, _, __, onValueChange, submit] = useFormData<IFormData>({ initialState, errorTemplate, onSubmit });
 
   return (
     <BoxForm
