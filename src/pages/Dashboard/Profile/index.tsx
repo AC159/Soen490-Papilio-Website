@@ -3,9 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import PageHeader from '../../../features/PageHeader';
 import Button from '../../../components/Button';
-// import Input from '../../../components/Input';
 import { IconNames } from '../../../components/Icon';
-// import useFormData from '../../../hooks/useFormData';
 import { getProfile } from '../../../api/apiLayer';
 import Row from './Row';
 
