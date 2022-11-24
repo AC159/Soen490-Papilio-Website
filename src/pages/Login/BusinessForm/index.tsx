@@ -1,6 +1,6 @@
 import Input from '../../../components/Input';
 import BoxForm from '../../../features/BoxForm';
-import useFormData, { IErrorTemplate } from '../../../hooks/useFormData';
+import useFormData from '../../../hooks/useFormData';
 import * as constant from './constant';
 import ErrorMessage, { createMessage } from '../../../components/ErrorMessage';
 
@@ -16,16 +16,9 @@ export const initialState: IFormData = {
   businessId: '',
 };
 
-const errorTemplate: IErrorTemplate = {
-  businessId: {
-    required: true,
-    pattern: /./,
-  },
-};
-
 const BusinessForm = ({ onSubmit }: IBusinessForm): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [formData, _, errors, onValueChange, submit] = useFormData<IFormData>({ initialState, errorTemplate, onSubmit });
+  const [_unused1, _unused2, errors, register, submit] = useFormData<IFormData>({ initialState, onSubmit });
 
   return (
     <BoxForm
@@ -34,12 +27,8 @@ const BusinessForm = ({ onSubmit }: IBusinessForm): JSX.Element => {
       buttonOnClick={submit}
     >
       <Input
-        name={constant.INPUT_BUSINESS_ID}
+      {...register(constant.INPUT_BUSINESS_ID, { required: true, pattern: /.*/ })}
         placeholder={constant.INPUT_BUSINESS_PLACEHOLDER}
-        value={formData.businessId}
-        onChange={onValueChange}
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        isError={!!errors[constant.INPUT_BUSINESS_ID]}
       />
       <ErrorMessage
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

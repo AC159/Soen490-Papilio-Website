@@ -54,7 +54,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
   switch (type) {
     case 'businessLogic':
       onSubmit = async (data: InfoFormData) => {
-        createUserWithEmailAndPassword(auth, data.adminAccount.adminEmail, data.adminAccount.adminPassword)
+        return await createUserWithEmailAndPassword(auth, data.adminAccount.adminEmail, data.adminAccount.adminPassword)
           .then(async (userCredential) => {
             // Signed in
             const user = userCredential.user;
@@ -80,17 +80,18 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
                 root: true,
               },
             };
-            await addBusiness(reqData).then(res => {
-              if (res.status === 400) {
-                console.log(res);
-              } else {
-                register(res);
-                navigate(`/${data.businessId}/dashboard`, {
-                  replace: true,
-                  relative: 'route',
-                });
-              }
-            });
+            return await addBusiness(reqData);
+          })
+          .then(res => {
+            if (res.status === 400) {
+              throw new Error('error');
+            } else {
+              register(res);
+              navigate(`/${data.businessId}/dashboard`, {
+                replace: true,
+                relative: 'route',
+              });
+            }
           })
           .catch((error) => {
             const errorCode = error.code;

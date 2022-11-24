@@ -15,9 +15,10 @@ export declare interface InputInterface {
   variant?: 'normal' | 'ghost'
   isError?: boolean
   onChange: (data: React.FormEvent<HTMLInputElement>) => void
+  onBlur?: () => void
 }
 
-const Input = ({ ref, name, value, label, hasLabel = false, placeholder, onChange, type = 'text', testId, size = 'md', labelPosition = 'top', variant = 'normal', isError = false }: InputInterface): JSX.Element => {
+const Input = ({ ref, name, value, label, hasLabel = false, placeholder, onChange, type = 'text', testId, size = 'md', labelPosition = 'top', variant = 'normal', isError = false, onBlur = () => {} }: InputInterface): JSX.Element => {
   const className = classNames('flex items-center relative', {
     'mb-2': variant === 'normal',
     'pt-5': hasLabel,
@@ -60,6 +61,7 @@ const Input = ({ ref, name, value, label, hasLabel = false, placeholder, onChang
         value={value}
         type={type}
         onChange={onChange}
+        onBlur={onBlur}
       />
     </div>
   );

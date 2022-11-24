@@ -2,7 +2,7 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
-import AdminForm from '.';
+import BusinessForm from '.';
 import * as constant from './constant';
 
 describe('business id form test', () => {
@@ -11,7 +11,7 @@ describe('business id form test', () => {
 
     render(
     <MemoryRouter>
-      <AdminForm onSubmit={mockOnSubmit} />
+      <BusinessForm onSubmit={mockOnSubmit} />
     </MemoryRouter>
     );
 
@@ -32,7 +32,7 @@ describe('business id form test', () => {
 
     render(
     <MemoryRouter>
-      <AdminForm onSubmit={mockOnSubmit} />
+      <BusinessForm onSubmit={mockOnSubmit} />
     </MemoryRouter>
     );
 

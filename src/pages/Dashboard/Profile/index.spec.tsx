@@ -17,7 +17,7 @@ describe('dashboard profile test', () => {
   it('should show inputs when button click', async () => {
     render(<ProfileDashboard />);
 
-    userEvent.click(screen.getAllByText(IconNames.EDIT_SQUARE)[0]);
+    userEvent.click((await screen.findAllByText(IconNames.EDIT_SQUARE))[0]);
 
     expect(await screen.findAllByRole('textbox')).toHaveLength(1);
   });

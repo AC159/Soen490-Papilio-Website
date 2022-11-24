@@ -2,7 +2,7 @@
 import type { InputInterface } from '..';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
-import useFormData, { IErrorTemplate } from '../../../hooks/useFormData';
+import useFormData from '../../../hooks/useFormData';
 import * as constant from './constant';
 
 export declare interface IAdminForm {
@@ -37,11 +37,9 @@ const inputs: InputInterface[] = [
   },
 ];
 
-const errorTemplate: IErrorTemplate = {};
-
 const AdminForm = ({ initialState, onSubmit, onBack }: IAdminForm): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [formData, _, __, onValueChange, submit] = useFormData<any>({ initialState, errorTemplate, onSubmit });
+  const [formData, _, __, register, submit] = useFormData<any>({ initialState, onSubmit });
 
   return (
     <>
@@ -50,13 +48,11 @@ const AdminForm = ({ initialState, onSubmit, onBack }: IAdminForm): JSX.Element 
       {inputs.map(({ name, label }) => (
         <Input
           key={name}
-          name={name}
+          {...register(name, { required: false, pattern: /.*/ })}
           placeholder=''
-          value={formData[name]}
           label={label}
           size='sm'
           labelPosition='left'
-          onChange={onValueChange}
           hasLabel
         />
       ))}
