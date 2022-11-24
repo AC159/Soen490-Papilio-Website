@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
 import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
+import LoginForm, { IFormData as LoginFormData } from './LoginForm';
 import { auth } from '../../firebase';
 
 export declare interface ILoginPage {
@@ -119,7 +120,28 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       content = (<BusinessForm onSubmit={onSubmit}/>);
       break;
     case 'login':
-      content = null;
+      onSubmit = async (data: LoginFormData) => {
+        const email = data.email;
+        const password = data.password;
+        signInWithEmailAndPassword(auth, email, password)
+          .then(async (userCredential) => {
+            const user = userCredential.user;
+            // added to clear the error user is not used
+            console.log(user);
+
+            navigate('{data.businessId/dashboard', {
+              replace: true,
+              relative: 'route',
+            });
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+          });
+      };
+      content = (<LoginForm onSubmit={onSubmit}/>);
+      break;
   }
 
   return (
