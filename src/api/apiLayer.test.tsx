@@ -87,7 +87,8 @@ describe('api test', () => {
       const formData = {
         firebaseId: FIREBASE_ID,
         email: 'jdoe@email.com',
-        name: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         businessId: BUSINESS_ID,
         role: 'Admin',
         root: false,

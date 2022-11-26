@@ -1,7 +1,8 @@
 export declare interface IEmployeeData {
   firebaseId: string
   email: string
-  name: string
+  firstName: string
+  lastName: string
   businessId: string
   role: string
   root: boolean

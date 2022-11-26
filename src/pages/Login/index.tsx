@@ -73,8 +73,8 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
                 ...rest,
               },
               employee: {
-                firstName: data.adminAccount.adminName.split(' ')[0],
-                lastName: data.adminAccount.adminName.split(' ')[1],
+                firstName: data.adminAccount.adminFirstName,
+                lastName: data.adminAccount.adminLastName,
                 email: data.adminAccount.adminEmail,
                 firebase_id: user.uid,
                 role: data.adminAccount.role,

@@ -8,13 +8,15 @@ export declare interface IAdminForm {
 }
 
 export interface IFormData {
-  adminName: string
+  adminFirstName: string
+  adminLastName: string
   adminEmail: string
   adminPassword: string
 };
 
 export const initialState: IFormData = {
-  adminName: '',
+  adminFirstName: '',
+  adminLastName: '',
   adminEmail: '',
   adminPassword: '',
 };
@@ -32,14 +34,19 @@ const AdminForm = ({ onSubmit }: IAdminForm): JSX.Element => {
       hasBack
     >
       <Input
-        placeholder={constant.INPUT_ADMIN_NAME_PLACEHOLDER}
-        label={constant.INPUT_ADMIN_NAME_LABEL}
-        {...register(constant.INPUT_ADMIN_NAME, { required: false, pattern: /.*/ })}
+        {...register(constant.INPUT_ADMIN_FIRST_NAME, { required: false, pattern: /.*/ })}
+        placeholder={constant.INPUT_ADMIN_FIRST_NAME_PLACEHOLDER}
+        label={constant.INPUT_ADMIN_FIRST_NAME_LABEL}
         hasLabel/>
       <Input
+        {...register(constant.INPUT_ADMIN_LAST_NAME, { required: false, pattern: /.*/ })}
+        placeholder={constant.INPUT_ADMIN_LAST_NAME_PLACEHOLDER}
+        label={constant.INPUT_ADMIN_LAST_NAME_LABEL}
+        hasLabel/>
+      <Input
+        {...register(constant.INPUT_ADMIN_EMAIL, { required: false, pattern: /.*/ })}
         placeholder={constant.INPUT_ADMIN_EMAIL_PLACEHOLDER}
         label={constant.INPUT_ADMIN_EMAIL_LABEL}
-        {...register(constant.INPUT_ADMIN_EMAIL, { required: false, pattern: /.*/ })}
         hasLabel/>
       <Input
         {...register(constant.INPUT_ADMIN_PASSWORD, { required: false, pattern: /.*/ })}

@@ -12,7 +12,8 @@ export declare interface IAdminForm {
 }
 
 export declare interface IFormData {
-  adminName: string
+  adminFirstName: string
+  adminLastName: string
   adminEmail: string
   adminPassword: string
   role: string
@@ -20,8 +21,12 @@ export declare interface IFormData {
 
 const inputs: InputInterface[] = [
   {
-    name: 'adminName',
-    label: 'Name',
+    name: 'adminFirstName',
+    label: 'First name',
+  },
+  {
+    name: 'adminLastName',
+    label: 'Last name',
   },
   {
     name: 'adminEmail',

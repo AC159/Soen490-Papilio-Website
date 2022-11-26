@@ -8,13 +8,15 @@ export declare interface AddFormInterface {
 }
 
 export declare interface IFormData {
-  employeeName: string
+  employeeFirstName: string
+  employeeLastName: string
   employeeEmail: string
   role: string
 };
 
 const initialState: IFormData = {
-  employeeName: '',
+  employeeFirstName: '',
+  employeeLastName: '',
   employeeEmail: '',
   role: '',
 };
@@ -27,9 +29,15 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
     <div>
       <h2 className="text-2xl font-semibold mt-4.5">{constant.FORM_HEADLINE}</h2>
       <Input
-        {...register(constant.INPUT_EMPLOYEE_NAME, { required: false, pattern: /.*/ })}
-        placeholder={constant.INPUT_EMPLOYEE_NAME_PLACEHOLDER}
-        label={constant.INPUT_EMPLOYEE_NAME_LABEL}
+        {...register(constant.INPUT_EMPLOYEE_FIRST_NAME, { required: false, pattern: /.*/ })}
+        placeholder={constant.INPUT_EMPLOYEE_FIRST_NAME_PLACEHOLDER}
+        label={constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL}
+        hasLabel
+      />
+      <Input
+        {...register(constant.INPUT_EMPLOYEE_LAST_NAME, { required: false, pattern: /.*/ })}
+        placeholder={constant.INPUT_EMPLOYEE_LAST_NAME_PLACEHOLDER}
+        label={constant.INPUT_EMPLOYEE_LAST_NAME_LABEL}
         hasLabel
       />
       <Input

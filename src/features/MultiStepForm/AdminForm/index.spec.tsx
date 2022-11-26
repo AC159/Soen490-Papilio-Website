@@ -4,7 +4,8 @@ import userEvent from '@testing-library/user-event';
 import AdminForm, { IFormData } from '.';
 
 const initialState: IFormData = {
-  adminName: '',
+  adminFirstName: '',
+  adminLastName: '',
   adminEmail: '',
   adminPassword: '',
   role: 'Admin',
@@ -18,7 +19,7 @@ describe('profile form test', () => {
 
     const inputs = screen.getAllByRole('textbox');
 
-    expect(inputs.length).toBe(4);
+    expect(inputs.length).toBe(5);
   });
 
   it('should accept inputs and send data on submit', async () => {
@@ -26,14 +27,16 @@ describe('profile form test', () => {
     const mockOnBack = jest.fn();
     render(<AdminForm initialState={initialState} onSubmit={mockOnSubmit} onBack={mockOnBack}/>);
 
-    userEvent.type(await screen.findByRole('textbox', { name: /Name/i }), 'Jonh Doe');
+    userEvent.type(await screen.findByRole('textbox', { name: /First name/i }), 'John');
+    userEvent.type(await screen.findByRole('textbox', { name: /Last name/i }), 'Doe');
     userEvent.type(await screen.findByRole('textbox', { name: /Email/i }), 'jdoe@email.com');
     userEvent.type(await screen.findByRole('textbox', { name: /Password/i }), 'password');
     userEvent.click(await screen.findByText('Next'));
 
     await waitFor(() => expect(mockOnSubmit).toHaveBeenCalledWith(
       {
-        adminName: 'Jonh Doe',
+        adminFirstName: 'John',
+        adminLastName: 'Doe',
         adminEmail: 'jdoe@email.com',
         adminPassword: 'password',
         role: 'Admin',
@@ -46,14 +49,16 @@ describe('profile form test', () => {
     const mockOnBack = jest.fn();
     render(<AdminForm initialState={initialState} onSubmit={mockOnSubmit} onBack={mockOnBack}/>);
 
-    userEvent.type(screen.getByRole('textbox', { name: /Name/i }), 'Jonh Doe');
+    userEvent.type(await screen.findByRole('textbox', { name: /First name/i }), 'John');
+    userEvent.type(await screen.findByRole('textbox', { name: /Last name/i }), 'Doe');
     userEvent.type(screen.getByRole('textbox', { name: /Email/i }), 'jdoe@email.com');
     userEvent.type(screen.getByRole('textbox', { name: /Password/i }), 'password');
     userEvent.click(screen.getByText('Back'));
 
     expect(mockOnBack).toHaveBeenCalledWith(
       {
-        adminName: 'Jonh Doe',
+        adminFirstName: 'John',
+        adminLastName: 'Doe',
         adminEmail: 'jdoe@email.com',
         adminPassword: 'password',
         role: 'Admin',
