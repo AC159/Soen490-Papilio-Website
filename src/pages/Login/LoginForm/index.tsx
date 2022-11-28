@@ -23,7 +23,6 @@ const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_unused1, _unused2, _unused3, register, submit] = useFormData<IFormData>({ initialState, onSubmit });
 
-
   return (
     <BoxForm
         heading={constant.FORM_HEADING}
