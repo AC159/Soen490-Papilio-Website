@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, createContext } from 'react';
 
 import * as ApiLayer from '../api/apiLayer';
 
-declare interface IEmployee {
+export declare interface IEmployee {
   name: string
   firebaseId: string
   businessId: string

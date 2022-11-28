@@ -28,12 +28,9 @@ const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
         heading={constant.FORM_HEADING}
         buttonText={constant.SUBMIT_BUTTON_TEXT}
         buttonOnClick={submit}
-        backButtonTo=''
-        hasBack
     >
       <Input
         {...register(constant.INPUT_EMAIL, { required: false, pattern: /.*/ })}
-        name={constant.INPUT_EMAIL}
         placeholder={constant.INPUT_EMAIL_PLACEHOLDER}
         label={constant.INPUT_EMAIL_LABEL}
         hasLabel/>

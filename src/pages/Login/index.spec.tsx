@@ -8,6 +8,7 @@ import LoginPage from '.';
 import * as businessConstant from './BusinessForm/constant';
 import * as ProfileConstant from '../../features/MultiStepForm/ProfileForm/constant';
 import * as AdminConstant from '../../features/MultiStepForm/AdminForm/constant';
+import * as LoginConstant from './LoginForm/constant';
 import { AuthProvider } from '../../context/employeeContext';
 import * as API from '../../api/apiLayer';
 
@@ -16,6 +17,7 @@ jest.mock('../../api/apiLayer', () => ({
   getBusiness: jest.fn(),
   register: jest.fn(),
   addBusiness: jest.fn(),
+  login: jest.fn(),
 }));
 
 describe('login logic test', () => {
@@ -176,5 +178,45 @@ describe('login logic test', () => {
     expect(auth.createUserWithEmailAndPassword).toHaveBeenCalled();
     expect(API.addBusiness).not.toHaveBeenCalled();
     expect(API.register).not.toHaveBeenCalled();
+  });
+
+  test('login page employee login logic successful when entering correct information', async () => {
+    (API.login as jest.MockedFunction<typeof API.login>).mockResolvedValue({
+      name: '',
+      firebaseId: 'firebase-id',
+      businessId: '1234',
+      role: 'admin',
+    });
+
+    (auth.signInWithEmailAndPassword as jest.MockedFunction<typeof auth.signInWithEmailAndPassword>)
+      .mockResolvedValue({
+        // @ts-expect-error
+        user: {
+          uid: 'firebase-id',
+        },
+      });
+
+    render(
+      <AuthProvider>
+        <MemoryRouter>
+          <Routes>
+            <Route path="" element={<LoginPage type='login' />} />
+            <Route path="/1234/dashboard" element={<div>DASHBOARD PAGE</div>} />
+          </Routes>
+        </MemoryRouter>
+      </AuthProvider>
+    );
+
+    userEvent.type(await screen.findByPlaceholderText(LoginConstant.INPUT_EMAIL_PLACEHOLDER), 'jd@email.com');
+    userEvent.type(await screen.findByPlaceholderText(LoginConstant.INPUT_PASSWORD_PLACEHOLDER), 'password');
+    userEvent.type(await screen.findByPlaceholderText(LoginConstant.INPUT_BUSINESS_ID_PLACEHOLDER), '1234');
+    await act(async () => userEvent.click(await screen.findByText(/Login$/m)));
+
+    expect(await screen.findByText(/DASHBOARD PAGE/)).toBeInTheDocument();
+    expect(auth.signInWithEmailAndPassword).toHaveBeenCalled();
+    expect(API.login).toHaveBeenCalledWith(expect.objectContaining({
+      firebaseId: 'firebase-id',
+      businessId: '1234',
+    }));
   });
 });

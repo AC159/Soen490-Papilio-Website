@@ -47,7 +47,7 @@ const steps: Step[] = [
 ];
 
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
-  const { register } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
   let content: React.ReactNode;
   let onSubmit;
@@ -122,22 +122,20 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       onSubmit = async (data: LoginFormData) => {
         const email = data.email;
         const password = data.password;
-        signInWithEmailAndPassword(auth, email, password)
+        return await signInWithEmailAndPassword(auth, email, password)
           .then(async (userCredential) => {
-            const user = userCredential.user;
-            // added to clear the error user is not used
-            console.log(user);
-
-            navigate('{data.businessId/dashboard', {
-              replace: true,
-              relative: 'route',
+            const { user } = userCredential;
+            return login({
+              name: '',
+              firebaseId: user.uid,
+              businessId: data.businessId,
+              role: '',
             });
           })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-          });
+          .then(() => navigate(`${data.businessId}/dashboard`, {
+            replace: true,
+            relative: 'route',
+          }));
       };
       content = (<LoginForm onSubmit={onSubmit}/>);
       break;
