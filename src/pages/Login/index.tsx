@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -5,6 +6,8 @@ import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
 import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
 import LoginForm, { IFormData as LoginFormData } from './LoginForm';
 import { auth } from '../../firebase';
+import { addBusiness, getBusiness } from '../../api/apiLayer';
+import { useAuth } from '../../hooks/useEmployee';
 
 export declare interface ILoginPage {
   type: 'business' | 'businessLogic' | 'login'
@@ -38,13 +41,13 @@ const steps: Step[] = [
   },
   {
     stepId: 'validation',
-    // title: 'Your business is being created',
     caption: "Let's create your business",
     last: true,
   },
 ];
 
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
+  const { register } = useAuth();
   const navigate = useNavigate();
   let content: React.ReactNode;
   let onSubmit;
@@ -78,18 +81,16 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
                 root: true,
               },
             };
-            await fetch('/api/business/createBusiness', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(reqData),
-            }).then(res => {
-              console.log(res);
-              navigate(`/${data.businessId}/dashboard`, {
-                replace: true,
-                relative: 'route',
-              });
+            await addBusiness(reqData).then(res => {
+              if (res.status === 400) {
+                console.log(res);
+              } else {
+                register(res);
+                navigate(`/${data.businessId}/dashboard`, {
+                  replace: true,
+                  relative: 'route',
+                });
+              }
             });
           })
           .catch((error) => {
@@ -102,10 +103,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       break;
     case 'business':
       onSubmit = async (data: BusinessFormData) => {
-        await fetch(`/api/business/get/${data.businessId}`, {
-          method: 'GET',
-          mode: 'no-cors',
-        }).then(res => {
+        await getBusiness(data.businessId).then(res => {
           if (res.status === 200) {
             navigate('admin', {
               replace: true,
