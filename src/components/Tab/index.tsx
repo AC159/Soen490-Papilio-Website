@@ -4,17 +4,26 @@ import { Link, LinkProps } from 'react-router-dom';
 import Icon, { IconNames } from '../Icon';
 
 export declare interface TabInterface {
-  label: string
-  onClick?: () => void
-  horizontal?: boolean
-  to?: LinkProps['to']
-  isSelected: boolean
-  icon?: 'ad' | 'home' | 'event' | 'employee' | 'feed'
-  type?: 'button' | 'link'
-  testId?: string
+  label: string;
+  onClick?: () => void;
+  horizontal?: boolean;
+  to?: LinkProps['to'];
+  isSelected: boolean;
+  icon?: 'ad' | 'home' | 'event' | 'employee' | 'feed';
+  type?: 'button' | 'link';
+  testId?: string;
 }
 
-const Tab = ({ label, isSelected, icon, horizontal = false, onClick, type = 'button', to = '', testId }: TabInterface): JSX.Element => {
+const Tab = ({
+  label,
+  isSelected,
+  icon,
+  horizontal = false,
+  onClick,
+  type = 'button',
+  to = '',
+  testId,
+}: TabInterface): JSX.Element => {
   const className = classNames('flex py-2 px-3 items-center cursor-pointer', {
     'border-l-4 flex-1': !horizontal,
     'border-b-4 justify-center w-max': horizontal,
@@ -31,10 +40,8 @@ const Tab = ({ label, isSelected, icon, horizontal = false, onClick, type = 'but
 
   const Content: React.ReactNode = (
     <>
-      {icon !== undefined && <Icon name={icons[icon]} size='sm'/>}
-      <span className={icon !== undefined ? 'ml-3' : ''}>
-        {label}
-      </span>
+      {icon !== undefined && <Icon name={icons[icon]} size="sm" />}
+      <span className={icon !== undefined ? 'ml-3' : ''}>{label}</span>
     </>
   );
 

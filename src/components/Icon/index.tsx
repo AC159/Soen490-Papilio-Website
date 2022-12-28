@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 
 export declare interface IconInterface {
-  size: 'sm' | 'md' | 'lg'
-  name: IconNames
+  size: 'sm' | 'md' | 'lg';
+  name: IconNames;
 }
 
 export enum IconNames {
@@ -16,21 +16,16 @@ export enum IconNames {
   ADD = 'add',
   FEED = 'feed',
   EDIT_SQUARE = 'edit_square',
-  SAVE = 'save'
+  SAVE = 'save',
 }
 
 const Icon = ({ size, name }: IconInterface): JSX.Element => {
-  const classname = classNames(
-    'material-symbols-outlined',
-    {
-      'text-base': size === 'sm',
-      'text-lg': size === 'md',
-      'text-2xl': size === 'lg',
-    }
-  );
-  return (
-    <span className={classname}>{name}</span>
-  );
+  const classname = classNames('material-symbols-outlined', {
+    'text-base': size === 'sm',
+    'text-lg': size === 'md',
+    'text-2xl': size === 'lg',
+  });
+  return <span className={classname}>{name}</span>;
 };
 
 export default Icon;

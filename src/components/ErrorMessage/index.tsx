@@ -1,11 +1,15 @@
 import { ERROR_CODE } from '../../utils/enum';
 
 export declare interface IErrorMessage {
-  isError: boolean
-  message: string
+  isError: boolean;
+  message: string;
 }
 
-export const createMessage = (error: number, requiredMessage: string = '', patternMessage: string = ''): string => {
+export const createMessage = (
+  error: number,
+  requiredMessage: string = '',
+  patternMessage: string = '',
+): string => {
   if (error === ERROR_CODE.PATTERN_ERROR) {
     return patternMessage;
   }
@@ -19,10 +23,8 @@ const ErrorMessage = ({ isError, message }: IErrorMessage): JSX.Element => {
   if (!isError) return <></>;
 
   return (
-    <span className='flex text-red-500 text-sm items-center pl-2 -mt-1.5'>
-      <span className="material-symbols-outlined mr-1 text-base">
-        error
-      </span>
+    <span className="flex text-red-500 text-sm items-center pl-2 -mt-1.5">
+      <span className="material-symbols-outlined mr-1 text-base">error</span>
       {message}
     </span>
   );

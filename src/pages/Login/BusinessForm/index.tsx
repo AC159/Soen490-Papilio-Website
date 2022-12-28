@@ -5,11 +5,11 @@ import * as constant from './constant';
 import ErrorMessage, { createMessage } from '../../../components/ErrorMessage';
 
 export declare interface IBusinessForm {
-  onSubmit: (data: IFormData) => Promise<void>
+  onSubmit: (data: IFormData) => Promise<void>;
 }
 
 export declare interface IFormData {
-  businessId: string
+  businessId: string;
 }
 
 export const initialState: IFormData = {
@@ -18,7 +18,9 @@ export const initialState: IFormData = {
 
 const BusinessForm = ({ onSubmit }: IBusinessForm): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_unused1, _unused2, errors, register, submit] = useFormData<IFormData>({ initialState, onSubmit });
+  const [_unused1, _unused2, errors, register, submit] = useFormData<IFormData>(
+    { initialState, onSubmit },
+  );
 
   return (
     <BoxForm
@@ -27,18 +29,19 @@ const BusinessForm = ({ onSubmit }: IBusinessForm): JSX.Element => {
       buttonOnClick={submit}
     >
       <Input
-      {...register(constant.INPUT_BUSINESS_ID, { required: true, pattern: /.*/ })}
+        {...register(constant.INPUT_BUSINESS_ID, {
+          required: true,
+          pattern: /.*/,
+        })}
         placeholder={constant.INPUT_BUSINESS_PLACEHOLDER}
       />
       <ErrorMessage
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         isError={!!errors[constant.INPUT_BUSINESS_ID]}
-        message={
-          createMessage(
-            errors[constant.INPUT_BUSINESS_ID],
-            constant.REQUIRED_MESSAGE
-          )
-        }
+        message={createMessage(
+          errors[constant.INPUT_BUSINESS_ID],
+          constant.REQUIRED_MESSAGE,
+        )}
       />
     </BoxForm>
   );

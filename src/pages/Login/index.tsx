@@ -1,16 +1,23 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 
 import BusinessForm, { IFormData as BusinessFormData } from './BusinessForm';
-import MultiStepForm, { Progress, Step, IFormData as InfoFormData } from '../../features/MultiStepForm';
+import MultiStepForm, {
+  Progress,
+  Step,
+  IFormData as InfoFormData,
+} from '../../features/MultiStepForm';
 import LoginForm, { IFormData as LoginFormData } from './LoginForm';
 import { auth } from '../../firebase';
 import { addBusiness, getBusiness } from '../../api/apiLayer';
 import { useAuth } from '../../hooks/useEmployee';
 
 export declare interface ILoginPage {
-  type: 'business' | 'businessLogic' | 'login'
+  type: 'business' | 'businessLogic' | 'login';
 }
 
 const progress: Progress[] = [
@@ -55,11 +62,21 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
   switch (type) {
     case 'businessLogic':
       onSubmit = async (data: InfoFormData) => {
-        return await createUserWithEmailAndPassword(auth, data.adminAccount.adminEmail, data.adminAccount.adminPassword)
+        return await createUserWithEmailAndPassword(
+          auth,
+          data.adminAccount.adminEmail,
+          data.adminAccount.adminPassword,
+        )
           .then(async (userCredential) => {
             // Signed in
             const user = userCredential.user;
-            const { businessName, addressLineOne, addressLineTwo, province, ...rest } = data.profile;
+            const {
+              businessName,
+              addressLineOne,
+              addressLineTwo,
+              province,
+              ...rest
+            } = data.profile;
             const reqData = {
               business: {
                 businessId: data.businessId,
@@ -83,7 +100,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             };
             return await addBusiness(reqData);
           })
-          .then(res => {
+          .then((res) => {
             if (res.status === 400) {
               throw new Error('error');
             } else {
@@ -100,11 +117,13 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             console.log(errorCode, errorMessage);
           });
       };
-      content = (<MultiStepForm steps={steps} progress={progress} onSubmit={onSubmit}/>);
+      content = (
+        <MultiStepForm steps={steps} progress={progress} onSubmit={onSubmit} />
+      );
       break;
     case 'business':
       onSubmit = async (data: BusinessFormData) => {
-        await getBusiness(data.businessId).then(res => {
+        await getBusiness(data.businessId).then((res) => {
           if (res.status === 200) {
             navigate('admin', {
               replace: true,
@@ -116,7 +135,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
           }
         });
       };
-      content = (<BusinessForm onSubmit={onSubmit}/>);
+      content = <BusinessForm onSubmit={onSubmit} />;
       break;
     case 'login':
       onSubmit = async (data: LoginFormData) => {
@@ -132,20 +151,20 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
               role: '',
             });
           })
-          .then(() => navigate(`${data.businessId}/dashboard`, {
-            replace: true,
-            relative: 'route',
-          }));
+          .then(() =>
+            navigate(`${data.businessId}/dashboard`, {
+              replace: true,
+              relative: 'route',
+            }),
+          );
       };
-      content = (<LoginForm onSubmit={onSubmit}/>);
+      content = <LoginForm onSubmit={onSubmit} />;
       break;
   }
 
   return (
-    <div className='flex flex-col h-screen'>
-      <div className='flex-1 flex justify-center items-center'>
-        {content}
-      </div>
+    <div className="flex flex-col h-screen">
+      <div className="flex-1 flex justify-center items-center">{content}</div>
     </div>
   );
 };

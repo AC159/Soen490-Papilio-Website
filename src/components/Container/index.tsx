@@ -1,18 +1,18 @@
 import classNames from 'classnames';
 
 export declare interface ContainerInterface {
-  children: React.ReactNode
-  border?: 'all' | 'left' | 'right' | 'bottom' | 'top' | 'none'
-  paddingClass?: string
+  children: React.ReactNode;
+  border?: 'all' | 'left' | 'right' | 'bottom' | 'top' | 'none';
+  paddingClass?: string;
 }
 
 const borderStyle: {
-  all: string
-  left: string
-  right: string
-  bottom: string
-  top: string
-  none: string
+  all: string;
+  left: string;
+  right: string;
+  bottom: string;
+  top: string;
+  none: string;
 } = {
   all: 'border-2',
   left: 'border-l-2',
@@ -22,18 +22,18 @@ const borderStyle: {
   none: 'border-0',
 };
 
-const Container = ({ children, paddingClass = '', border = 'none' }: ContainerInterface): JSX.Element => {
+const Container = ({
+  children,
+  paddingClass = '',
+  border = 'none',
+}: ContainerInterface): JSX.Element => {
   const divStyle = classNames(
     paddingClass,
     'box-border flex flex-row justify-between',
-    borderStyle[border]
+    borderStyle[border],
   );
 
-  return (
-    <div className={divStyle}>
-      {children}
-    </div>
-  );
+  return <div className={divStyle}>{children}</div>;
 };
 
 export default Container;
