@@ -46,6 +46,7 @@ const SelectInput = ({
     <div className="w-full">
       <div className="my-2 p-1 bg-white flex border border-gray-200 rounded">
         <input
+          id={name}
           value={value}
           className="p-1 px-2 appearance-none outline-none w-full text-gray-800"
           name={name}

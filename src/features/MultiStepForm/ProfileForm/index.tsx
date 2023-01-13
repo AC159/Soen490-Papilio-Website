@@ -160,8 +160,8 @@ const ProfileForm = ({ initialState, onSubmit }: IProfileForm): JSX.Element => {
             return (
               <Select
                 key={name}
-                placeholder={rest.placeholder ?? ''}
                 {...register(name, { required: false, pattern: /.*/ })}
+                placeholder={rest.placeholder ?? ''}
                 items={getItems(name)}
                 label={label}
               />
