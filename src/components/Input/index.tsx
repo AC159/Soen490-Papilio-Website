@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
+import InputWrapper from '../InputWrapper';
 
 export declare interface InputInterface {
   ref?: React.MutableRefObject<any>;
@@ -34,14 +35,6 @@ const Input = ({
   isError = false,
   onBlur = () => {},
 }: InputInterface): JSX.Element => {
-  const className = classNames('flex items-center relative', {
-    'mb-2': variant === 'normal',
-    'pt-5': hasLabel,
-    'pt-2': !hasLabel,
-    'justify-end pt-0 mt-3': labelPosition === 'left',
-    'pt-0 flex-1': variant === 'ghost',
-  });
-
   const normalInputStyle = classNames(
     'border-2 rounded focus:border-gray-400',
     {
@@ -61,19 +54,14 @@ const Input = ({
     [ghostInputStyle]: variant === 'ghost',
   });
 
-  const labelStyle = classNames({
-    'absolute top-0.5 left-0.5 text-sm font-semibold text-gray-600':
-      labelPosition === 'top',
-    'mr-3': labelPosition === 'left',
-  });
-
   return (
-    <div className={className}>
-      {hasLabel && (
-        <label htmlFor={name} className={labelStyle}>
-          {label}
-        </label>
-      )}
+    <InputWrapper
+      name={name}
+      hasLabel={hasLabel}
+      label={label}
+      variant={variant}
+      labelPosition={labelPosition}
+    >
       <input
         ref={ref}
         name={name}
@@ -86,7 +74,7 @@ const Input = ({
         onChange={onChange}
         onBlur={onBlur}
       />
-    </div>
+    </InputWrapper>
   );
 };
 
