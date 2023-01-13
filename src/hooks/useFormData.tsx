@@ -20,6 +20,7 @@ declare interface IRegisterReturn {
   value: any;
   onChange: (e: React.FormEvent<HTMLInputElement>) => void;
   onBlur: () => void;
+  onManualChange: (name: string, value: string) => void;
   isError: boolean;
 }
 
@@ -99,12 +100,19 @@ const useFormData = <T extends {}>({
         ...validate(options, name, formData[name as keyof T]),
       }));
     const value = formData[name as keyof T];
+
+    const onManualChange = (name: string, value: string): void => {
+      validate(validation[name], name, value);
+      setFormData((data: T) => ({ ...data, [name]: value }));
+    };
+
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     return {
       name,
       value,
       onChange,
       onBlur,
+      onManualChange,
       isError: !!errors[name as keyof IErrorMessages],
     };
   };
