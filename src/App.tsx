@@ -11,17 +11,17 @@ import { AuthProvider } from './context/employeeContext';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: (<LoginPage type='business' />),
-    errorElement: (<ErrorPage />),
+    element: <LoginPage type="business" />,
+    errorElement: <ErrorPage />,
   },
   {
     path: '/admin',
-    element: (<LoginPage type='businessLogic' />),
-    errorElement: (<ErrorPage />),
+    element: <LoginPage type="businessLogic" />,
+    errorElement: <ErrorPage />,
   },
   {
     path: ':businessId/dashboard/',
-    element: (<Dashboard />),
+    element: <Dashboard />,
     children: [
       {
         element: <div>Home</div>,
@@ -46,15 +46,15 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: (<LoginPage type='login' />),
-    errorElement: (<ErrorPage />),
+    element: <LoginPage type="login" />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
 const App = (): JSX.Element => {
   return (
     <AuthProvider>
-      <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </AuthProvider>
   );
 };

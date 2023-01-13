@@ -18,26 +18,35 @@ export declare interface IFormData {
   role: string;
 }
 
-const inputs: InputInterface[] = [
+declare interface InputsProps extends InputInterface {
+  pattern: RegExp;
+}
+
+const inputs: InputsProps[] = [
   {
     name: 'adminFirstName',
     label: 'First name',
+    pattern: /.+/,
   },
   {
     name: 'adminLastName',
     label: 'Last name',
+    pattern: /.+/,
   },
   {
     name: 'adminEmail',
     label: 'Email',
+    pattern: /.*@.*\..*/,
   },
   {
     name: 'adminPassword',
     label: 'Password',
+    pattern: /.+/,
   },
   {
     name: 'role',
     label: 'Role',
+    pattern: /Admin/,
   },
 ];
 
@@ -58,10 +67,10 @@ const AdminForm = ({
         {constant.FORM_TITLE}
       </h2>
       <div className="flex-1">
-        {inputs.map(({ name, label }) => (
+        {inputs.map(({ name, label, pattern }) => (
           <Input
             key={name}
-            {...register(name, { required: false, pattern: /.*/ })}
+            {...register(name, { required: false, pattern })}
             placeholder=""
             label={label}
             size="sm"
