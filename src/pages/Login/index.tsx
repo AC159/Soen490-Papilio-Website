@@ -68,7 +68,6 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
           data.adminAccount.adminPassword,
         )
           .then(async (userCredential) => {
-            // Signed in
             const user = userCredential.user;
             const {
               businessName,
