@@ -58,7 +58,9 @@ const EmployeeDashboard = (): JSX.Element => {
 
   const ActionList = (): JSX.Element => {
     if (employee.role !== 'Admin') { return <></>; }
-    return (<Button
+    return (
+    <div className='flex space-x-2'>
+    <Button
       text={constant.ADD_EMPLOYEE_BUTTON}
       hasIcon={true}
       icon={IconNames.ADD}
@@ -66,7 +68,21 @@ const EmployeeDashboard = (): JSX.Element => {
       variant='outline'
       onClick={() => { setIsOpen(!isOpen); }}
       size='sm'
-    />);
+    />
+    
+    <Button
+      text={constant.DELETE_EMPLOYEE_BUTTON}
+      hasIcon={true}
+      icon={IconNames.DELETE}
+      iconPosition='lhs'
+      variant='outline'
+      onClick={() => { setIsOpen(!isOpen); }}
+      size='sm'
+    />
+    
+    
+    
+    </div>);
   };
 
   useEffect(() => {
