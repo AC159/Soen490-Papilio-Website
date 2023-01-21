@@ -69,7 +69,6 @@ const EmployeeDashboard = (): JSX.Element => {
       onClick={() => { setIsOpen(!isOpen); }}
       size='sm'
     />
-    
     <Button
       text={constant.DELETE_EMPLOYEE_BUTTON}
       hasIcon={true}
@@ -79,9 +78,6 @@ const EmployeeDashboard = (): JSX.Element => {
       onClick={() => { setIsOpen(!isOpen); }}
       size='sm'
     />
-    
-    
-    
     </div>);
   };
 
