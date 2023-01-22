@@ -87,8 +87,7 @@ const SelectItemWithImage = ({
   );
 };
 
-const SelectItem = ({
-  // value,
+export const SelectItem = ({
   display,
   onClick,
 }: {
@@ -106,6 +105,47 @@ const SelectItem = ({
           <div className="w-full items-center flex">{display}</div>
         </div>
       </div>
+    </div>
+  );
+};
+
+export const OptionList = ({
+  isDirty,
+  data,
+  onManualChange,
+  name,
+}: {
+  isDirty: boolean;
+  data: ItemType[];
+  onManualChange: any;
+  name: any;
+}): JSX.Element => {
+  if (!isDirty) {
+    return <div />;
+  }
+  return (
+    <div className="absolute shadow-md shadow-slate-300 top-14 z-40 w-full left-0 rounded overflow-y-auto bg-white">
+      {data.map((item: any) => {
+        if (item.type === 'basic') {
+          return (
+            <SelectItem
+              key={item.value}
+              value={item.value}
+              display={item.display}
+              onClick={() => onManualChange(name, item.value)}
+            />
+          );
+        }
+        return (
+          <SelectItemWithImage
+            value={item.value}
+            key={item.value}
+            display={item.display}
+            img={item.img}
+            onClick={() => onManualChange(name, item.value)}
+          />
+        );
+      })}
     </div>
   );
 };
@@ -150,7 +190,8 @@ const Select = ({
         <div className="w-full flex flex-col">
           <div
             className="w-full flex flex-col relative"
-            onBlur={() => setTimeout(() => setIsDirty(false), 140)}
+            // onBlur={() => setTimeout(() => setIsDirty(false), 140)}
+            onBlur={() => setIsDirty(false)}
             onFocus={() => setIsDirty(true)}
           >
             <SelectInput
@@ -161,31 +202,12 @@ const Select = ({
               onChange={onChange}
               onBlur={onBlur}
             />
-            {isDirty && (
-              <div className="absolute shadow-md shadow-slate-300 top-14 z-40 w-full left-0 rounded overflow-y-auto bg-white">
-                {data.map((item) => {
-                  if (item.type === 'basic') {
-                    return (
-                      <SelectItem
-                        key={item.value}
-                        value={item.value}
-                        display={item.display}
-                        onClick={() => onManualChange(name, item.value)}
-                      />
-                    );
-                  }
-                  return (
-                    <SelectItemWithImage
-                      value={item.value}
-                      key={item.value}
-                      display={item.display}
-                      img={item.img}
-                      onClick={() => onManualChange(name, item.value)}
-                    />
-                  );
-                })}
-              </div>
-            )}
+            <OptionList
+              isDirty={isDirty}
+              data={data}
+              name={name}
+              onManualChange={onManualChange}
+            />
           </div>
         </div>
       </div>
