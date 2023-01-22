@@ -19,7 +19,7 @@ describe('api test', () => {
   global.fetch = jest.fn(async () =>
     await Promise.resolve({
       json: async () => await Promise.resolve({ test: 100 }),
-    })
+    }),
   ) as jest.Mock;
 
   beforeEach(() => {

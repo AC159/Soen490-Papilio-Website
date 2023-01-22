@@ -23,7 +23,7 @@ test('logic test', async () => {
         [constant.INPUT_EMPLOYEE_LAST_NAME]: 'Doe',
         [constant.INPUT_EMPLOYEE_EMAIL]: 'jd@email.com',
         [constant.INPUT_ROLE]: 'admin',
-      })
+      }),
     );
   });
 });
