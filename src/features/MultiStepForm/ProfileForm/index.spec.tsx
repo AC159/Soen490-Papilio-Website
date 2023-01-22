@@ -6,6 +6,7 @@ import ProfilForm, { IFormData } from '.';
 
 const initialState: IFormData = {
   businessName: '',
+  email: '',
   addressLineOne: '',
   addressLineTwo: '',
   postalCode: '',
@@ -26,7 +27,7 @@ describe('profile form test', () => {
 
     const inputs = screen.getAllByRole('textbox');
 
-    expect(inputs.length).toBe(5);
+    expect(inputs.length).toBe(6);
   });
 
   const itDisplaysATextBox = (name: string | RegExp): void =>
@@ -102,6 +103,13 @@ describe('profile form test', () => {
     itDisplaysInitialValue('businessName', 'Business name');
     itSavesInitialValueOnSubmitting('businessName');
     itSavesNewValueOnSubmitting('businessName', 'Business name');
+  });
+  describe('email', () => {
+    itDisplaysATextBox('Email');
+    itDisplaysALabelWithTheCorrectValue('Email');
+    itDisplaysInitialValue('email', 'Email');
+    itSavesInitialValueOnSubmitting('email');
+    itSavesNewValueOnSubmitting('email', 'Email');
   });
   describe('addressLineOne', () => {
     itDisplaysATextBox('Address');

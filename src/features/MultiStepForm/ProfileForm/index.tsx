@@ -15,6 +15,7 @@ export declare interface IProfileForm {
 
 export declare interface IFormData {
   businessName: string;
+  email: string;
   addressLineOne: string;
   addressLineTwo: string;
   postalCode: string;
@@ -32,6 +33,11 @@ const inputs: InputsProps[] = [
   {
     name: 'businessName',
     label: 'Business name',
+    type: 'string',
+  },
+  {
+    name: 'email',
+    label: 'Email',
     type: 'string',
   },
   {
