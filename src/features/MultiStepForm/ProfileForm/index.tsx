@@ -1,9 +1,12 @@
+import Select from 'react-select';
+
 import type { InputInterface } from '..';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import useFormData from '../../../hooks/useFormData';
 import * as constant from './constant';
-import Select from '../../../components/Select';
+import InputWrapper from '../../../components/InputWrapper';
+// import Select from '../../../components/Select';
 
 export declare interface IProfileForm {
   initialState: IFormData;
@@ -69,71 +72,58 @@ const getItems = (type: string): any[] => {
   const items: { [key: string]: any } = {
     province: [
       {
-        type: 'basic',
         value: 'QC',
-        display: 'Quebec',
+        label: 'Quebec',
       },
       {
-        type: 'basic',
         value: 'ON',
-        display: 'Ontario',
+        label: 'Ontario',
       },
       {
-        type: 'basic',
         value: 'BC',
-        display: 'British Columbia',
+        label: 'British Columbia',
       },
       {
-        type: 'basic',
         value: 'MB',
-        display: 'Manitoba',
+        label: 'Manitoba',
       },
       {
-        type: 'basic',
         value: 'SK',
-        display: 'Saskatchewan',
+        label: 'Saskatchewan',
       },
       {
-        type: 'basic',
         value: 'PE',
-        display: 'Prince Edward Island',
+        label: 'Prince Edward Island',
       },
       {
-        type: 'basic',
         value: 'NS',
-        display: 'Nova Scotia',
+        label: 'Nova Scotia',
       },
       {
-        type: 'basic',
         value: 'AB',
-        display: 'Alberta',
+        label: 'Alberta',
       },
       {
-        type: 'basic',
         value: 'NL',
-        display: 'Newfoundland and Labrador',
+        label: 'Newfoundland and Labrador',
       },
     ],
     country: [
       {
-        type: 'basic',
         value: 'CAN',
-        display: 'Canada',
+        label: 'Canada',
       },
       {
-        type: 'basic',
         value: 'USA',
-        display: 'United States',
+        label: 'United States',
       },
       {
-        type: 'basic',
         value: 'FRA',
-        display: 'France',
+        label: 'France',
       },
       {
-        type: 'basic',
         value: 'GER',
-        display: 'Germany',
+        label: 'Germany',
       },
     ],
   };
@@ -157,14 +147,38 @@ const ProfileForm = ({ initialState, onSubmit }: IProfileForm): JSX.Element => {
         {/* eslint-disable-next-line array-callback-return */}
         {inputs.map(({ name, label, ...rest }) => {
           if (rest.type === 'select') {
+            const { onManualChange, value, ...other } = register(name, {
+              required: false,
+              pattern: /.*/,
+            });
             return (
-              <Select
+              <InputWrapper
                 key={name}
-                {...register(name, { required: false, pattern: /.*/ })}
-                placeholder={rest.placeholder ?? ''}
-                items={getItems(name)}
+                name={name}
                 label={label}
-              />
+                hasLabel={true}
+                labelPosition="left"
+              >
+                <Select
+                  {...other}
+                  placeholder={rest.placeholder ?? ''}
+                  options={getItems(name)}
+                  styles={{
+                    control: (baseStyles) => ({
+                      ...baseStyles,
+                      borderColor: 'rgb(229, 230,235)',
+                      borderWidth: 2,
+                    }),
+                  }}
+                  classNames={{
+                    container: () => 'w-4/6',
+                    control: () => 'w-full',
+                  }}
+                  onChange={(values) => {
+                    onManualChange(name, values.value);
+                  }}
+                />
+              </InputWrapper>
             );
           }
           return (

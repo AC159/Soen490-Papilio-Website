@@ -9,10 +9,10 @@ describe('Header tests', () => {
     render(
       <MemoryRouter>
         <Routes>
-          <Route path='' element={<Header />} />
-          <Route path='/login' element={<p>Login Page</p>} />
+          <Route path="" element={<Header />} />
+          <Route path="/login" element={<p>Login Page</p>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     userEvent.click(await screen.findByText('Login'));
@@ -24,13 +24,11 @@ describe('Header tests', () => {
     render(
       <MemoryRouter>
         <Routes>
-          <Route path='' element={<Header />} />
-          <Route path='/admin' element={<p>Admin Page</p>} />
+          <Route path="" element={<Header />} />
+          <Route path="/admin" element={<p>Admin Page</p>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-
-    screen.debug();
 
     userEvent.click(await screen.findByText(/Getting start/));
 

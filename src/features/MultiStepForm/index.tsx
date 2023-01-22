@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import classNames from 'classnames';
 import AdminForm, { IFormData as AdminData } from './AdminForm';
 import ProfileForm, { IFormData as ProfileData } from './ProfileForm';
 
