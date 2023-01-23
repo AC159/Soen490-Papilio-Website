@@ -74,12 +74,14 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
               addressLineOne,
               addressLineTwo,
               province,
+              email,
               ...rest
             } = data.profile;
             const reqData = {
               business: {
                 businessId: data.businessId,
                 name: businessName,
+                email,
               },
               address: {
                 mention: businessName,
