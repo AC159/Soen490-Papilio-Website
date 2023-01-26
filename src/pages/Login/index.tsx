@@ -11,6 +11,7 @@ import MultiStepForm, {
   Step,
   IFormData as InfoFormData,
 } from '../../features/MultiStepForm';
+import { IFormData as ProfileProps } from '../../features/MultiStepForm/ProfileForm';
 import LoginForm, { IFormData as LoginFormData } from './LoginForm';
 import { auth } from '../../firebase';
 import { addBusiness, getBusiness } from '../../api/apiLayer';
@@ -53,6 +54,12 @@ const steps: Step[] = [
   },
 ];
 
+const createSingleLineAddress = (profile: ProfileProps): string => {
+  const prefix =
+    profile.addressLineTwo === '' ? '' : `${profile.addressLineTwo}-`;
+  return `${prefix}${profile.addressLineOne}, ${profile.city}, ${profile.province}, ${profile.postalCode}, ${profile.country}`;
+};
+
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
@@ -82,6 +89,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
                 businessId: data.businessId,
                 name: businessName,
                 email,
+                address: createSingleLineAddress(data.profile),
               },
               address: {
                 mention: businessName,
