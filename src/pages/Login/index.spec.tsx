@@ -206,7 +206,7 @@ describe('login', () => {
       );
     });
 
-    it.only('combines the address fields with the appartment number into a single field in the correct order', async () => {
+    it('combines the address fields with the appartment number into a single field in the correct order', async () => {
       mockData = {
         ...mockData,
         profile: {
