@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+    .welcome{
+        @apply font-sans font-[300] flex flex-col lg:px-44 lg:py-80 md:px-20 md:py-40 sm:py-28 space-y-2 pl-10;
+    }
+}

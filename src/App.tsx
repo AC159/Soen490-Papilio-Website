@@ -4,6 +4,7 @@ import ActivityDashboard from './pages/Dashboard/Activities';
 import ProfileDashboard from './pages/Dashboard/Profile';
 import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
+import HomePage from './pages/Home';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './context/employeeContext';
@@ -11,6 +12,11 @@ import { AuthProvider } from './context/employeeContext';
 const router = createBrowserRouter([
   {
     path: '/',
+    element: (<HomePage/>),
+    errorElement: (<ErrorPage />),
+  },
+  {
+    path: '/signup',
     element: (<LoginPage type='business' />),
     errorElement: (<ErrorPage />),
   },
