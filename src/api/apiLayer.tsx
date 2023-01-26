@@ -71,9 +71,9 @@ export async function getEmployees(businessId: string): Promise<Response> {
   }
   return await fetch(`/api/business/get/${businessId}/employees`, {
     method: 'GET',
-  })
-    .then(async (res) => await res.json())
-    .catch(async error => await Promise.reject(new Error(error.message, { cause: 0 })));
+  });
+  // .then(async (res) => await res.json())
+  // .catch(async error => await Promise.reject(new Error(error.message, { cause: 0 })));
 }
 
 export function updateEmployeeRole(): void {}

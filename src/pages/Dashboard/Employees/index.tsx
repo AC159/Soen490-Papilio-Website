@@ -3,18 +3,45 @@ import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
 import { auth } from '../../../firebase';
-import Table from '../../../features/Table';
+import Table, { TableEmployee } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
 import ListBanner from '../../../features/ListBanner';
-import AddForm, { IFormData } from './AddForm';
+import AddForm from './AddForm';
+import DeleteForm from './DeleteForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
 import { addEmployee, getEmployees } from '../../../api/apiLayer';
 import { IEmployeeData } from '../../../interfaces';
-import { useAuth } from '../../../hooks/useEmployee';
+
+export declare interface IFormData {
+  employeeName: string
+  employeeEmail: string
+  role: string
+};
+
+const initialEmployee = [
+  {
+    id: 241,
+    name: 'John',
+    email: 'johnd@gmail.com',
+    role: 'Admin',
+  },
+  {
+    id: 242,
+    name: 'Jack',
+    email: 'jackd@gmail.com',
+    role: 'Manager',
+  },
+];
+
+enum FormState {
+  Table,
+  Add,
+  Delete
+}
 
 const tabs: ITab[] = [
   { label: constant.ALL_EMPLOYEES_LABEL },
@@ -32,10 +59,10 @@ const Box = (): JSX.Element => (
 );
 
 const EmployeeDashboard = (): JSX.Element => {
-  const { employee } = useAuth();
+  // const { employee } = useAuth();
   const { businessId } = useParams();
-  const [employees, setEmployees] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [employees, setEmployees] = useState<TableEmployee[]>(initialEmployee);
+  const [formState, setFormState] = useState(FormState.Table);
 
   const onSubmit = async (data: IFormData): Promise<void> => {
     const reqData: IEmployeeData = {
@@ -51,49 +78,63 @@ const EmployeeDashboard = (): JSX.Element => {
       await sendSignInLinkToEmail(auth, data.employeeEmail, {
         url: 'https://localhost:3000/email-signin',
       }).then(() => {
-        setIsOpen(false);
+        setFormState(FormState.Table);
       });
     });
   };
 
+  const onSubmitDelete = (employeeIds: number[]): void => {
+    setEmployees(employees.filter(employee => !employeeIds.includes(Number(employee.id))));
+  };
+
   const ActionList = (): JSX.Element => {
-    if (employee.role !== 'Admin') { return <></>; }
+    // if (employee.role !== 'Admin') { return <></>; }
     return (
-    <div className='flex space-x-2'>
-    <Button
-      text={constant.ADD_EMPLOYEE_BUTTON}
-      hasIcon={true}
-      icon={IconNames.ADD}
-      iconPosition='lhs'
-      variant='outline'
-      onClick={() => { setIsOpen(!isOpen); }}
-      size='sm'
-    />
-    <Button
-      text={constant.DELETE_EMPLOYEE_BUTTON}
-      hasIcon={true}
-      icon={IconNames.DELETE}
-      iconPosition='lhs'
-      variant='outline'
-      onClick={() => { setIsOpen(!isOpen); }}
-      size='sm'
-    />
-    </div>);
+      <div className='flex space-x-2'>
+        <Button
+          text={constant.ADD_EMPLOYEE_BUTTON}
+          hasIcon={true}
+          icon={IconNames.ADD}
+          iconPosition='lhs'
+          variant='outline'
+          onClick={() => {
+            if (formState !== FormState.Add) {
+              setFormState(FormState.Add);
+            } else {
+              setFormState(FormState.Table);
+            }
+          }}
+          size='sm'
+        />
+        <Button
+          text={constant.DELETE_EMPLOYEE_BUTTON}
+          hasIcon={true}
+          icon={IconNames.DELETE}
+          iconPosition='lhs'
+          variant='outline'
+          onClick={() => {
+            if (formState !== FormState.Delete) {
+              setFormState(FormState.Delete);
+            } else {
+              setFormState(FormState.Table);
+            }
+          }}
+          size='sm'
+        />
+      </div>);
   };
 
   useEffect(() => {
     void (async function getAllEmployees() {
-      await getEmployees((businessId ?? '')).then(async (res) => {
-        // @ts-expect-error
-        const { employees } = res;
-        // @ts-expect-error
-        const employeeArray = employees.map(employee => ({
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          name: `${employee.firstName} ${employee.lastName}`,
-          email: employee.email,
-          role: employee.role,
-        }));
-        setEmployees(employeeArray);
+      await getEmployees((businessId ?? '')).then(async () => {
+        // const { employees } = res.data;
+        // const employeeArray = (employees ?? []).map(employee: any => ({
+        //   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        //   name: `${employee.firstName} ${employee.lastName}`,
+        //   email: employee.email,
+        //   role: employee.role,
+        // }));
+        // setEmployees(employeeArray);
       }).catch(error => {
         if (error?.cause !== 1) {
           alert(error.message);
@@ -102,7 +143,15 @@ const EmployeeDashboard = (): JSX.Element => {
     })();
   }, [businessId]);
 
-  console.log(employees);
+  let currentForm = null;
+  if (formState === FormState.Delete) {
+    currentForm = <DeleteForm onSubmit={onSubmitDelete} employees={employees} />;
+  } else if (formState === FormState.Add) {
+    currentForm = <AddForm onSubmit={onSubmit} />;
+  } else {
+    currentForm = <Table employees={employees} />;
+  }
+
   return (
     <>
       <PageHeader
@@ -110,7 +159,7 @@ const EmployeeDashboard = (): JSX.Element => {
         subtitle={constant.SUBHEADER}
         rhs={(
           <>
-            <SearchBar placeholder={constant.SEARCHBAR_PLACEHOLDER} onClick={() => {}} margin="right"/>
+            <SearchBar placeholder={constant.SEARCHBAR_PLACEHOLDER} onClick={() => { }} margin="right" />
             <Box />
           </>
         )}
@@ -120,7 +169,7 @@ const EmployeeDashboard = (): JSX.Element => {
         rhs={<ActionList />}
       />
       <div className='p-3'>
-        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table />)}
+        {currentForm}
       </div>
     </>
   );

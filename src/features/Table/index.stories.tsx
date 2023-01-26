@@ -9,7 +9,7 @@ export default {
 
 const Template: ComponentStory<typeof Table> = () => (
   <div className='h-screen'>
-    <Table />
+    <Table employees={[]} onSelect={() => {}} />
   </div>
 );
 
