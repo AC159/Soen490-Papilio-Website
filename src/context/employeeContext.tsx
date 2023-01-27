@@ -25,7 +25,10 @@ const AuthProvider = (props: any): JSX.Element => {
 
   const login = useCallback(
     async (form: IEmployee) =>
-      await ApiLayer.login(form).then((data: IEmployee) => setEmployee(data)),
+      await ApiLayer.login(form).then((data: IEmployee) => {
+        console.log(data);
+        setEmployee(data);
+      }),
     [setEmployee],
   );
   const register = useCallback(

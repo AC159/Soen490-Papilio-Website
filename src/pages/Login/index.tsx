@@ -68,6 +68,8 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
 
   switch (type) {
     case 'businessLogic':
+      // eslint-disable-next-line no-case-declarations
+      let firebaseId: string;
       onSubmit = async (data: InfoFormData) => {
         return await createUserWithEmailAndPassword(
           auth,
@@ -77,6 +79,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
           .then(async (userCredential) => {
             const user = userCredential.user;
             const { businessName, email } = data.profile;
+            firebaseId = user.uid;
             const reqData = {
               business: {
                 businessId: data.businessId,
@@ -99,7 +102,12 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             if (res.status === 400) {
               throw new Error('error');
             } else {
-              register(res);
+              console.log(res.body);
+              register({
+                businessId: data.businessId,
+                firebaseId,
+                role: data.adminAccount.role,
+              });
               navigate(`/${data.businessId}/dashboard`, {
                 replace: true,
                 relative: 'route',

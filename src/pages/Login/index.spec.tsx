@@ -134,7 +134,12 @@ describe('login', () => {
         business: expect.objectContaining({}),
         employee: expect.objectContaining({}),
       });
-      expect(API.register).toHaveBeenCalledWith(fetchResponse(200));
+      expect(API.register).toHaveBeenCalledWith(
+        expect.objectContaining({
+          businessId: '1234',
+          firebaseId: 'firebase-id',
+        }),
+      );
       expect(await screen.findByTestId('/1234/dashboard')).toBeInTheDocument();
     });
 

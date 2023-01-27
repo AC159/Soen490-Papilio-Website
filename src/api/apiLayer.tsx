@@ -23,6 +23,10 @@ export async function login(data: {
 }
 export async function register(data: any): Promise<any> {
   console.log(data);
+  return {
+    ...data,
+    name: '',
+  };
 }
 export function logout(): void {}
 export async function getActivites(

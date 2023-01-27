@@ -26,17 +26,17 @@ const inputs: InputsProps[] = [
   {
     name: 'adminFirstName',
     label: 'First name',
-    pattern: /.+/,
+    pattern: /.{2,}/,
   },
   {
     name: 'adminLastName',
     label: 'Last name',
-    pattern: /.+/,
+    pattern: /.{2,}/,
   },
   {
     name: 'adminEmail',
     label: 'Email',
-    pattern: /.*@.*\..*/,
+    pattern: /.+@.+\..*/,
   },
   {
     name: 'adminPassword',
