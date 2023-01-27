@@ -132,7 +132,6 @@ describe('login', () => {
       );
       expect(API.addBusiness).toHaveBeenCalledWith({
         business: expect.objectContaining({}),
-        address: expect.objectContaining({}),
         employee: expect.objectContaining({}),
       });
       expect(API.register).toHaveBeenCalledWith(fetchResponse(200));

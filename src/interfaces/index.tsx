@@ -12,15 +12,8 @@ export declare interface IBusinessData {
   business: {
     businessId: string;
     name: string;
-  };
-  address: {
-    mention: string;
-    lineOne: string;
-    lineTwo: string;
-    state: string;
-    postalCode: string;
-    city: string;
-    country: string;
+    email: string;
+    address: string;
   };
   employee: {
     firstName: string;

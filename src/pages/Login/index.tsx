@@ -76,27 +76,13 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
         )
           .then(async (userCredential) => {
             const user = userCredential.user;
-            const {
-              businessName,
-              addressLineOne,
-              addressLineTwo,
-              province,
-              email,
-              ...rest
-            } = data.profile;
+            const { businessName, email } = data.profile;
             const reqData = {
               business: {
                 businessId: data.businessId,
                 name: businessName,
                 email,
                 address: createSingleLineAddress(data.profile),
-              },
-              address: {
-                mention: businessName,
-                lineOne: addressLineOne,
-                lineTwo: addressLineTwo,
-                state: province,
-                ...rest,
               },
               employee: {
                 firstName: data.adminAccount.adminFirstName,
