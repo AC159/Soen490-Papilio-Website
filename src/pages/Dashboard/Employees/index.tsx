@@ -15,6 +15,7 @@ import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
 import { addEmployee, getEmployees } from '../../../api/apiLayer';
 import { IEmployeeData } from '../../../interfaces';
+import { useAuth } from '../../../hooks/useEmployee';
 
 export declare interface IFormData {
   employeeName: string
@@ -59,7 +60,7 @@ const Box = (): JSX.Element => (
 );
 
 const EmployeeDashboard = (): JSX.Element => {
-  // const { employee } = useAuth();
+  const { employee } = useAuth();
   const { businessId } = useParams();
   const [employees, setEmployees] = useState<TableEmployee[]>(initialEmployee);
   const [formState, setFormState] = useState(FormState.Table);
@@ -88,7 +89,7 @@ const EmployeeDashboard = (): JSX.Element => {
   };
 
   const ActionList = (): JSX.Element => {
-    // if (employee.role !== 'Admin') { return <></>; }
+    if (employee.role !== 'Admin') { return <></>; }
     return (
       <div className='flex space-x-2'>
         <Button
