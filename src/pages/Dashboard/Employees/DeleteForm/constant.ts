@@ -1,4 +1,4 @@
-export const FORM_HEADLINE = 'Which employee would like to delete?';
+export const FORM_HEADLINE = 'Who is the employee you would like to delete?';
 export const INPUT_EMPLOYEE_NAME = 'employeeName';
 export const INPUT_EMPLOYEE_NAME_LABEL = 'Employee name';
 export const INPUT_EMPLOYEE_NAME_PLACEHOLDER = 'Enter employee name';

@@ -23,8 +23,8 @@ const DeleteForm = ({ employees, onSubmit }: DeleteFormInterface): JSX.Element =
 
   return (
     <div>
-      <h2 className="Checklist">{constant.FORM_HEADLINE}</h2>
-
+      <h2 className="text-2xl font-semibold mt-4.5">{constant.FORM_HEADLINE}</h2>
+      <br></br>
       <Table employees={employees} onSelect={handleToggleEmployeeToDelete} />
 
       {/* // TODO: Give choices to employee */}
