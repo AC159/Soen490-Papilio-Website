@@ -127,20 +127,24 @@ const EmployeeDashboard = (): JSX.Element => {
 
   useEffect(() => {
     void (async function getAllEmployees() {
-      await getEmployees((businessId ?? '')).then(async () => {
-        // const { employees } = res.data;
-        // const employeeArray = (employees ?? []).map(employee: any => ({
-        //   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        //   name: `${employee.firstName} ${employee.lastName}`,
-        //   email: employee.email,
-        //   role: employee.role,
-        // }));
-        // setEmployees(employeeArray);
-      }).catch(error => {
-        if (error?.cause !== 1) {
-          alert(error.message);
-        }
-      });
+      await getEmployees(businessId ?? '')
+        .then(async (res) => {
+          // @ts-expect-error
+          const { employees } = res;
+          // @ts-expect-error
+          const employeeArray = employees.map((employee) => ({
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            name: `${employee.firstName} ${employee.lastName}`,
+            email: employee.email,
+            role: employee.role,
+          }));
+          setEmployees(employeeArray);
+        })
+        .catch((error) => {
+          if (error?.cause !== 1) {
+            console.error(error.message);
+          }
+        });
     })();
   }, [businessId]);
 
