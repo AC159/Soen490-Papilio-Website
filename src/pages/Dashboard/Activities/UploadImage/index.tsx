@@ -7,7 +7,7 @@ const UploadImage = (): JSX.Element => {
   function formSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     console.log({ imageFile });
-    alert(
+    console.error(
       "here you'd submit the form using\n the imageFile like any other field",
     );
   }
