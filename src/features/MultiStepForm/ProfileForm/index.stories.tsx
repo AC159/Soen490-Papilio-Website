@@ -8,8 +8,8 @@ export default {
 } as ComponentMeta<typeof ProfileForm>;
 
 const Template: ComponentStory<typeof ProfileForm> = (args: IProfileForm) => (
-  <div className='border h-screen flex items-center flex-col'>
-    <ProfileForm {...args}/>
+  <div className="border h-screen flex items-center flex-col">
+    <ProfileForm {...args} />
   </div>
 );
 
@@ -18,6 +18,7 @@ Basic.args = {
   onSubmit: async () => {},
   initialState: {
     businessName: '',
+    email: '',
     addressLineOne: '',
     addressLineTwo: '',
     postalCode: '',

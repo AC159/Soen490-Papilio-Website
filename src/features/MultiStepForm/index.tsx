@@ -68,6 +68,7 @@ export const initialState: IFormData = {
   businessId: '',
   profile: {
     businessName: '',
+    email: '',
     addressLineOne: '',
     addressLineTwo: '',
     postalCode: '',

@@ -11,6 +11,7 @@ import MultiStepForm, {
   Step,
   IFormData as InfoFormData,
 } from '../../features/MultiStepForm';
+import { IFormData as ProfileProps } from '../../features/MultiStepForm/ProfileForm';
 import LoginForm, { IFormData as LoginFormData } from './LoginForm';
 import { auth } from '../../firebase';
 import { addBusiness, getBusiness } from '../../api/apiLayer';
@@ -53,6 +54,12 @@ const steps: Step[] = [
   },
 ];
 
+const createSingleLineAddress = (profile: ProfileProps): string => {
+  const prefix =
+    profile.addressLineTwo === '' ? '' : `${profile.addressLineTwo}-`;
+  return `${prefix}${profile.addressLineOne}, ${profile.city}, ${profile.province}, ${profile.postalCode}, ${profile.country}`;
+};
+
 const LoginPage = ({ type }: ILoginPage): JSX.Element => {
   const { login, register } = useAuth();
   const navigate = useNavigate();
@@ -61,6 +68,8 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
 
   switch (type) {
     case 'businessLogic':
+      // eslint-disable-next-line no-case-declarations
+      let firebaseId: string;
       onSubmit = async (data: InfoFormData) => {
         return await createUserWithEmailAndPassword(
           auth,
@@ -69,24 +78,14 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
         )
           .then(async (userCredential) => {
             const user = userCredential.user;
-            const {
-              businessName,
-              addressLineOne,
-              addressLineTwo,
-              province,
-              ...rest
-            } = data.profile;
+            const { businessName, email } = data.profile;
+            firebaseId = user.uid;
             const reqData = {
               business: {
                 businessId: data.businessId,
                 name: businessName,
-              },
-              address: {
-                mention: businessName,
-                lineOne: addressLineOne,
-                lineTwo: addressLineTwo,
-                state: province,
-                ...rest,
+                email,
+                address: createSingleLineAddress(data.profile),
               },
               employee: {
                 firstName: data.adminAccount.adminFirstName,
@@ -103,7 +102,12 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             if (res.status === 400) {
               throw new Error('error');
             } else {
-              register(res);
+              console.log(res.body);
+              register({
+                businessId: data.businessId,
+                firebaseId,
+                role: data.adminAccount.role,
+              });
               navigate(`/${data.businessId}/dashboard`, {
                 replace: true,
                 relative: 'route',
@@ -151,7 +155,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             });
           })
           .then(() =>
-            navigate(`${data.businessId}/dashboard`, {
+            navigate(`/${data.businessId}/dashboard`, {
               replace: true,
               relative: 'route',
             }),

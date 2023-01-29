@@ -10,9 +10,9 @@ describe('business id form test', () => {
     const mockOnSubmit = jest.fn();
 
     render(
-    <MemoryRouter>
-      <BusinessForm onSubmit={mockOnSubmit} />
-    </MemoryRouter>
+      <MemoryRouter>
+        <BusinessForm onSubmit={mockOnSubmit} />
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(constant.FORM_HEADING)).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('business id form test', () => {
     await waitFor(() => expect(mockOnSubmit).toHaveBeenCalledWith(
       expect.objectContaining({
         [constant.INPUT_BUSINESS_ID]: 'MyAmazingBillionDollarCompany',
-      })
+      }),
     ));
   });
 
@@ -31,9 +31,9 @@ describe('business id form test', () => {
     const mockOnSubmit = jest.fn();
 
     render(
-    <MemoryRouter>
-      <BusinessForm onSubmit={mockOnSubmit} />
-    </MemoryRouter>
+      <MemoryRouter>
+        <BusinessForm onSubmit={mockOnSubmit} />
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(constant.FORM_HEADING)).toBeInTheDocument();

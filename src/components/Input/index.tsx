@@ -15,6 +15,7 @@ export declare interface InputInterface {
   labelPosition?: 'top' | 'left';
   variant?: 'normal' | 'ghost';
   isError?: boolean;
+  autoComplete?: string;
   onChange: (data: React.FormEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
 }
@@ -33,6 +34,7 @@ const Input = ({
   labelPosition = 'top',
   variant = 'normal',
   isError = false,
+  autoComplete = undefined,
   onBlur = () => {},
 }: InputInterface): JSX.Element => {
   const normalInputStyle = classNames(
@@ -73,6 +75,7 @@ const Input = ({
         type={type}
         onChange={onChange}
         onBlur={onBlur}
+        autoComplete={autoComplete}
       />
     </InputWrapper>
   );

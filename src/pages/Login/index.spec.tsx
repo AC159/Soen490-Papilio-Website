@@ -66,7 +66,7 @@ const renderRoutes = (
     </TestWrapper>,
   );
 
-describe('login logic test', () => {
+describe('login', () => {
   const firebaseUser = {
     user: {
       uid: 'firebase-id',
@@ -132,10 +132,14 @@ describe('login logic test', () => {
       );
       expect(API.addBusiness).toHaveBeenCalledWith({
         business: expect.objectContaining({}),
-        address: expect.objectContaining({}),
         employee: expect.objectContaining({}),
       });
-      expect(API.register).toHaveBeenCalledWith(fetchResponse(200));
+      expect(API.register).toHaveBeenCalledWith(
+        expect.objectContaining({
+          businessId: '1234',
+          firebaseId: 'firebase-id',
+        }),
+      );
       expect(await screen.findByTestId('/1234/dashboard')).toBeInTheDocument();
     });
 
@@ -161,6 +165,79 @@ describe('login logic test', () => {
 
       expect(screen.queryByTestId('/1234/dashboard')).not.toBeInTheDocument();
       expect(await screen.findByTestId('businessLogic')).toBeInTheDocument();
+    });
+
+    it('sends address field within the business object as string', async () => {
+      renderRoutes('businessLogic', '/1234/dashboard', intialEntries);
+
+      await act(async () => userEvent.click(await screen.findByRole('button')));
+
+      expect(API.addBusiness).toHaveBeenCalledWith(
+        expect.objectContaining({
+          business: expect.objectContaining({
+            address: expect.any(String),
+          }),
+        }),
+      );
+    });
+
+    it('combines the address fields into a single field in the correct order', async () => {
+      mockData = {
+        ...mockData,
+        profile: {
+          businessName: '',
+          email: '',
+          addressLineOne: '1234 Main Street',
+          addressLineTwo: '',
+          postalCode: 'W3E 2E3',
+          city: 'Montreal',
+          country: 'Canada',
+          province: 'QC',
+        },
+      };
+      const expected = '1234 Main Street, Montreal, QC, W3E 2E3, Canada';
+
+      renderRoutes('businessLogic', '/1234/dashboard', intialEntries);
+
+      await act(async () => userEvent.click(await screen.findByRole('button')));
+
+      expect(API.addBusiness).toHaveBeenCalledWith(
+        expect.objectContaining({
+          business: expect.objectContaining({
+            address: expected,
+          }),
+        }),
+      );
+    });
+
+    it('combines the address fields with the appartment number into a single field in the correct order', async () => {
+      mockData = {
+        ...mockData,
+        profile: {
+          businessName: '',
+          email: '',
+          addressLineOne: '1234 Main Street',
+          addressLineTwo: 'Box 168',
+          postalCode: 'W3E 2E3',
+          city: 'Montreal',
+          country: 'Canada',
+          province: 'QC',
+        },
+      };
+      const expected =
+        'Box 168-1234 Main Street, Montreal, QC, W3E 2E3, Canada';
+
+      renderRoutes('businessLogic', '/1234/dashboard', intialEntries);
+
+      await act(async () => userEvent.click(await screen.findByRole('button')));
+
+      expect(API.addBusiness).toHaveBeenCalledWith(
+        expect.objectContaining({
+          business: expect.objectContaining({
+            address: expected,
+          }),
+        }),
+      );
     });
   });
 

@@ -51,7 +51,7 @@ describe('logic test', () => {
           />
           <Route path="/back" element={<div>Old page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/Form/)).toBeInTheDocument();

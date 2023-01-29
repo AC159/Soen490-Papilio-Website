@@ -50,7 +50,7 @@ describe('mechanism test', () => {
           />
           <Route path="/test" element={<div>New page</div>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText(/tab/)).toBeInTheDocument();
