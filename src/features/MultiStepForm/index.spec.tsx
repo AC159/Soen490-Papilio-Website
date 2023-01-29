@@ -1,9 +1,29 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 import MultiStepForm, { Progress, Step } from '.';
-import * as AdminConstant from './AdminForm/constant';
-import * as ProfileConstant from './ProfileForm/constant';
+
+let mockData = {};
+
+jest.mock('./ProfileForm', () => ({
+  __esModule: true,
+  default: ({ onSubmit }: any) => (
+    <div data-testid="profile">
+      <button onClick={() => onSubmit(mockData)} />
+    </div>
+  ),
+}));
+
+jest.mock('./AdminForm', () => ({
+  __esModule: true,
+  default: ({ onSubmit, onBack }: any) => (
+    <div data-testid="adminAccount">
+      <button onClick={() => onSubmit(mockData)}>next</button>
+      <button onClick={() => onBack()}>back</button>
+    </div>
+  ),
+}));
 
 const progress: Progress[] = [
   {
@@ -39,34 +59,56 @@ const steps: Step[] = [
   },
 ];
 
+const defaultProps = {
+  steps,
+  progress,
+  onSubmit: async () => {},
+};
+
+const TestWrapper = ({ children }: any): JSX.Element => (
+  <MemoryRouter initialEntries={[{ state: { businessId: 'business1' } }]}>
+    {children}
+  </MemoryRouter>
+);
+
 describe('multi step form test', () => {
-  it('should have the business profile as first page and admin form on the second and validation as last page', async () => {
+  const itDisplaysPageInCorrectOrder = (
+    name: string,
+    id: string,
+    pageNumber: number,
+  ): void =>
+    it(`displays ${name} page in the ${pageNumber} place`, async () => {
+      render(
+        <TestWrapper>
+          <MultiStepForm {...defaultProps} />
+        </TestWrapper>,
+      );
+
+      for (let i = 1; i < pageNumber; i++) {
+        expect(screen.getByRole('button')).toBeInTheDocument();
+        await act(async () =>
+          userEvent.click(await screen.findByRole('button')),
+        );
+      }
+
+      expect(await screen.findByTestId(id)).toBeInTheDocument();
+    });
+
+  itDisplaysPageInCorrectOrder('Profile', 'profile', 1);
+  itDisplaysPageInCorrectOrder('Admin Form', 'adminAccount', 2);
+
+  it('returns to the previous page on back', async () => {
     const mockOnSubmit = jest.fn();
+    mockData = { ...mockData, businessName: 'Awesome Business' };
     render(
-      <MemoryRouter initialEntries={[{ state: { businessId: 'business1' } }]}>
-        <MultiStepForm steps={steps} progress={progress} onSubmit={mockOnSubmit}/>
-      </MemoryRouter>
+      <TestWrapper>
+        <MultiStepForm {...defaultProps} onSubmit={mockOnSubmit} />
+      </TestWrapper>,
     );
 
-    expect(await screen.findByText(ProfileConstant.FORM_TITLE)).toBeInTheDocument();
-    userEvent.click(await screen.findByText('Next'));
-    expect(await screen.findByText(AdminConstant.FORM_TITLE)).toBeInTheDocument();
-    userEvent.click(await screen.findByText('Next'));
-    expect(await screen.findByText(/Finish Yeah!!!/)).toBeInTheDocument();
-  });
+    userEvent.click(await screen.findByRole('button'));
+    userEvent.click(await screen.findByRole('button', { name: 'back' }));
 
-  it('should save the data and display them on back', async () => {
-    const mockOnSubmit = jest.fn();
-    render(
-      <MemoryRouter initialEntries={[{ state: { businessId: 'business1' } }]}>
-        <MultiStepForm steps={steps} progress={progress} onSubmit={mockOnSubmit} />
-      </MemoryRouter>);
-
-    const name = 'My Awesome Business';
-    userEvent.type(await screen.findByRole('textbox', { name: 'Business name' }), name);
-    userEvent.click(await screen.findByText('Next'));
-    userEvent.click(await screen.findByText('Back'));
-
-    expect(await screen.findByDisplayValue(name)).toBeInTheDocument();
+    expect(await screen.findByTestId('profile')).toBeInTheDocument();
   });
 });

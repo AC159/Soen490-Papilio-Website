@@ -42,7 +42,7 @@ describe('logic test', () => {
           <Route path='/2' element={<div>Second</div>}/>
           <Route path='/3' element={<div>Third</div>}/>
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
     expect(screen.getAllByTestId('tab-test-id').at(0)).not.toHaveClass('border-transparent');

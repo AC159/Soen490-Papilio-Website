@@ -12,7 +12,7 @@ test('logic test', async () => {
   render(
     <MemoryRouter>
       <LoginForm onSubmit={mockonSubmit} />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   expect(screen.getByText(constant.FORM_HEADING)).toBeInTheDocument();
@@ -26,7 +26,7 @@ test('logic test', async () => {
       expect.objectContaining({
         [constant.INPUT_EMAIL]: 'login@email.com',
         [constant.INPUT_PASSWORD]: 'password',
-      })
+      }),
     );
   });
 });

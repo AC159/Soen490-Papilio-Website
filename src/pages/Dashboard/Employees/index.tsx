@@ -41,7 +41,8 @@ const EmployeeDashboard = (): JSX.Element => {
     const reqData: IEmployeeData = {
       firebaseId: '',
       email: data.employeeEmail,
-      name: data.employeeName,
+      firstName: data.employeeFirstName,
+      lastName: data.employeeLastName,
       businessId: (businessId ?? ''),
       role: data.role,
       root: false, // True only while creating the business
