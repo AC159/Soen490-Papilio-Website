@@ -15,6 +15,7 @@ export enum IconNames {
   DONE = 'done',
   SEARCH = 'search',
   ADD = 'add',
+  DELETE = 'delete',
   FEED = 'feed',
   EDIT_SQUARE = 'edit_square',
   SAVE = 'save',
