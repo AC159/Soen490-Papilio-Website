@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import EmployeeDashboard from './pages/Dashboard/Employees';
 import ActivityDashboard from './pages/Dashboard/Activities';
 import ProfileDashboard from './pages/Dashboard/Profile';
+import AdsDashboard from './pages/Dashboard/AdCenter';
 import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
 
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'ads',
-        element: <div>Ad center</div>,
+        element: <AdsDashboard />,
       },
       {
         path: 'profile',
