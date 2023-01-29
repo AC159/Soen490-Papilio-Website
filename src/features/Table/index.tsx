@@ -3,7 +3,7 @@
 // import SearchBar from '../SearchBar';
 import Row from './Row';
 
-export interface TableEmployee {
+export interface Employee {
   id: string | number
   name: string
   email: string
@@ -11,8 +11,8 @@ export interface TableEmployee {
 };
 
 interface IProps {
-  employees: TableEmployee[]
-  onSelect?: (employee: TableEmployee) => void
+  employees: Employee[]
+  onSelect?: (employee: Employee) => void
 }
 
 const Table = ({
@@ -21,7 +21,7 @@ const Table = ({
 }: IProps): JSX.Element => {
   const isClickable = !(onSelect == null);
 
-  const handleOnClick = (employee: TableEmployee): void => {
+  const handleOnClick = (employee: Employee): void => {
     if (onSelect != null) {
       onSelect(employee);
     }

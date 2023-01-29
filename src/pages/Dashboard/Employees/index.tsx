@@ -3,7 +3,7 @@ import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
 import { auth } from '../../../firebase';
-import Table, { TableEmployee } from '../../../features/Table';
+import Table, { Employee } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -62,7 +62,7 @@ const Box = (): JSX.Element => (
 const EmployeeDashboard = (): JSX.Element => {
   const { employee } = useAuth();
   const { businessId } = useParams();
-  const [employees, setEmployees] = useState<TableEmployee[]>(initialEmployee);
+  const [employees, setEmployees] = useState<Employee[]>(initialEmployee);
   const [formState, setFormState] = useState(FormState.Table);
 
   const onSubmit = async (data: IFormData): Promise<void> => {
