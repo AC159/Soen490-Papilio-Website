@@ -155,7 +155,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
             });
           })
           .then(() =>
-            navigate(`${data.businessId}/dashboard`, {
+            navigate(`/${data.businessId}/dashboard`, {
               replace: true,
               relative: 'route',
             }),

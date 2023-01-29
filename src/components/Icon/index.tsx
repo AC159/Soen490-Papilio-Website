@@ -5,6 +5,7 @@ export declare interface IconInterface {
   name: IconNames;
 }
 
+// The icons name can be found in google fonts: https://fonts.google.com/icons
 export enum IconNames {
   HOME = 'home',
   AD = 'confirmation_number',
