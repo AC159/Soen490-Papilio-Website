@@ -13,15 +13,13 @@ import * as constant from './constant';
 import { addActivity, getActivites } from '../../../api/apiLayer';
 import { IActivityData, IActivity } from '../../../interfaces';
 
-const tabs: ITab[] = [
-  { label: constant.ALL_ACTIVITY_LABEL },
-];
+const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
 
 // TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
-  <div className='border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white'>
+  <div className="border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white">
     <span className="material-symbols-outlined">expand_more</span>
-    <span className='flex-1'>User</span>
+    <span className="flex-1">User</span>
     <span className="material-symbols-outlined">account_box</span>
   </div>
 );
@@ -42,7 +40,8 @@ const ActivityDashboard = (): JSX.Element => {
         startTime: data.activityStart,
         endTime: data.activityEnd,
       },
-      address: { // TODO: Add address information to form
+      address: {
+        // TODO: Add address information to form
         mention: data.activityLocation,
         lineOne: '1234 Main Street',
         lineTwo: '',
@@ -53,22 +52,24 @@ const ActivityDashboard = (): JSX.Element => {
       },
       // image: data.activityImage,  // TODO: Add image information
     };
-    await addActivity((businessId ?? ''), reqData);
+    await addActivity(businessId ?? '', reqData);
   };
 
   useEffect(() => {
     void (async function getAllEmployees() {
-      await getActivites((businessId ?? '')).then(async (res) => {
-        const { activities } = res;
-        const activitiesArray = activities.map(activity => ({
-          ...activity,
-        }));
-        setActivities(activitiesArray);
-      }).catch(error => {
-        if (error?.cause !== 1) {
-          alert(error.message);
-        }
-      });
+      await getActivites(businessId ?? '')
+        .then(async (res) => {
+          const { activities } = res;
+          const activitiesArray = activities.map((activity) => ({
+            ...activity,
+          }));
+          setActivities(activitiesArray);
+        })
+        .catch((error) => {
+          if (error?.cause !== 1) {
+            console.error(error.message);
+          }
+        });
     })();
   }, [businessId]);
 
@@ -78,12 +79,16 @@ const ActivityDashboard = (): JSX.Element => {
       <PageHeader
         header={constant.HEADER}
         subtitle={constant.SUBHEADER}
-        rhs={(
+        rhs={
           <>
-            <SearchBar placeholder={constant.SEARCHBAR_PLACEHOLDER} onClick={() => {}} margin="right"/>
+            <SearchBar
+              placeholder={constant.SEARCHBAR_PLACEHOLDER}
+              onClick={() => {}}
+              margin="right"
+            />
             <Box />
           </>
-        )}
+        }
       />
       <ListBanner
         tabs={tabs}
@@ -92,15 +97,17 @@ const ActivityDashboard = (): JSX.Element => {
             text={constant.ADD_ACTIVITY_BUTTON}
             hasIcon={true}
             icon={IconNames.ADD}
-            iconPosition='lhs'
-            variant='outline'
-            onClick={() => { setIsOpen(!isOpen); }}
-            size='sm'
+            iconPosition="lhs"
+            variant="outline"
+            onClick={() => {
+              setIsOpen(!isOpen);
+            }}
+            size="sm"
           />
         }
       />
-      <div className='p-5'>
-        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table />)}
+      <div className="p-5">
+        {isOpen ? <AddForm onSubmit={onSubmit} /> : <Table />}
       </div>
     </>
   );

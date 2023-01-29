@@ -19,7 +19,8 @@ describe('logic test', () => {
     // @ts-expect-error
     hooks.useAuth = jest.fn().mockReturnValue({
       employee: {
-        name: 'John',
+        firstName: 'John',
+        lastName: 'Doe',
         role: 'Admin',
         firebaseId: 'firebase-id',
       },
@@ -70,7 +71,8 @@ describe('logic test', () => {
     render(<AuthProvider><EmployeeDashboard /></AuthProvider>);
 
     userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-    userEvent.type(await screen.findByRole('textbox', { name: formConstant.INPUT_EMPLOYEE_NAME_LABEL }), 'John');
+    userEvent.type(await screen.findByRole('textbox', { name: formConstant.INPUT_EMPLOYEE_FIRST_NAME_LABEL }), 'John');
+    userEvent.type(await screen.findByRole('textbox', { name: formConstant.INPUT_EMPLOYEE_LAST_NAME_LABEL }), 'Doe');
     userEvent.type(await screen.findByRole('textbox', { name: formConstant.INPUT_EMPLOYEE_EMAIL_LABEL }), 'jd@email.com');
     userEvent.type(await screen.findByRole('textbox', { name: formConstant.INPUT_ROLE_LABEL }), 'Admin');
 
@@ -80,7 +82,8 @@ describe('logic test', () => {
     expect(await screen.findByRole('table')).toBeInTheDocument();
     expect(API.addEmployee).toHaveBeenCalledWith(expect.stringContaining(''), expect.objectContaining({
       email: 'jd@email.com',
-      name: 'John',
+      firstName: 'John',
+      lastName: 'Doe',
       role: 'Admin',
     }));
   });
