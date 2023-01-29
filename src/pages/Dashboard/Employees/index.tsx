@@ -38,7 +38,7 @@ const initialEmployee = [
   },
 ];
 
-enum FormState {
+enum whichSectionIsOpen {
   Table,
   Add,
   Delete
@@ -63,7 +63,7 @@ const EmployeeDashboard = (): JSX.Element => {
   const { employee } = useAuth();
   const { businessId } = useParams();
   const [employees, setEmployees] = useState<Employee[]>(initialEmployee);
-  const [formState, setFormState] = useState(FormState.Table);
+  const [formState, setFormState] = useState(whichSectionIsOpen.Table);
 
   const onSubmit = async (data: IFormData): Promise<void> => {
     const reqData: IEmployeeData = {
@@ -79,7 +79,7 @@ const EmployeeDashboard = (): JSX.Element => {
       await sendSignInLinkToEmail(auth, data.employeeEmail, {
         url: 'https://localhost:3000/email-signin',
       }).then(() => {
-        setFormState(FormState.Table);
+        setFormState(whichSectionIsOpen.Table);
       });
     });
   };
@@ -99,10 +99,10 @@ const EmployeeDashboard = (): JSX.Element => {
           iconPosition='lhs'
           variant='outline'
           onClick={() => {
-            if (formState !== FormState.Add) {
-              setFormState(FormState.Add);
+            if (formState !== whichSectionIsOpen.Add) {
+              setFormState(whichSectionIsOpen.Add);
             } else {
-              setFormState(FormState.Table);
+              setFormState(whichSectionIsOpen.Table);
             }
           }}
           size='sm'
@@ -114,10 +114,10 @@ const EmployeeDashboard = (): JSX.Element => {
           iconPosition='lhs'
           variant='outline'
           onClick={() => {
-            if (formState !== FormState.Delete) {
-              setFormState(FormState.Delete);
+            if (formState !== whichSectionIsOpen.Delete) {
+              setFormState(whichSectionIsOpen.Delete);
             } else {
-              setFormState(FormState.Table);
+              setFormState(whichSectionIsOpen.Table);
             }
           }}
           size='sm'
@@ -149,9 +149,9 @@ const EmployeeDashboard = (): JSX.Element => {
   }, [businessId]);
 
   let currentForm = null;
-  if (formState === FormState.Delete) {
+  if (formState === whichSectionIsOpen.Delete) {
     currentForm = <DeleteForm onSubmit={onSubmitDelete} employees={employees} />;
-  } else if (formState === FormState.Add) {
+  } else if (formState === whichSectionIsOpen.Add) {
     currentForm = <AddForm onSubmit={onSubmit} />;
   } else {
     currentForm = <Table employees={employees} />;
