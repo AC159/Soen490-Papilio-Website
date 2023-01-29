@@ -4,14 +4,14 @@ import useFormData from '../../../hooks/useFormData';
 import * as constant from './constant';
 
 export declare interface ILoginForm {
-  onSubmit: (data: IFormData) => Promise<void>
+  onSubmit: (data: IFormData) => Promise<void>;
 }
 
 export interface IFormData {
-  email: string
-  password: string
-  businessId: string
-};
+  email: string;
+  password: string;
+  businessId: string;
+}
 
 export const initialState: IFormData = {
   email: '',
@@ -20,38 +20,41 @@ export const initialState: IFormData = {
 };
 
 const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
-  const [formData, onValueChange, submit] = useFormData<IFormData>({ initialState, onSubmit });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_unused1, _unused2, _unused3, register, submit] =
+    useFormData<IFormData>({ initialState, onSubmit });
 
   return (
     <BoxForm
-        heading={constant.FORM_HEADING}
-        buttonText={constant.SUBMIT_BUTTON_TEXT}
-        buttonOnClick={submit}
-        backButtonTo=''
-        hasBack
+      heading={constant.FORM_HEADING}
+      buttonText={constant.SUBMIT_BUTTON_TEXT}
+      buttonOnClick={submit}
     >
       <Input
-        name={constant.INPUT_EMAIL}
-        value={formData.email}
+        {...register(constant.INPUT_EMAIL, { required: false, pattern: /.*/ })}
         placeholder={constant.INPUT_EMAIL_PLACEHOLDER}
         label={constant.INPUT_EMAIL_LABEL}
-        onChange={onValueChange}
-        hasLabel/>
+        hasLabel
+      />
       <Input
-        name={constant.INPUT_PASSWORD}
-        value={formData.password}
+        {...register(constant.INPUT_PASSWORD, {
+          required: false,
+          pattern: /.*/,
+        })}
         placeholder={constant.INPUT_PASSWORD_PLACEHOLDER}
         label={constant.INPUT_PASSWORD_LABEL}
-        onChange={onValueChange}
-        type='password'
-        hasLabel/>
+        type="password"
+        hasLabel
+      />
       <Input
-        name={constant.INPUT_BUSINESS_ID}
-        value={formData.businessId}
+        {...register(constant.INPUT_BUSINESS_ID, {
+          required: false,
+          pattern: /.*/,
+        })}
         placeholder={constant.INPUT_BUSINESS_ID_PLACEHOLDER}
         label={constant.INPUT_BUSINESS_ID_LABEL}
-        onChange={onValueChange}
-        hasLabel/>
+        hasLabel
+      />
     </BoxForm>
   );
 };

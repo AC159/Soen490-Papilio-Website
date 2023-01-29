@@ -3,29 +3,38 @@ import { useParams } from 'react-router-dom';
 
 import PageHeader from '../../../features/PageHeader';
 import Button from '../../../components/Button';
-import Input from '../../../components/Input';
 import { IconNames } from '../../../components/Icon';
-import useFormData from '../../../hooks/useFormData';
 import { getProfile } from '../../../api/apiLayer';
+import Row from './Row';
 
 declare interface IProfileInformation {
-  'Business name': string
-  Address: string
-  '': string
-  City: string
-  Province: string
-  'Postal Code': string
-  Country: string
+  businessName: string;
+  address: string;
+  address2Line: string;
+  city: string;
+  province: string;
+  postalCode: string;
+  country: string;
 }
 
 const ProfileInformation: IProfileInformation = {
-  'Business name': '',
-  Address: '',
-  '': '',
-  'Postal Code': '',
-  City: '',
-  Province: '',
-  Country: '',
+  businessName: '',
+  address: '',
+  address2Line: '',
+  city: '',
+  province: '',
+  postalCode: '',
+  country: '',
+};
+
+const NAMES = {
+  businessName: 'Business name',
+  address: 'Address',
+  address2Line: '',
+  city: 'City',
+  province: 'Province',
+  postalCode: 'Postal Code',
+  country: 'Country',
 };
 
 const ProfileDashboard = (): JSX.Element => {
@@ -34,7 +43,7 @@ const ProfileDashboard = (): JSX.Element => {
 
   useEffect(() => {
     void (async function get() {
-      await getProfile((businessId ?? '')).then(() => {
+      await getProfile(businessId ?? '').then(() => {
         // TODO: Setup profile the fetch response
         setProfile(ProfileInformation);
       });
@@ -42,55 +51,46 @@ const ProfileDashboard = (): JSX.Element => {
   }, []);
 
   return (
-    <div className='flex flex-col h-full'>
-      <PageHeader
-        header='Business profile'
-      />
-      <div className='m-4 flex-1 p-4'>
-        {Object.entries(profile).map((entry) => {
+    <div className="flex flex-col h-full">
+      <PageHeader header="Business profile" />
+      <div className="m-4 flex-1 p-4">
+        {Object.entries(profile).map(([key, value]) => {
           const [isEditing, setIsEditing] = useState(false);
           const onSubmit = async (data: IProfileInformation): Promise<void> => {
             setProfile(data);
             setIsEditing(false);
           };
-          const [formData, onValueChange, submit] = useFormData({ initialState: profile, onSubmit });
 
           return (
-          <div key={entry[0]} className='flex flex-row items-center mb-2'>
-            <p className=' font-bold mr-4 w-1/4 text-right'>{entry[0]}</p>
-            {isEditing
-              ? (
-                <div className='border rounded-sm border-brand-blue-dark bg-brand-blue-light p-4 flex-1 group flex flex-row items-center justify-between'>
-                  <Input
-                    name={entry[0]}
-                    // @ts-expect-error
-                    value={formData[entry[0]]}
-                    placeholder=''
-                    variant='ghost'
-                    onChange={onValueChange}
-                    />
-                  <Button
-                    variant='ghost'
-                    icon={IconNames.SAVE}
-                    onClick={submit}
-                    hasIcon
-                  />
-                </div>
-                )
-              : (
-                <div className='border rounded-sm p-4 flex-1 group flex flex-row items-center justify-between' data-testid='field' >
-                  <span>{entry[1]}</span>
-                  <div className='text-white group-hover:text-black'>
+            <div key={key} className="flex flex-row items-center mb-2">
+              <p className=" font-bold mr-4 w-1/4 text-right">
+                {NAMES[key as keyof typeof NAMES]}
+              </p>
+              {isEditing ? (
+                <Row
+                  key={key}
+                  data={key}
+                  initialState={profile}
+                  onSubmit={onSubmit}
+                />
+              ) : (
+                <div
+                  className="border rounded-sm p-4 flex-1 group flex flex-row items-center justify-between"
+                  data-testid="field"
+                >
+                  <span>{value}</span>
+                  <div className="text-white group-hover:text-black">
                     <Button
-                      variant='ghost'
+                      variant="ghost"
                       icon={IconNames.EDIT_SQUARE}
-                      onClick={() => { setIsEditing(true); }}
+                      onClick={() => {
+                        setIsEditing(true);
+                      }}
                       hasIcon
-                      />
+                    />
                   </div>
                 </div>
-                )
-            }
+              )}
             </div>
           );
         })}
