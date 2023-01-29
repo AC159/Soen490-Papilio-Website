@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+html, body, label {
+  font-family: 'Roboto', sans-serif;
+}
+
+@layer base {
+    .createGrid{
+        @apply flex flex-col grid grid-cols-3 gap-x-4 text-left text-sm xl:text-lg py-4 px-16;
+    }
+}
+
+@layer components {
+    .basic{
+        @apply bg-gradient-to-b from-[#52a89f] via-[#52a89f] to-[#336964] rounded-[50px] h-fit space-y-2 py-8 xl:py-20 px-4 xl:px-10 text-white;
+    }
+
+    .pro{
+        @apply bg-gradient-to-b from-[#f27f0c] via-[#f27f0c] to-[#BC5E00] rounded-[50px] h-fit space-y-2 py-10 xl:py-20 px-4 xl:px-10 text-white;
+    }
+
+    .ultimate{
+        @apply bg-gradient-to-b from-[#053f5c] via-[#053f5c] to-[#002436] rounded-[50px] h-fit space-y-2 py-10 xl:py-20 px-4 xl:px-10 text-white;
+    }
+}
