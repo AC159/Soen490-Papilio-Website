@@ -21,6 +21,7 @@ module.exports = {
   rules: {
     quotes: ['error', 'single', { avoidEscape: true }],
     'react/react-in-jsx-scope': 'off',
+    'multiline-ternary': ['error', 'never'],
     'comma-dangle': [
       'error',
       {
@@ -77,6 +78,34 @@ module.exports = {
         named: 'never',
         asyncArrow: 'always',
       },
+    ],
+    '@typescript-eslint/member-delimiter-style': [
+      'error',
+      {
+        multiline: {
+          delimiter: 'semi',
+          requireLast: true,
+        },
+        singleline: {
+          delimiter: 'semi',
+          requireLast: false,
+        },
+        multilineDetection: 'brackets',
+      },
+    ],
+    'comma-dangle': ['error', 'always-multiline'],
+    '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
+    '@typescript-eslint/indent': [
+      'error',
+      2,
+      {
+        SwitchCase: 1,
+        ignoredNodes: ['PropertyDefinition[decorators]', 'TSUnionType'],
+      },
+    ],
+    '@typescript-eslint/strict-boolean-expressions': [
+      'error',
+      { allowNumber: true },
     ],
     '@typescript-eslint/space-before-function-paren': [
       'error',

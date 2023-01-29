@@ -10,7 +10,7 @@ describe('test side menu', () => {
     render(
       <AuthProvider>
         <BrowserRouter><SideMenu /></BrowserRouter>
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     const links = screen.getAllByRole('link');
@@ -27,7 +27,7 @@ describe('test side menu', () => {
             <Route path='/' element={<div>HOME PAGE</div>} />
           </Routes>
         </MemoryRouter>
-      </AuthProvider>
+      </AuthProvider>,
     );
 
     expect(screen.getAllByRole('link')).toHaveLength(5);

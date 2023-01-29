@@ -24,9 +24,9 @@ const tabs: ITab[] = [
 
 // TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
-  <div className='border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white'>
+  <div className="border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white">
     <span className="material-symbols-outlined">expand_more</span>
-    <span className='flex-1'>User</span>
+    <span className="flex-1">User</span>
     <span className="material-symbols-outlined">account_box</span>
   </div>
 );
@@ -41,13 +41,14 @@ const EmployeeDashboard = (): JSX.Element => {
     const reqData: IEmployeeData = {
       firebaseId: '',
       email: data.employeeEmail,
-      name: data.employeeName,
-      businessId: (businessId ?? ''),
+      firstName: data.employeeFirstName,
+      lastName: data.employeeLastName,
+      businessId: businessId ?? '',
       role: data.role,
       root: false, // True only while creating the business
     };
 
-    await addEmployee((businessId ?? ''), reqData).then(async () => {
+    await addEmployee(businessId ?? '', reqData).then(async () => {
       await sendSignInLinkToEmail(auth, data.employeeEmail, {
         url: 'https://localhost:3000/email-signin',
       }).then(() => {
@@ -57,36 +58,44 @@ const EmployeeDashboard = (): JSX.Element => {
   };
 
   const ActionList = (): JSX.Element => {
-    if (employee.role !== 'Admin') { return <></>; }
-    return (<Button
-      text={constant.ADD_EMPLOYEE_BUTTON}
-      hasIcon={true}
-      icon={IconNames.ADD}
-      iconPosition='lhs'
-      variant='outline'
-      onClick={() => { setIsOpen(!isOpen); }}
-      size='sm'
-    />);
+    if (employee.role !== 'Admin') {
+      return <></>;
+    }
+    return (
+      <Button
+        text={constant.ADD_EMPLOYEE_BUTTON}
+        hasIcon={true}
+        icon={IconNames.ADD}
+        iconPosition="lhs"
+        variant="outline"
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+        size="sm"
+      />
+    );
   };
 
   useEffect(() => {
     void (async function getAllEmployees() {
-      await getEmployees((businessId ?? '')).then(async (res) => {
-        // @ts-expect-error
-        const { employees } = res;
-        // @ts-expect-error
-        const employeeArray = employees.map(employee => ({
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          name: `${employee.firstName} ${employee.lastName}`,
-          email: employee.email,
-          role: employee.role,
-        }));
-        setEmployees(employeeArray);
-      }).catch(error => {
-        if (error?.cause !== 1) {
-          alert(error.message);
-        }
-      });
+      await getEmployees(businessId ?? '')
+        .then(async (res) => {
+          // @ts-expect-error
+          const { employees } = res;
+          // @ts-expect-error
+          const employeeArray = employees.map((employee) => ({
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            name: `${employee.firstName} ${employee.lastName}`,
+            email: employee.email,
+            role: employee.role,
+          }));
+          setEmployees(employeeArray);
+        })
+        .catch((error) => {
+          if (error?.cause !== 1) {
+            console.error(error.message);
+          }
+        });
     })();
   }, [businessId]);
 
@@ -96,19 +105,20 @@ const EmployeeDashboard = (): JSX.Element => {
       <PageHeader
         header={constant.HEADER}
         subtitle={constant.SUBHEADER}
-        rhs={(
+        rhs={
           <>
-            <SearchBar placeholder={constant.SEARCHBAR_PLACEHOLDER} onClick={() => {}} margin="right"/>
+            <SearchBar
+              placeholder={constant.SEARCHBAR_PLACEHOLDER}
+              onClick={() => {}}
+              margin="right"
+            />
             <Box />
           </>
-        )}
+        }
       />
-      <ListBanner
-        tabs={tabs}
-        rhs={<ActionList />}
-      />
-      <div className='p-3'>
-        {isOpen ? (<AddForm onSubmit={onSubmit} />) : (<Table />)}
+      <ListBanner tabs={tabs} rhs={<ActionList />} />
+      <div className="p-3">
+        {isOpen ? <AddForm onSubmit={onSubmit} /> : <Table />}
       </div>
     </>
   );

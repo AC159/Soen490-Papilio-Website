@@ -12,30 +12,55 @@ const Header = (): JSX.Element => {
     });
   };
   return (
-    <header className='static'>
+    <header className="static">
       <div className="flex items-center space-x-2 md:space-x-10">
-        <Logo size='lg' hasText/>
+        <Logo size="lg" hasText />
       </div>
       <div>
-        <BasicMenu/>
-        <ul className='flex item-center space-x-10 hidden md:flex'>
-          <li className='headerLink' onClick={() => { onClick('/'); }}>Features</li>
-          <li className='headerLink' onClick={() => { onClick('/'); }}>Blog</li>
-          <li className='headerLink' onClick={() => { onClick('/'); }}>Pricing</li>
-          <div className='flex item-center space-x-3'>
+        <BasicMenu />
+        <ul className="flex item-center space-x-10 hidden md:flex">
+          <li
+            className="headerLink"
+            onClick={() => {
+              onClick('/');
+            }}
+          >
+            Features
+          </li>
+          <li
+            className="headerLink"
+            onClick={() => {
+              onClick('/');
+            }}
+          >
+            Blog
+          </li>
+          <li
+            className="headerLink"
+            onClick={() => {
+              onClick('/');
+            }}
+          >
+            Pricing
+          </li>
+          <div className="flex item-center space-x-3">
             <li>
               <Button
-                text='Login'
-                variant='outline-dark'
-                onClick={() => { onClick('/login'); }}
-                margin='left'
+                text="Login"
+                variant="outline-dark"
+                onClick={() => {
+                  onClick('/login');
+                }}
+                margin="left"
               />
             </li>
             <li>
               <Button
-                text='Get Started'
-                onClick={() => { onClick('/signup'); }}
-                margin='left'
+                text="Get Started"
+                onClick={() => {
+                  onClick('/signup');
+                }}
+                margin="left"
               />
             </li>
           </div>

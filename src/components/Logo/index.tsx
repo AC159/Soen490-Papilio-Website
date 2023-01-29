@@ -1,6 +1,7 @@
+/* eslint-disable multiline-ternary */
 export declare interface LogoInterface {
-  hasText?: boolean
-  size?: 'sm' | 'md' | 'lg'
+  hasText?: boolean;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const Logo = ({ hasText = false, size = 'md' }: LogoInterface): JSX.Element => {
@@ -10,9 +11,11 @@ const Logo = ({ hasText = false, size = 'md' }: LogoInterface): JSX.Element => {
     lg: 'h-14',
   };
 
-  const imgUrl = hasText ? `${process.env.PUBLIC_URL}/logoText.png` : `${process.env.PUBLIC_URL}/logo.png`;
+  const imgUrl = hasText
+    ? `${process.env.PUBLIC_URL}/logoText.png`
+    : `${process.env.PUBLIC_URL}/logo.png`;
 
-  return <img src={imgUrl} alt="papilio logo" className={className[size]}/>;
+  return <img src={imgUrl} alt="papilio logo" className={className[size]} />;
 };
 
 export default Logo;
