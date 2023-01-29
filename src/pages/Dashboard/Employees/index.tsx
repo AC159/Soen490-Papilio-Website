@@ -17,27 +17,6 @@ import { addEmployee, getEmployees } from '../../../api/apiLayer';
 import { IEmployeeData } from '../../../interfaces';
 import { useAuth } from '../../../hooks/useEmployee';
 
-// export declare interface IFormData {
-//   employeeName: string;
-//   employeeEmail: string;
-//   role: string;
-// }
-
-// const initialEmployee = [
-//   {
-//     id: 241,
-//     name: 'John',
-//     email: 'johnd@gmail.com',
-//     role: 'Admin',
-//   },
-//   {
-//     id: 242,
-//     name: 'Jack',
-//     email: 'jackd@gmail.com',
-//     role: 'Manager',
-//   },
-// ];
-
 enum FormState {
   Table,
   Add,

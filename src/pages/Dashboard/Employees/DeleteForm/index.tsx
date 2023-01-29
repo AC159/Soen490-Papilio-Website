@@ -11,8 +11,6 @@ const DeleteForm = ({
   employees,
   onSubmit,
 }: DeleteFormInterface): JSX.Element => {
-  //   const [formData, onValueChange, submit] = useFormData<IFormData>({ initialState, onSubmit });
-
   const [employeesIdsToDelete, setEmployeesIdsToDelete] = useState<string[]>(
     [],
   );

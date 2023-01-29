@@ -1,6 +1,3 @@
-// import Button from '../../components/Button';
-// import { IconNames } from '../../components/Icon';
-// import SearchBar from '../SearchBar';
 import Row from './Row';
 
 export interface Employee {
@@ -39,7 +36,7 @@ const Table = ({ employees, onSelect }: IProps): JSX.Element => {
     <div className="rounded-sm overflow-hidden border border-gray-100 bg-white">
       <table className="table-auto border-collapse w-full">
         <thead className="bg-gray-100">
-          <Row data={['Employee name', 'Email', 'Role']} />
+          <Row data={['Employee name', 'Email', 'Role']} head />
         </thead>
         <tbody>{employeeRows}</tbody>
       </table>
