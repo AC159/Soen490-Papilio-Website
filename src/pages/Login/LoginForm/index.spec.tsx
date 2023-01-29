@@ -16,7 +16,6 @@ test('logic test', async () => {
   );
 
   expect(screen.getByText(constant.FORM_HEADING)).toBeInTheDocument();
-
   userEvent.type(await screen.findByPlaceholderText(constant.INPUT_EMAIL_PLACEHOLDER), 'login@email.com');
   userEvent.type(await screen.findByPlaceholderText(constant.INPUT_PASSWORD_PLACEHOLDER), 'password');
   userEvent.click(await screen.findByText(constant.SUBMIT_BUTTON_TEXT));
