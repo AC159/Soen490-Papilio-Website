@@ -128,7 +128,7 @@ const LoginPage = ({ type }: ILoginPage): JSX.Element => {
       onSubmit = async (data: BusinessFormData) => {
         await getBusiness(data.businessId).then((res) => {
           if (res.status === 200) {
-            navigate('admin', {
+            navigate('/admin', {
               replace: true,
               state: { businessId: data.businessId },
             });
