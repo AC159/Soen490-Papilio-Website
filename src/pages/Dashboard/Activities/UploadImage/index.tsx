@@ -35,7 +35,11 @@ const UploadImage = (): JSX.Element => {
       <br></br>
       <div className="flex pl-5 text-sm font-semibold text-gray-600">
         <form onSubmit={formSubmit}>
-          <input type="file" onChange={(e) => convertFile(e.target.files)} />
+          <input
+            type="file"
+            data-testid="test-file-upload"
+            onChange={(e) => convertFile(e.target.files)}
+          />
           {
             <>
               {imageFile.includes('image/') && (
