@@ -13,7 +13,6 @@ jest.mock('../../features/SideMenu', () => ({
 describe('Dashboard', () => {
   it('displays the pages from the router', () => {
     render(<Dashboard />);
-    // @ts-expect-error
-    expect(Outlet.mock.calls.length).toBeGreaterThan(0);
+    expect(Outlet).toHaveBeenCalled();
   });
 });

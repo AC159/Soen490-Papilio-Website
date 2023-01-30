@@ -5,11 +5,6 @@ import DeleteForm from '.';
 import * as constant from './constant';
 import * as Table from '../../../../features/Table';
 
-// jest.mock('../../../../features/Table', () => ({
-//   __esModule: true,
-//   default: jest.fn(),
-// }));
-
 const defaultProps = {
   employees: [],
   onSubmit: () => {},
