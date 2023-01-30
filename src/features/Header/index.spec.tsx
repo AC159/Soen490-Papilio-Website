@@ -25,12 +25,12 @@ describe('Header tests', () => {
       <MemoryRouter>
         <Routes>
           <Route path="" element={<Header />} />
-          <Route path="/admin" element={<p>Admin Page</p>} />
+          <Route path="/signup" element={<p>Admin Page</p>} />
         </Routes>
       </MemoryRouter>,
     );
 
-    userEvent.click(await screen.findByText(/Getting start/));
+    userEvent.click(await screen.findByText(/Get Started/));
 
     expect(await screen.findByText(/Admin Page/)).toBeInTheDocument();
   });

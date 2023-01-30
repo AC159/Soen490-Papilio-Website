@@ -7,12 +7,18 @@ import ProfileDashboard from './pages/Dashboard/Profile';
 import AdsDashboard from './pages/Dashboard/AdCenter';
 import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
+import HomePage from './pages/Home';
 
 import { AuthProvider } from './context/employeeContext';
 
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <HomePage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: '/signup',
     element: <LoginPage type="business" />,
     errorElement: <ErrorPage />,
   },
