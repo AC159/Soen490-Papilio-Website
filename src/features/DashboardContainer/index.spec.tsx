@@ -14,8 +14,7 @@ describe('DashboardContainer', () => {
         <span>a</span>
       </DashboardContainer>,
     );
-    // @ts-expect-error
-    expect(SideMenu.mock.calls.length).toBeGreaterThan(0);
+    expect(SideMenu).toHaveBeenCalled();
   });
 
   it('displays a component as child', () => {
