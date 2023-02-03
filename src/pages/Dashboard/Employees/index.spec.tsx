@@ -27,10 +27,10 @@ describe('logic test', () => {
     // @ts-expect-error
     hooks.useAuth = jest.fn().mockReturnValue({
       employee: {
-        firstName: 'John',
-        lastName: 'Doe',
+        name: 'John Doe',
         role: 'Admin',
         firebaseId: 'firebase-id',
+        businessId: 'businessId',
       },
     });
     // @ts-expect-error
@@ -161,14 +161,14 @@ describe('logic test', () => {
 
   it('calls deleteEmployee when clicking delete in DeleteForm', async () => {
     // @ts-expect-error
-    API.deleteEmployee = jest.fn().mockResolvedValue({});
+    API.deleteEmployees = jest.fn().mockResolvedValue({});
 
     render(<EmployeeDashboard />);
 
     userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
     userEvent.click(screen.getByTestId('deleteForm'));
 
-    expect(API.deleteEmployee).toHaveBeenCalledWith([]);
+    expect(API.deleteEmployees).toHaveBeenCalledWith([], 'businessId');
     await act(async () => await Promise.resolve());
   });
 });

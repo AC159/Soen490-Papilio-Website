@@ -15,7 +15,7 @@ import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
 import {
   addEmployee,
-  deleteEmployee,
+  deleteEmployees,
   getEmployees,
 } from '../../../api/apiLayer';
 import { IEmployeeData } from '../../../interfaces';
@@ -71,7 +71,7 @@ const EmployeeDashboard = (): JSX.Element => {
   const handleEmployeeDeletion = async (
     employeeIds: string[],
   ): Promise<void> => {
-    await deleteEmployee(employeeIds).then(async () => {
+    await deleteEmployees(employeeIds, employee.businessId).then(async () => {
       setEmployees(
         employees.filter((employee) => !employeeIds.includes(employee.id)),
       );

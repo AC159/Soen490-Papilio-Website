@@ -100,7 +100,26 @@ export async function getEmployees(businessId: string): Promise<Response> {
 }
 
 export function updateEmployeeRole(): void {}
-export async function deleteEmployee(employees: string[]): Promise<void> {}
+export async function deleteEmployees(
+  employees: string[],
+  businessId: string,
+): Promise<void> {
+  employees.forEach(async (employee) => {
+    await deleteEmployee(employee, businessId);
+  });
+}
+
+export async function deleteEmployee(
+  employeeId: string,
+  businessId: string,
+): Promise<Response> {
+  return await fetch(
+    `api/business/${businessId}/removeEmployee/${employeeId}`,
+    {
+      method: 'DELETE',
+    },
+  );
+}
 export async function addBusiness(
   data: Interfaces.IBusinessData,
 ): Promise<Response> {
