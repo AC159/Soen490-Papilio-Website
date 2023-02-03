@@ -48,7 +48,7 @@ const EmployeeDashboard = (): JSX.Element => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [currentSection, setCurrentSection] = useState(Section.Table);
 
-  const onSubmit = async (data: IFormData): Promise<void> => {
+  const handleEmployeeCreation = async (data: IFormData): Promise<void> => {
     const reqData: IEmployeeData = {
       firebaseId: '',
       email: data.employeeEmail,
@@ -68,7 +68,9 @@ const EmployeeDashboard = (): JSX.Element => {
     });
   };
 
-  const onSubmitDelete = async (employeeIds: string[]): Promise<void> => {
+  const handleEmployeeDeletion = async (
+    employeeIds: string[],
+  ): Promise<void> => {
     await deleteEmployee(employeeIds).then(async () => {
       setEmployees(
         employees.filter((employee) => !employeeIds.includes(employee.id)),
@@ -143,10 +145,10 @@ const EmployeeDashboard = (): JSX.Element => {
   let currentForm = null;
   if (currentSection === Section.Delete) {
     currentForm = (
-      <DeleteForm onSubmit={onSubmitDelete} employees={employees} />
+      <DeleteForm onSubmit={handleEmployeeDeletion} employees={employees} />
     );
   } else if (currentSection === Section.Add) {
-    currentForm = <AddForm onSubmit={onSubmit} />;
+    currentForm = <AddForm onSubmit={handleEmployeeCreation} />;
   } else {
     currentForm = <Table employees={employees} />;
   }
