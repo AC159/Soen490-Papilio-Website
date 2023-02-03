@@ -13,11 +13,15 @@ import DeleteForm from './DeleteForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
-import { addEmployee, getEmployees } from '../../../api/apiLayer';
+import {
+  addEmployee,
+  deleteEmployee,
+  getEmployees,
+} from '../../../api/apiLayer';
 import { IEmployeeData } from '../../../interfaces';
 import { useAuth } from '../../../hooks/useEmployee';
 
-enum whichSectionIsOpen {
+enum Section {
   Table,
   Add,
   Delete,
@@ -42,7 +46,7 @@ const EmployeeDashboard = (): JSX.Element => {
   const { employee } = useAuth();
   const { businessId } = useParams();
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [formState, setFormState] = useState(whichSectionIsOpen.Table);
+  const [currentSection, setCurrentSection] = useState(Section.Table);
 
   const onSubmit = async (data: IFormData): Promise<void> => {
     const reqData: IEmployeeData = {
@@ -59,15 +63,17 @@ const EmployeeDashboard = (): JSX.Element => {
       await sendSignInLinkToEmail(auth, data.employeeEmail, {
         url: 'https://localhost:3000/email-signin',
       }).then(() => {
-        setFormState(whichSectionIsOpen.Table);
+        setCurrentSection(Section.Table);
       });
     });
   };
 
-  const onSubmitDelete = (employeeIds: string[]): void => {
-    setEmployees(
-      employees.filter((employee) => !employeeIds.includes(employee.id)),
-    );
+  const onSubmitDelete = async (employeeIds: string[]): Promise<void> => {
+    await deleteEmployee(employeeIds).then(async () => {
+      setEmployees(
+        employees.filter((employee) => !employeeIds.includes(employee.id)),
+      );
+    });
   };
 
   const ActionList = (): JSX.Element => {
@@ -83,10 +89,10 @@ const EmployeeDashboard = (): JSX.Element => {
           iconPosition="lhs"
           variant="outline"
           onClick={() => {
-            if (formState !== whichSectionIsOpen.Add) {
-              setFormState(whichSectionIsOpen.Add);
+            if (currentSection !== Section.Add) {
+              setCurrentSection(Section.Add);
             } else {
-              setFormState(whichSectionIsOpen.Table);
+              setCurrentSection(Section.Table);
             }
           }}
           size="sm"
@@ -98,10 +104,10 @@ const EmployeeDashboard = (): JSX.Element => {
           iconPosition="lhs"
           variant="outline"
           onClick={() => {
-            if (formState !== whichSectionIsOpen.Delete) {
-              setFormState(whichSectionIsOpen.Delete);
+            if (currentSection !== Section.Delete) {
+              setCurrentSection(Section.Delete);
             } else {
-              setFormState(whichSectionIsOpen.Table);
+              setCurrentSection(Section.Table);
             }
           }}
           size="sm"
@@ -111,7 +117,7 @@ const EmployeeDashboard = (): JSX.Element => {
   };
 
   useEffect(() => {
-    void (async function getAllEmployees() {
+    void (async function () {
       await getEmployees(businessId ?? '')
         .then(async (res) => {
           // @ts-expect-error
@@ -135,11 +141,11 @@ const EmployeeDashboard = (): JSX.Element => {
   }, [businessId]);
 
   let currentForm = null;
-  if (formState === whichSectionIsOpen.Delete) {
+  if (currentSection === Section.Delete) {
     currentForm = (
       <DeleteForm onSubmit={onSubmitDelete} employees={employees} />
     );
-  } else if (formState === whichSectionIsOpen.Add) {
+  } else if (currentSection === Section.Add) {
     currentForm = <AddForm onSubmit={onSubmit} />;
   } else {
     currentForm = <Table employees={employees} />;

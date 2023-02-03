@@ -4,7 +4,7 @@ import Table, { Employee } from '../../../../features/Table';
 import { useState } from 'react';
 export declare interface DeleteFormInterface {
   employees: Employee[];
-  onSubmit: (employeeIds: string[]) => void;
+  onSubmit: (employeeIds: string[]) => Promise<void>;
 }
 
 const DeleteForm = ({
@@ -35,7 +35,7 @@ const DeleteForm = ({
       <Table employees={employees} onSelect={handleToggleEmployeeToDelete} />
       <Button
         text={constant.BUTTON_TEXT}
-        onClick={() => onSubmit(employeesIdsToDelete)}
+        onClick={async () => await onSubmit(employeesIdsToDelete)}
       />
     </div>
   );

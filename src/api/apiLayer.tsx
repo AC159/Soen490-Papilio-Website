@@ -100,6 +100,7 @@ export async function getEmployees(businessId: string): Promise<Response> {
 }
 
 export function updateEmployeeRole(): void {}
+export async function deleteEmployee(employees: string[]): Promise<void> {}
 export async function addBusiness(
   data: Interfaces.IBusinessData,
 ): Promise<Response> {

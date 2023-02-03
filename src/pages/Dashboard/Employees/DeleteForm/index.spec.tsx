@@ -7,7 +7,7 @@ import * as Table from '../../../../features/Table';
 
 const defaultProps = {
   employees: [],
-  onSubmit: () => {},
+  onSubmit: async () => {},
 };
 
 const oneEmployee = [
@@ -48,7 +48,7 @@ describe('Delete Form', () => {
       expect.objectContaining({
         employees: oneEmployee,
       }),
-      {},
+      expect.anything(),
     );
   });
 
