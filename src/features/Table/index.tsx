@@ -27,18 +27,17 @@ const Table = ({ employees, headerContent, onSelect }: IProps): JSX.Element => {
     }
   }, [onSelect]);
 
+  const handleOnClick = useCallback(
+    // @ts-expect-error
+    (employee: Employee): void => onSelect(employee),
+    [onSelect],
+  );
+
   const employeeRows = employees.map((employee) => {
     const data = [employee.name, employee.email, employee.role];
     if (onSelect === undefined) {
       return <Row key={`employee-${employee.id}`} data={data} />;
     }
-
-    const handleOnClick = useCallback(
-      (employee: Employee): void => {
-        onSelect(employee);
-      },
-      [onSelect],
-    );
 
     return (
       <ClickableRow
@@ -48,8 +47,6 @@ const Table = ({ employees, headerContent, onSelect }: IProps): JSX.Element => {
       />
     );
   });
-
-  console.table(buffer);
 
   return (
     <div className="rounded-sm overflow-hidden border border-gray-100 bg-white">

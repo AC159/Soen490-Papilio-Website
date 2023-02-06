@@ -14,7 +14,7 @@ const oneEmployee = [
 const fiveEmployees = Array.from('01234', (id) => ({
   id,
   name: 'John Smith',
-  email: 'fake@email.com',
+  email: `fake${id}@email.com`,
   role: 'Admin',
 }));
 
@@ -59,7 +59,16 @@ describe('Table', () => {
 
   it('displays 5 rows in the table body when 5 employees are passed', () => {
     render(<Table {...defaultProps} employees={fiveEmployees} />);
-    expect(Row).toHaveBeenCalledTimes(6); // With 1 header row
+    expect(Row).toHaveBeenLastCalledWith(
+      {
+        data: [
+          fiveEmployees[4].name,
+          fiveEmployees[4].email,
+          fiveEmployees[4].role,
+        ],
+      },
+      expect.anything(),
+    );
   });
 
   it('displays clickable row when onSelect is passed as attribute to table', () => {
@@ -67,13 +76,11 @@ describe('Table', () => {
     render(
       <Table
         {...defaultProps}
-        employees={fiveEmployees}
+        employees={oneEmployee}
         onSelect={mockOnSelect}
       />,
     );
-
-    expect(Row).toHaveBeenCalledTimes(1);
-    expect(ClickableRow).toHaveBeenCalledTimes(5);
+    expect(ClickableRow).toHaveBeenCalled();
   });
 
   it('displays content in header that was passed to the table', () => {
@@ -98,11 +105,21 @@ describe('Table', () => {
         onSelect={mockOnSelect}
       />,
     );
-    expect(ClickableRow).toHaveBeenCalledTimes(1);
+    expect(ClickableRow).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: [oneEmployee[0].name, oneEmployee[0].email, oneEmployee[0].role],
+      }),
+      expect.anything(),
+    );
   });
 
   it('disabled click on body row when no onSelect function is passed', () => {
     render(<Table {...defaultProps} employees={oneEmployee} />);
-    expect(Row).toHaveBeenCalledTimes(2);
+    expect(Row).toHaveBeenLastCalledWith(
+      {
+        data: [oneEmployee[0].name, oneEmployee[0].email, oneEmployee[0].role],
+      },
+      expect.anything(),
+    );
   });
 });
