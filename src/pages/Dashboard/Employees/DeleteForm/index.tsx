@@ -5,6 +5,7 @@ import Table, {
   employeeTableHeader,
 } from '../../../../features/Table';
 import { useState } from 'react';
+import { useAuth } from '../../../../hooks/useEmployee';
 export declare interface DeleteFormInterface {
   employees: Employee[];
   onSubmit: (employeeIds: string[]) => Promise<void>;
@@ -14,18 +15,21 @@ const DeleteForm = ({
   employees,
   onSubmit,
 }: DeleteFormInterface): JSX.Element => {
+  const { employee: admin } = useAuth();
   const [employeesIdsToDelete, setEmployeesIdsToDelete] = useState<string[]>(
     [],
   );
 
   const handleToggleEmployeeToDelete = (employee: Employee): void => {
     const employeeId = employee.id;
-    if (employeesIdsToDelete.includes(employeeId)) {
-      setEmployeesIdsToDelete(
-        employeesIdsToDelete.filter((id) => employeeId !== id),
-      );
-    } else {
-      setEmployeesIdsToDelete([...employeesIdsToDelete, employeeId]);
+    if (employeeId !== admin.firebaseId) {
+      if (employeesIdsToDelete.includes(employeeId)) {
+        setEmployeesIdsToDelete(
+          employeesIdsToDelete.filter((id) => employeeId !== id),
+        );
+      } else {
+        setEmployeesIdsToDelete([...employeesIdsToDelete, employeeId]);
+      }
     }
   };
 
