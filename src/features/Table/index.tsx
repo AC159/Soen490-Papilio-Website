@@ -11,12 +11,18 @@ export interface Employee {
 interface IProps {
   employees: Employee[];
   headerContent: string[];
+  disabledRowId?: string;
   onSelect?: (employee: Employee) => void;
 }
 
 export const employeeTableHeader = ['Employee name', 'Email', 'Role'];
 
-const Table = ({ employees, headerContent, onSelect }: IProps): JSX.Element => {
+const Table = ({
+  employees,
+  headerContent,
+  disabledRowId,
+  onSelect,
+}: IProps): JSX.Element => {
   const [buffer, setBuffer] = useState<string[]>([]);
 
   useEffect(() => {
@@ -44,6 +50,7 @@ const Table = ({ employees, headerContent, onSelect }: IProps): JSX.Element => {
         key={`employee-${employee.id}`}
         data={data}
         onClick={() => handleOnClick(employee)}
+        disabled={disabledRowId === employee.id}
       />
     );
   });

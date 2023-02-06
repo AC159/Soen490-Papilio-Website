@@ -122,4 +122,24 @@ describe('Table', () => {
       expect.anything(),
     );
   });
+
+  it('disabled row when id to disabled match row id', () => {
+    const id = oneEmployee[0].id;
+    const mockOnSelect = jest.fn();
+    render(
+      <Table
+        {...defaultProps}
+        employees={oneEmployee}
+        onSelect={mockOnSelect}
+        disabledRowId={id}
+      />,
+    );
+
+    expect(ClickableRow).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        disabled: true,
+      }),
+      expect.anything(),
+    );
+  });
 });

@@ -22,14 +22,12 @@ const DeleteForm = ({
 
   const handleToggleEmployeeToDelete = (employee: Employee): void => {
     const employeeId = employee.id;
-    if (employeeId !== admin.firebaseId) {
-      if (employeesIdsToDelete.includes(employeeId)) {
-        setEmployeesIdsToDelete(
-          employeesIdsToDelete.filter((id) => employeeId !== id),
-        );
-      } else {
-        setEmployeesIdsToDelete([...employeesIdsToDelete, employeeId]);
-      }
+    if (employeesIdsToDelete.includes(employeeId)) {
+      setEmployeesIdsToDelete(
+        employeesIdsToDelete.filter((id) => employeeId !== id),
+      );
+    } else {
+      setEmployeesIdsToDelete([...employeesIdsToDelete, employeeId]);
     }
   };
 
@@ -43,6 +41,7 @@ const DeleteForm = ({
         employees={employees}
         headerContent={employeeTableHeader}
         onSelect={handleToggleEmployeeToDelete}
+        disabledRowId={admin.firebaseId}
       />
       <Button
         text={constant.BUTTON_TEXT}

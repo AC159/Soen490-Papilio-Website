@@ -63,6 +63,7 @@ describe('Row', () => {
 
 const clickableRowDefaultProps = {
   data: [],
+  disabled: false,
   onClick: () => {},
 };
 
@@ -106,5 +107,15 @@ describe('ClickableRow', () => {
 
     userEvent.click(screen.getByRole('checkbox'));
     expect(mockOnClick).toHaveBeenCalled();
+  });
+
+  it('disable the checkbox when disabled is true', () => {
+    const mockOnClick = jest.fn();
+    render(
+      renderRow(<ClickableRow data={oneCell} onClick={mockOnClick} disabled />),
+    );
+
+    userEvent.click(screen.getByRole('checkbox'));
+    expect(mockOnClick).not.toHaveBeenCalled();
   });
 });

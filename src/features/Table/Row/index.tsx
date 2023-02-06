@@ -16,17 +16,19 @@ const Row = ({ data, head = false }: RowInterface): JSX.Element => {
 
 export declare interface ClickableRowProps {
   data: string[];
+  disabled: boolean;
   onClick: () => void;
 }
 
 export const ClickableRow = ({
   data,
+  disabled,
   onClick,
 }: ClickableRowProps): JSX.Element => {
   return (
     <tr className="border-gray-100 border-b last:border-b-0">
       <td>
-        <input type="checkbox" onClick={onClick} />
+        <input type="checkbox" onClick={onClick} disabled={disabled} />
       </td>
       {data.map((cell) => (
         <Cell key={cell} value={cell} />
