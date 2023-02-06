@@ -3,7 +3,7 @@ import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
 import { auth } from '../../../firebase';
-import Table, { Employee } from '../../../features/Table';
+import Table, { Employee, employeeTableHeader } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -150,7 +150,9 @@ const EmployeeDashboard = (): JSX.Element => {
   } else if (currentSection === Section.Add) {
     currentForm = <AddForm onSubmit={handleEmployeeCreation} />;
   } else {
-    currentForm = <Table employees={employees} />;
+    currentForm = (
+      <Table employees={employees} headerContent={employeeTableHeader} />
+    );
   }
 
   return (

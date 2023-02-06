@@ -1,4 +1,5 @@
-import Row from './Row';
+import { useCallback } from 'react';
+import Row, { ClickableRow } from './Row';
 
 export interface Employee {
   id: string;
@@ -9,25 +10,31 @@ export interface Employee {
 
 interface IProps {
   employees: Employee[];
+  headerContent: string[];
   onSelect?: (employee: Employee) => void;
 }
 
-const Table = ({ employees, onSelect }: IProps): JSX.Element => {
-  const isClickable = !(onSelect == null);
+export const employeeTableHeader = ['Employee name', 'Email', 'Role'];
 
-  const handleOnClick = (employee: Employee): void => {
-    if (onSelect != null) {
-      onSelect(employee);
-    }
-  };
-
+const Table = ({ employees, headerContent, onSelect }: IProps): JSX.Element => {
   const employeeRows = employees.map((employee) => {
+    const data = [employee.name, employee.email, employee.role];
+    if (onSelect === undefined) {
+      return <Row key={`employee-${employee.id}`} data={data} />;
+    }
+
+    const handleOnClick = useCallback(
+      (employee: Employee): void => {
+        onSelect(employee);
+      },
+      [onSelect],
+    );
+
     return (
-      <Row
+      <ClickableRow
         key={`employee-${employee.id}`}
-        data={[employee.name, employee.email, employee.role]}
+        data={data}
         onClick={() => handleOnClick(employee)}
-        isClickable={isClickable}
       />
     );
   });
@@ -36,7 +43,7 @@ const Table = ({ employees, onSelect }: IProps): JSX.Element => {
     <div className="rounded-sm overflow-hidden border border-gray-100 bg-white">
       <table className="table-auto border-collapse w-full">
         <thead className="bg-gray-100">
-          <Row data={['Employee name', 'Email', 'Role']} head />
+          <Row data={headerContent} head />
         </thead>
         <tbody>{employeeRows}</tbody>
       </table>

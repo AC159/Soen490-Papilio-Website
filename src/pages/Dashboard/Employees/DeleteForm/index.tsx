@@ -1,6 +1,9 @@
 import Button from '../../../../components/Button';
 import * as constant from './constant';
-import Table, { Employee } from '../../../../features/Table';
+import Table, {
+  Employee,
+  employeeTableHeader,
+} from '../../../../features/Table';
 import { useState } from 'react';
 export declare interface DeleteFormInterface {
   employees: Employee[];
@@ -32,7 +35,11 @@ const DeleteForm = ({
         {constant.FORM_HEADLINE}
       </h2>
       <br></br>
-      <Table employees={employees} onSelect={handleToggleEmployeeToDelete} />
+      <Table
+        employees={employees}
+        headerContent={employeeTableHeader}
+        onSelect={handleToggleEmployeeToDelete}
+      />
       <Button
         text={constant.BUTTON_TEXT}
         onClick={async () => await onSubmit(employeesIdsToDelete)}
