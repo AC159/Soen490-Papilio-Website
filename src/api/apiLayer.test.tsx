@@ -306,7 +306,7 @@ describe('api test', () => {
       const employees = ['1234'];
       await API.deleteEmployees(employees, businessId);
       expect(global.fetch).toHaveBeenCalledWith(
-        `api/business/${businessId}/removeEmployee/1234`,
+        `/api/business/${businessId}/removeEmployee/1234`,
         {
           method: 'DELETE',
         },

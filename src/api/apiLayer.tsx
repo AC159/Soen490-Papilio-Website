@@ -114,7 +114,7 @@ export async function deleteEmployee(
   businessId: string,
 ): Promise<Response> {
   return await fetch(
-    `api/business/${businessId}/removeEmployee/${employeeId}`,
+    `/api/business/${businessId}/removeEmployee/${employeeId}`,
     {
       method: 'DELETE',
     },
