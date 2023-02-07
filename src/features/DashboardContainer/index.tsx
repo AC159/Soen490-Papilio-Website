@@ -8,7 +8,7 @@ const DashboardContainer = ({ children }: IDashboardContainer): JSX.Element => {
   return (
     <div className="flex flex-row w-screen h-screen">
       <SideMenu />
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 pl-48">{children}</div>
     </div>
   );
 };
