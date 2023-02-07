@@ -8,6 +8,10 @@ export interface Employee {
   role: string;
 }
 
+export interface RowProps {
+  id: string;
+}
+
 interface IProps {
   employees: Employee[];
   headerContent: string[];
