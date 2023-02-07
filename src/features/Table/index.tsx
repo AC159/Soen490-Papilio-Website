@@ -1,4 +1,5 @@
-import Row from './Row';
+import { useCallback, useEffect, useState } from 'react';
+import Row, { ClickableRow } from './Row';
 
 export interface Employee {
   id: string;
@@ -9,25 +10,47 @@ export interface Employee {
 
 interface IProps {
   employees: Employee[];
+  headerContent: string[];
+  disabledRowId?: string;
   onSelect?: (employee: Employee) => void;
 }
 
-const Table = ({ employees, onSelect }: IProps): JSX.Element => {
-  const isClickable = !(onSelect == null);
+export const employeeTableHeader = ['Employee name', 'Email', 'Role'];
 
-  const handleOnClick = (employee: Employee): void => {
-    if (onSelect != null) {
-      onSelect(employee);
+const Table = ({
+  employees,
+  headerContent,
+  disabledRowId,
+  onSelect,
+}: IProps): JSX.Element => {
+  const [buffer, setBuffer] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (onSelect !== undefined) {
+      setBuffer(['']);
+    } else {
+      setBuffer([]);
     }
-  };
+  }, [onSelect]);
+
+  const handleOnClick = useCallback(
+    // @ts-expect-error
+    (employee: Employee): void => onSelect(employee),
+    [onSelect],
+  );
 
   const employeeRows = employees.map((employee) => {
+    const data = [employee.name, employee.email, employee.role];
+    if (onSelect === undefined) {
+      return <Row key={`employee-${employee.id}`} data={data} />;
+    }
+
     return (
-      <Row
+      <ClickableRow
         key={`employee-${employee.id}`}
-        data={[employee.name, employee.email, employee.role]}
+        data={data}
         onClick={() => handleOnClick(employee)}
-        isClickable={isClickable}
+        disabled={disabledRowId === employee.id}
       />
     );
   });
@@ -36,7 +59,7 @@ const Table = ({ employees, onSelect }: IProps): JSX.Element => {
     <div className="rounded-sm overflow-hidden border border-gray-100 bg-white">
       <table className="table-auto border-collapse w-full">
         <thead className="bg-gray-100">
-          <Row data={['Employee name', 'Email', 'Role']} head />
+          <Row data={[...buffer, ...headerContent]} head />
         </thead>
         <tbody>{employeeRows}</tbody>
       </table>

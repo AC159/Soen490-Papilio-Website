@@ -18,10 +18,7 @@ const HomePage = (): JSX.Element => {
           <div className="welcome">
             <div className="flex">
               <h1 className="text-3xl md:text-4xl lg:text-6xl">
-                Welcome to&nbsp;
-              </h1>
-              <h1 className="font-medium text-3xl md:text-4xl lg:text-6xl">
-                Papilio
+                Welcome to <span className="font-medium">Papilio</span>
               </h1>
             </div>
             <h3 className="text-lg md:text-2xl lg:text-4xl">
