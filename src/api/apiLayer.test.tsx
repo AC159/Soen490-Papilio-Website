@@ -264,15 +264,7 @@ describe('api test', () => {
           groupSize: 10,
           startTime: '1970-01-01T00:00:00.000Z',
           endTime: '2070-01-01T00:00:00.000Z',
-        },
-        address: {
-          mention: 'mention',
-          lineOne: '1234 Main Street',
-          lineTwo: '',
-          city: 'Montreal',
-          state: 'QC',
-          country: 'Canada',
-          postalCode: 'EXAMPLE',
+          address: '',
         },
       };
     });

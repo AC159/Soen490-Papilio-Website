@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Table from '../Activities/ActivityTable';
+// import Table from '../Activities/ActivityTable';
+import Table, {
+  ActivityProps,
+  activityTableHeader,
+} from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -11,7 +15,7 @@ import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
 import { addActivity, getActivites } from '../../../api/apiLayer';
-import { IActivityData, IActivity } from '../../../interfaces';
+import { IActivityData } from '../../../interfaces';
 
 const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
 
@@ -26,7 +30,7 @@ const Box = (): JSX.Element => (
 
 const ActivityDashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [activities, setActivities] = useState<ActivityProps[]>([]);
   const { businessId } = useParams();
 
   const onSubmit = async (data: IFormData): Promise<void> => {
@@ -51,7 +55,12 @@ const ActivityDashboard = (): JSX.Element => {
         .then(async (res) => {
           const { activities } = res;
           const activitiesArray = activities.map((activity) => ({
-            ...activity,
+            id: activity.id?.toString() ?? '',
+            title: activity.title,
+            startTime: activity.startTime,
+            endTime: activity.endTime ?? '',
+            address: activity.address,
+            status: 'inactive',
           }));
           setActivities(activitiesArray);
         })
@@ -63,7 +72,6 @@ const ActivityDashboard = (): JSX.Element => {
     })();
   }, [businessId]);
 
-  console.log(activities);
   return (
     <>
       <PageHeader
@@ -97,7 +105,11 @@ const ActivityDashboard = (): JSX.Element => {
         }
       />
       <div className="p-5">
-        {isOpen ? <AddForm onSubmit={onSubmit} /> : <Table />}
+        {isOpen ? (
+          <AddForm onSubmit={onSubmit} />
+        ) : (
+          <Table rowsData={activities} headerContent={activityTableHeader} />
+        )}
       </div>
     </>
   );

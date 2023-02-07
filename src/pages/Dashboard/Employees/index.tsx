@@ -151,7 +151,7 @@ const EmployeeDashboard = (): JSX.Element => {
     currentForm = <AddForm onSubmit={handleEmployeeCreation} />;
   } else {
     currentForm = (
-      <Table employees={employees} headerContent={employeeTableHeader} />
+      <Table rowsData={employees} headerContent={employeeTableHeader} />
     );
   }
 

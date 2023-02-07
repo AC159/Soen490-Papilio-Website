@@ -38,7 +38,7 @@ const DeleteForm = ({
       </h2>
       <br></br>
       <Table
-        employees={employees}
+        rowsData={employees}
         headerContent={employeeTableHeader}
         onSelect={handleToggleEmployeeToDelete}
         disabledRowId={admin.firebaseId}

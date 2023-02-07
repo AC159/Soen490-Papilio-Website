@@ -73,7 +73,7 @@ describe('Delete Form', () => {
 
     expect(Table.default).toHaveBeenCalledWith(
       expect.objectContaining({
-        employees: oneEmployee,
+        rowsData: oneEmployee,
       }),
       expect.anything(),
     );
