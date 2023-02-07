@@ -27,15 +27,6 @@ export declare interface IBusinessData {
 
 export declare interface IActivityData {
   activity: IActivity;
-  address: {
-    mention: string;
-    lineOne: string;
-    lineTwo: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-  };
 }
 
 export declare interface IActivity {
@@ -45,9 +36,10 @@ export declare interface IActivity {
   costPerIndividual: number;
   costPerGroup: number;
   groupSize: number;
+  address: string;
   image?: null;
   startTime: string;
-  endTime: string;
+  endTime?: string;
   createdAt?: string;
   updatedAt?: string;
   businessId?: string;

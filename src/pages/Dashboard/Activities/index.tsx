@@ -38,17 +38,7 @@ const ActivityDashboard = (): JSX.Element => {
         costPerGroup: parseFloat(data.activityCostGroup),
         groupSize: parseFloat(data.activityGroupSize),
         startTime: data.activityStart,
-        endTime: data.activityEnd,
-      },
-      address: {
-        // TODO: Add address information to form
-        mention: data.activityLocation,
-        lineOne: '1234 Main Street',
-        lineTwo: '',
-        city: 'Montreal',
-        state: 'QC',
-        country: 'Canada',
-        postalCode: 'EXAMPLE',
+        address: data.activityLocation,
       },
       // image: data.activityImage,  // TODO: Add image information
     };
