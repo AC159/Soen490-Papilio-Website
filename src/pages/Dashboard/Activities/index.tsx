@@ -47,7 +47,7 @@ const ActivityDashboard = (): JSX.Element => {
       },
       // image: data.activityImage,  // TODO: Add image information
     };
-    await addActivity(businessId ?? '', reqData);
+    await addActivity(businessId ?? '', reqData).then(() => setIsOpen(false));
   };
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const ActivityDashboard = (): JSX.Element => {
           }
         });
     })();
-  }, [businessId]);
+  }, [businessId, isOpen]);
 
   return (
     <>
@@ -93,9 +93,9 @@ const ActivityDashboard = (): JSX.Element => {
         tabs={tabs}
         rhs={
           <Button
-            text={constant.ADD_ACTIVITY_BUTTON}
+            text={isOpen ? 'Close' : constant.ADD_ACTIVITY_BUTTON}
             hasIcon={true}
-            icon={IconNames.ADD}
+            icon={isOpen ? IconNames.CLOSE : IconNames.ADD}
             iconPosition="lhs"
             variant="outline"
             onClick={() => {

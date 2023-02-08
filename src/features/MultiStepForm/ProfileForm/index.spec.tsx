@@ -38,9 +38,6 @@ describe('profile form test', () => {
   const itDisplaysATextBox = (name: string | RegExp): void =>
     it('displays a text box', () => {
       render(<ProfilForm {...defaultProps} />);
-
-      screen.debug();
-
       expect(screen.getByRole('textbox', { name })).not.toBeNull();
     });
 

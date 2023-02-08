@@ -1,4 +1,9 @@
-import { screen, render, act } from '@testing-library/react';
+import {
+  screen,
+  render,
+  act,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useParams } from 'react-router-dom';
 
@@ -50,6 +55,10 @@ describe('Activity dashboard test', () => {
       businessId: '',
       count: 1,
     });
+
+    (API.addActivity as jest.MockedFunction<typeof API.addActivity>)
+      // @ts-expect-error
+      .mockResolvedValue(null);
 
     (useParams as jest.MockedFunction<typeof useParams>).mockReturnValue({
       businessId: '',
@@ -121,5 +130,20 @@ describe('Activity dashboard test', () => {
         address: '201 Main Street, Montreal, QC EXM PLE',
       },
     });
+    await act(async () => await Promise.resolve());
+  });
+
+  it('close the add activity form after successfull submit', async () => {
+    render(
+      <AuthProvider>
+        <ActivityDashboard />
+      </AuthProvider>,
+    );
+
+    userEvent.click(screen.getByText(constants.ADD_ACTIVITY_BUTTON));
+    userEvent.click(await screen.findByTestId('addForm'));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId('addForm'));
+    expect(screen.queryByTestId('addForm')).not.toBeInTheDocument();
   });
 });
