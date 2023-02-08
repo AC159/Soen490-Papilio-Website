@@ -16,6 +16,7 @@ import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
 import { addActivity, getActivites } from '../../../api/apiLayer';
 import { IActivityData } from '../../../interfaces';
+import { formatDate } from '../../../utils';
 
 const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
 
@@ -57,7 +58,7 @@ const ActivityDashboard = (): JSX.Element => {
           const activitiesArray = activities.map((activity) => ({
             id: activity.id?.toString() ?? '',
             title: activity.title,
-            startTime: activity.startTime,
+            startTime: formatDate(activity.startTime),
             endTime: activity.endTime ?? '',
             address: activity.address,
             status: 'inactive',
