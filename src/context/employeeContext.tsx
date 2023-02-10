@@ -26,17 +26,18 @@ const AuthProvider = (props: any): JSX.Element => {
   const login = useCallback(
     async (form: IEmployee) =>
       await ApiLayer.login(form).then((data: IEmployee) => {
-        console.log(data);
         setEmployee(data);
+        sessionStorage.setItem('employee', JSON.stringify(data));
       }),
     [setEmployee],
   );
 
   const register = useCallback(
     async (form: IEmployee) =>
-      await ApiLayer.register(form).then((data: IEmployee) =>
-        setEmployee(data),
-      ),
+      await ApiLayer.register(form).then((data: IEmployee) => {
+        setEmployee(data);
+        sessionStorage.setItem('employee', JSON.stringify(data));
+      }),
     [setEmployee],
   );
 
@@ -44,14 +45,19 @@ const AuthProvider = (props: any): JSX.Element => {
     (callback: Function) => {
       ApiLayer.logout();
       setEmployee(initialState);
+      sessionStorage.clear();
       callback();
     },
     [setEmployee],
   );
 
+  const load = useCallback(() => {
+    setEmployee(JSON.parse(sessionStorage.getItem('employee') ?? ''));
+  }, [setEmployee]);
+
   const value = useMemo(
-    () => ({ employee, login, logout, register }),
-    [login, logout, register, employee],
+    () => ({ employee, login, logout, load, register }),
+    [login, logout, register, load, employee],
   );
 
   return <AuthContext.Provider value={value} {...props} />;
