@@ -1,3 +1,4 @@
+/* eslint multiline-ternary: ["error", "always-multiline"] */
 import { useEffect, useState } from 'react';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
@@ -79,43 +80,44 @@ const EmployeeDashboard = (): JSX.Element => {
   };
 
   const ActionList = (): JSX.Element => {
-    if (employee.role !== 'Admin') {
-      return <></>;
+    switch (currentSection) {
+      case Section.Add:
+      case Section.Delete:
+        return (
+          <Button
+            text="Close"
+            icon={IconNames.CLOSE}
+            iconPosition="lhs"
+            variant="outline"
+            onClick={() => setCurrentSection(Section.Table)}
+            size="sm"
+            hasIcon
+          />
+        );
+      default:
+        return (
+          <div className="flex space-x-2">
+            <Button
+              text={constant.ADD_EMPLOYEE_BUTTON}
+              icon={IconNames.ADD}
+              iconPosition="lhs"
+              variant="outline"
+              onClick={() => setCurrentSection(Section.Add)}
+              size="sm"
+              hasIcon
+            />
+            <Button
+              text={constant.DELETE_EMPLOYEE_BUTTON}
+              icon={IconNames.DELETE}
+              iconPosition="lhs"
+              variant="outline"
+              onClick={() => setCurrentSection(Section.Delete)}
+              size="sm"
+              hasIcon
+            />
+          </div>
+        );
     }
-    return (
-      <div className="flex space-x-2">
-        <Button
-          text={constant.ADD_EMPLOYEE_BUTTON}
-          hasIcon={true}
-          icon={IconNames.ADD}
-          iconPosition="lhs"
-          variant="outline"
-          onClick={() => {
-            if (currentSection !== Section.Add) {
-              setCurrentSection(Section.Add);
-            } else {
-              setCurrentSection(Section.Table);
-            }
-          }}
-          size="sm"
-        />
-        <Button
-          text={constant.DELETE_EMPLOYEE_BUTTON}
-          hasIcon={true}
-          icon={IconNames.DELETE}
-          iconPosition="lhs"
-          variant="outline"
-          onClick={() => {
-            if (currentSection !== Section.Delete) {
-              setCurrentSection(Section.Delete);
-            } else {
-              setCurrentSection(Section.Table);
-            }
-          }}
-          size="sm"
-        />
-      </div>
-    );
   };
 
   useEffect(() => {
@@ -171,7 +173,10 @@ const EmployeeDashboard = (): JSX.Element => {
           </>
         }
       />
-      <ListBanner tabs={tabs} rhs={<ActionList />} />
+      <ListBanner
+        tabs={tabs}
+        rhs={employee.role === 'Admin' && <ActionList />}
+      />
       <div className="p-3">{currentForm}</div>
     </>
   );

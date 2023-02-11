@@ -6,7 +6,6 @@ import * as auth from 'firebase/auth';
 import EmployeeDashboard from '.';
 import * as constant from './constant';
 import * as formConstant from './AddForm/constant';
-import { FORM_HEADLINE } from './AddForm/constant';
 import { AuthProvider } from '../../../context/employeeContext';
 import * as API from '../../../api/apiLayer';
 import * as hooks from '../../../hooks/useEmployee';
@@ -63,7 +62,9 @@ describe('logic test', () => {
     expect(screen.getByRole('table')).toBeInTheDocument();
     userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
 
-    expect(await screen.findByText(FORM_HEADLINE)).toBeInTheDocument();
+    expect(
+      await screen.findByText(formConstant.FORM_HEADLINE),
+    ).toBeInTheDocument();
   });
 
   test('when getEmployee throw error returns empty list of employees', async () => {
@@ -120,7 +121,7 @@ describe('logic test', () => {
       'Admin',
     );
 
-    const button = (await screen.findAllByText(formConstant.BUTTON_TEXT)).at(1);
+    const button = await screen.findByText(formConstant.BUTTON_TEXT);
     userEvent.click(button as Element);
 
     expect(await screen.findByRole('table')).toBeInTheDocument();
@@ -170,5 +171,35 @@ describe('logic test', () => {
 
     expect(API.deleteEmployees).toHaveBeenCalledWith([], 'businessId');
     await act(async () => await Promise.resolve());
+  });
+
+  it('changes add employee button to close after click', async () => {
+    render(<EmployeeDashboard />);
+
+    userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+    expect(await screen.findByText('Close')).toBeInTheDocument();
+  });
+
+  it('changes back to Add employee when click on close', async () => {
+    render(<EmployeeDashboard />);
+
+    userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+    userEvent.click(screen.getByText('Close'));
+    expect(screen.queryByText('Close')).not.toBeInTheDocument();
+    await act(async () => await Promise.resolve());
+  });
+
+  it('changes delete employee button to close after click', async () => {
+    render(<EmployeeDashboard />);
+
+    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    expect(await screen.findByText('Close')).toBeInTheDocument();
+  });
+
+  it('changes back to delete employee when click on close', async () => {
+    render(<EmployeeDashboard />);
+
+    userEvent.dblClick(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    expect(await screen.findByText('Close')).toBeInTheDocument();
   });
 });
