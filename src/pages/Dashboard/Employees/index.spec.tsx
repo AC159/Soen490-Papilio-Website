@@ -1,5 +1,9 @@
 /* eslint-disable no-import-assign */
-import { render, screen } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as auth from 'firebase/auth';
 
@@ -43,13 +47,12 @@ describe('logic test', () => {
         },
       ],
     });
+    // @ts-expect-error
+    API.deleteEmployees = jest.fn().mockResolvedValue({});
   });
 
   afterEach(() => {
-    (
-      API.getEmployees as jest.MockedFunction<typeof API.getEmployees>
-    ).mockClear();
-    (hooks.useAuth as jest.MockedFunction<typeof hooks.useAuth>).mockClear();
+    jest.clearAllMocks();
   });
 
   test('open add employee form test', async () => {
@@ -161,9 +164,6 @@ describe('logic test', () => {
   });
 
   it('calls deleteEmployee when clicking delete in DeleteForm', async () => {
-    // @ts-expect-error
-    API.deleteEmployees = jest.fn().mockResolvedValue({});
-
     render(<EmployeeDashboard />);
 
     userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
@@ -201,5 +201,13 @@ describe('logic test', () => {
 
     userEvent.dblClick(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
     expect(await screen.findByText('Close')).toBeInTheDocument();
+  });
+
+  it('closes the deleteForm on successful delete', async () => {
+    render(<EmployeeDashboard />);
+    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    userEvent.click(screen.getByTestId('deleteForm'));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId('deleteForm'));
   });
 });

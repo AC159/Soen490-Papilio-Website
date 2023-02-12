@@ -76,6 +76,7 @@ const EmployeeDashboard = (): JSX.Element => {
       setEmployees(
         employees.filter((employee) => !employeeIds.includes(employee.id)),
       );
+      setCurrentSection(Section.Table);
     });
   };
 
