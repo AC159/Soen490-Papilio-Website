@@ -59,12 +59,16 @@ const DeleteForm = ({
         onSelect={handleToggleEmployeeToDelete}
         disabledRowId={admin.firebaseId}
       />
-      <Button text={constant.BUTTON_TEXT} onClick={openSubmissionModal} />
+      <Button
+        text={constant.BUTTON_TEXT}
+        onClick={openSubmissionModal}
+        disabled={employeeIdsToDelete.length === 0}
+      />
       {isOpen && (
         <Portal>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-50 shadow-lg w-3/12 rounded-xl p-5 text-center border-2 border-red-400">
             <span>Are you sure you want to delete these employees?</span>
-            <div className="flex flex-row space-x-2 justify-end mt-5">
+            <div className="flex flex-row space-x-2 justify-center mt-5">
               <Button
                 text="Cancel"
                 onClick={closeSubmissionModal}

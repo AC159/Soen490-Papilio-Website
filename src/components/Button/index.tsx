@@ -19,6 +19,7 @@ export declare interface ButtonInterface {
   iconPosition?: 'rhs' | 'lhs';
   margin?: 'right' | 'left';
   testId?: string;
+  disabled?: boolean;
   onClick: () => void | Promise<void>;
 }
 
@@ -34,6 +35,7 @@ const Button = ({
   hasIcon = false,
   iconPosition = 'rhs',
   iconSize = 'md',
+  disabled = false,
 }: ButtonInterface): JSX.Element => {
   const OutlineStyle = classNames(
     'border-2 border-brand-orange text-brand-orange',
@@ -67,6 +69,7 @@ const Button = ({
     'w-max',
     'box-content',
     'items-center',
+    'disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none',
     {
       'bg-brand-blue-dark text-white': variant === 'primary',
       'bg-brand-blue text-white': variant === 'secondary',
@@ -89,8 +92,13 @@ const Button = ({
   });
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <div data-testid={testId} onClick={onClick} className={className}>
+    <button
+      data-testid={testId}
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      onClick={onClick}
+      className={className}
+      disabled={disabled}
+    >
       {hasIcon && iconPosition === 'lhs' && (
         <Icon name={icon} size={iconSize} />
       )}
@@ -98,7 +106,7 @@ const Button = ({
       {hasIcon && iconPosition === 'rhs' && (
         <Icon name={icon} size={iconSize} />
       )}
-    </div>
+    </button>
   );
 };
 

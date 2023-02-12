@@ -12,11 +12,6 @@ import * as Table from '../../../../features/Table';
 import * as hooks from '../../../../hooks/useEmployee';
 import { act } from 'react-dom/test-utils';
 
-const defaultProps = {
-  employees: [],
-  onSubmit: async () => {},
-};
-
 const oneEmployee = [
   {
     id: 'a',
@@ -34,6 +29,14 @@ const adminEmployee = [
     role: 'Admin',
   },
 ];
+
+const defaultProps = {
+  employees: oneEmployee,
+  onSubmit: async () => {},
+};
+
+const selectOneEmployee = (): void =>
+  userEvent.click(screen.getByRole('checkbox'));
 
 const renderWithPortal = (component: React.ReactElement): any =>
   render(<div id="portalRoot">{component}</div>);
@@ -67,6 +70,7 @@ describe('Delete Form', () => {
 
   it('opens the submission modal when delete button is clicked', async () => {
     renderWithPortal(<DeleteForm {...defaultProps} />);
+    selectOneEmployee();
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(
@@ -78,6 +82,7 @@ describe('Delete Form', () => {
 
   it('displays a delete button inside the delete modal', async () => {
     renderWithPortal(<DeleteForm {...defaultProps} />);
+    selectOneEmployee();
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(await screen.findByText(/^Delete$/)).toBeInTheDocument();
@@ -85,6 +90,7 @@ describe('Delete Form', () => {
 
   it('displays a cancel button inside the delete modal', async () => {
     renderWithPortal(<DeleteForm {...defaultProps} />);
+    selectOneEmployee();
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(await screen.findByText(/^Cancel$/)).toBeInTheDocument();
@@ -93,6 +99,7 @@ describe('Delete Form', () => {
   it('closes the modal without deleting anything when cancel is clicked', async () => {
     const mockOnSubmit = jest.fn();
     renderWithPortal(<DeleteForm {...defaultProps} onSubmit={mockOnSubmit} />);
+    selectOneEmployee();
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
     userEvent.click(await screen.findByText(/^Cancel$/));
 
@@ -104,6 +111,7 @@ describe('Delete Form', () => {
     const mockOnSubmit = jest.fn();
     renderWithPortal(<DeleteForm {...defaultProps} onSubmit={mockOnSubmit} />);
 
+    selectOneEmployee();
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
     userEvent.click(await screen.findByText(/^Delete$/));
 
@@ -139,31 +147,23 @@ describe('Delete Form', () => {
   });
 
   it('removes the id of the deleted employee when double click on user row', async () => {
-    const mockOnSubmit = jest.fn();
-    renderWithPortal(
-      <DeleteForm employees={oneEmployee} onSubmit={mockOnSubmit} />,
-    );
+    renderWithPortal(<DeleteForm {...defaultProps} employees={oneEmployee} />);
 
     userEvent.dblClick(screen.getByRole('checkbox'));
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
-    userEvent.click(await screen.findByText(/^Delete$/));
 
-    expect(mockOnSubmit).toHaveBeenCalledWith([]);
-    await act(async () => await Promise.resolve());
+    expect(screen.queryByText(/^Delete$/)).not.toBeInTheDocument();
   });
 
   it('block admin from deleting themselves', async () => {
-    const mockOnSubmit = jest.fn();
     renderWithPortal(
-      <DeleteForm employees={adminEmployee} onSubmit={mockOnSubmit} />,
+      <DeleteForm {...defaultProps} employees={adminEmployee} />,
     );
 
     userEvent.click(screen.getByRole('checkbox'));
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
-    userEvent.click(await screen.findByText(/^Delete$/));
 
-    expect(mockOnSubmit).toHaveBeenCalledWith([]);
-    await act(async () => await Promise.resolve());
+    expect(screen.queryByText(/^Delete$/)).not.toBeInTheDocument();
   });
 
   it('closes the delete modal after successful delete', async () => {
@@ -172,7 +172,7 @@ describe('Delete Form', () => {
       <DeleteForm employees={oneEmployee} onSubmit={mockOnSubmit} />,
     );
 
-    userEvent.dblClick(screen.getByRole('checkbox'));
+    userEvent.click(screen.getByRole('checkbox'));
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
     userEvent.click(await screen.findByText(/^Delete$/));
 
