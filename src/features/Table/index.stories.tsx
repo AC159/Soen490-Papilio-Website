@@ -8,11 +8,10 @@ export default {
 } as ComponentMeta<typeof Table>;
 
 const Template: ComponentStory<typeof Table> = () => (
-  <div className='h-screen'>
-    <Table employees={[]} onSelect={() => {}} />
+  <div className="h-screen">
+    <Table employees={[]} headerContent={[]} onSelect={() => {}} />
   </div>
 );
 
 export const Primary = Template.bind({});
-Primary.args = {
-};
+Primary.args = {};

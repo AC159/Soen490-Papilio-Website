@@ -28,11 +28,11 @@ describe('api test', () => {
     ).mockResolvedValue(new Response());
   });
 
-  describe('login related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
+  afterEach(() => {
+    (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
+  });
 
+  describe('login related test', () => {
     it('should send the request to the correct endpoint and format the result', async () => {
       (
         global.fetch as jest.MockedFunction<typeof global.fetch>
@@ -68,20 +68,12 @@ describe('api test', () => {
   });
 
   describe('register related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should do something', async () => {
       await API.register(BUSINESS_ID);
     });
   });
 
   describe('getProfile related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       await API.getProfile(BUSINESS_ID);
 
@@ -93,10 +85,6 @@ describe('api test', () => {
   });
 
   describe('addEmployee related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       const formData = {
         firebaseId: FIREBASE_ID,
@@ -124,10 +112,6 @@ describe('api test', () => {
   });
 
   describe('getEmployees related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should reject with an error when businessId is not present', async () => {
       await API.getEmployees('').catch((e) =>
         expect(e).toEqual(new Error('No business Id', { cause: 1 })),
@@ -179,10 +163,6 @@ describe('api test', () => {
   });
 
   describe('addBusiness related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       const formData = {
         business: {
@@ -214,10 +194,6 @@ describe('api test', () => {
   });
 
   describe('getBusiness related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       await API.getBusiness(BUSINESS_ID);
 
@@ -229,10 +205,6 @@ describe('api test', () => {
   });
 
   describe('getActivities related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should reject with an error when businessId is not present', async () => {
       await API.getActivites('').catch((e) =>
         expect(e).toEqual(new Error('No business Id', { cause: 1 })),
@@ -281,9 +253,6 @@ describe('api test', () => {
 
   describe('addActivity related test', () => {
     let formData: IActivityData;
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
 
     beforeEach(() => {
       formData = {
@@ -327,6 +296,27 @@ describe('api test', () => {
           }),
         },
       );
+    });
+  });
+
+  describe('deleteEmployee', () => {
+    const businessId = 'businessId';
+
+    it('should send the request to the correct endpoint', async () => {
+      const employees = ['1234'];
+      await API.deleteEmployees(employees, businessId);
+      expect(global.fetch).toHaveBeenCalledWith(
+        `/api/business/${businessId}/removeEmployee/1234`,
+        {
+          method: 'DELETE',
+        },
+      );
+    });
+
+    it('calls fetch for each employee to delete', async () => {
+      const employees = ['1234', '2345'];
+      await API.deleteEmployees(employees, businessId);
+      expect(global.fetch).toHaveBeenCalledTimes(2);
     });
   });
 });

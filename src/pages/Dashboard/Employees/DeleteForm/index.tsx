@@ -1,16 +1,21 @@
 import Button from '../../../../components/Button';
 import * as constant from './constant';
-import Table, { Employee } from '../../../../features/Table';
+import Table, {
+  Employee,
+  employeeTableHeader,
+} from '../../../../features/Table';
 import { useState } from 'react';
+import { useAuth } from '../../../../hooks/useEmployee';
 export declare interface DeleteFormInterface {
   employees: Employee[];
-  onSubmit: (employeeIds: string[]) => void;
+  onSubmit: (employeeIds: string[]) => Promise<void>;
 }
 
 const DeleteForm = ({
   employees,
   onSubmit,
 }: DeleteFormInterface): JSX.Element => {
+  const { employee: admin } = useAuth();
   const [employeesIdsToDelete, setEmployeesIdsToDelete] = useState<string[]>(
     [],
   );
@@ -32,10 +37,15 @@ const DeleteForm = ({
         {constant.FORM_HEADLINE}
       </h2>
       <br></br>
-      <Table employees={employees} onSelect={handleToggleEmployeeToDelete} />
+      <Table
+        employees={employees}
+        headerContent={employeeTableHeader}
+        onSelect={handleToggleEmployeeToDelete}
+        disabledRowId={admin.firebaseId}
+      />
       <Button
         text={constant.BUTTON_TEXT}
-        onClick={() => onSubmit(employeesIdsToDelete)}
+        onClick={async () => await onSubmit(employeesIdsToDelete)}
       />
     </div>
   );
