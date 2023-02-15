@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 // import Table from '../Activities/ActivityTable';
-import Table, {
-  ActivityProps,
-  activityTableHeader,
-} from '../../../features/Table';
+import Table, { activityTableHeader } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -14,9 +11,8 @@ import AddForm, { IFormData } from './AddForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
-import { addActivity, getActivites } from '../../../api/apiLayer';
-import { IActivityData } from '../../../interfaces';
-import { formatDate } from '../../../utils';
+import { addActivity, getActivities } from '../../../api/apiLayer';
+import { IActivityData, ActivityRowProps } from '../../../interfaces';
 
 const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
 
@@ -31,7 +27,7 @@ const Box = (): JSX.Element => (
 
 const ActivityDashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activities, setActivities] = useState<ActivityProps[]>([]);
+  const [activities, setActivities] = useState<ActivityRowProps[]>([]);
   const { businessId } = useParams();
 
   const onSubmit = async (data: IFormData): Promise<void> => {
@@ -52,19 +48,8 @@ const ActivityDashboard = (): JSX.Element => {
 
   useEffect(() => {
     void (async function getAllEmployees() {
-      await getActivites(businessId ?? '')
-        .then(async (res) => {
-          const { activities } = res;
-          const activitiesArray = activities.map((activity) => ({
-            id: activity.id?.toString() ?? '',
-            title: activity.title,
-            startTime: formatDate(activity.startTime),
-            endTime: activity.endTime ?? '',
-            address: activity.address,
-            status: 'inactive',
-          }));
-          setActivities(activitiesArray);
-        })
+      await getActivities(businessId ?? '')
+        .then(setActivities)
         .catch((error) => {
           if (error?.cause !== 1) {
             console.error(error.message);

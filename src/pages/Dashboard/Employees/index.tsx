@@ -4,7 +4,7 @@ import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
 import { auth } from '../../../firebase';
-import Table, { Employee, employeeTableHeader } from '../../../features/Table';
+import Table, { employeeTableHeader } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -19,7 +19,7 @@ import {
   deleteEmployees,
   getEmployees,
 } from '../../../api/apiLayer';
-import { IEmployeeData } from '../../../interfaces';
+import { IEmployeeData, EmployeeRowProps } from '../../../interfaces';
 import { useAuth } from '../../../hooks/useEmployee';
 
 enum Section {
@@ -46,16 +46,15 @@ const Box = (): JSX.Element => (
 const EmployeeDashboard = (): JSX.Element => {
   const { employee } = useAuth();
   const { businessId } = useParams();
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<EmployeeRowProps[]>([]);
   const [currentSection, setCurrentSection] = useState(Section.Table);
 
   const handleEmployeeCreation = async (data: IFormData): Promise<void> => {
     const reqData: IEmployeeData = {
-      firebaseId: '',
+      firebase_id: '',
       email: data.employeeEmail,
       firstName: data.employeeFirstName,
       lastName: data.employeeLastName,
-      businessId: businessId ?? '',
       role: data.role,
       root: false, // True only while creating the business
     };
@@ -124,19 +123,7 @@ const EmployeeDashboard = (): JSX.Element => {
   useEffect(() => {
     void (async function () {
       await getEmployees(businessId ?? '')
-        .then(async (res) => {
-          // @ts-expect-error
-          const { employees } = res;
-          // @ts-expect-error
-          const employeeArray = employees.map((employee) => ({
-            id: employee.firebase_id,
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            name: `${employee.firstName} ${employee.lastName}`,
-            email: employee.email,
-            role: employee.role,
-          }));
-          setEmployees(employeeArray);
-        })
+        .then(setEmployees)
         .catch((error) => {
           if (error?.cause !== 1) {
             console.error(error.message);

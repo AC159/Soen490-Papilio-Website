@@ -12,6 +12,7 @@ import * as constants from './constant';
 import { AuthProvider } from '../../../context/employeeContext';
 import * as hooks from '../../../hooks/useEmployee';
 import * as API from '../../../api/apiLayer';
+import { formatDate } from '../../../utils';
 
 let mockData: any;
 
@@ -33,7 +34,7 @@ jest.mock('./AddForm', () => ({
 jest.mock('../../../api/apiLayer', () => ({
   __esModule: true,
   addActivity: jest.fn(),
-  getActivites: jest.fn(),
+  getActivities: jest.fn(),
 }));
 
 describe('Activity dashboard test', () => {
@@ -49,12 +50,17 @@ describe('Activity dashboard test', () => {
         },
       });
     (
-      API.getActivites as jest.MockedFunction<typeof API.getActivites>
-    ).mockResolvedValue({
-      activities: [],
-      businessId: '',
-      count: 1,
-    });
+      API.getActivities as jest.MockedFunction<typeof API.getActivities>
+    ).mockResolvedValue([
+      {
+        id: 'activity_id',
+        title: 'title',
+        startTime: formatDate(Date()),
+        endTime: '',
+        address: '1234 Main St.',
+        status: 'inactive',
+      },
+    ]);
 
     (API.addActivity as jest.MockedFunction<typeof API.addActivity>)
       // @ts-expect-error
@@ -92,7 +98,7 @@ describe('Activity dashboard test', () => {
         <ActivityDashboard />
       </AuthProvider>,
     );
-    expect(API.getActivites).toHaveBeenCalledWith('businessId');
+    expect(API.getActivities).toHaveBeenCalledWith('businessId');
     await act(async () => await Promise.resolve());
   });
 

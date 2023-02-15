@@ -1,22 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import Row, { ClickableRow } from './Row';
+import { RowProps } from '../../interfaces';
 
 export interface Employee extends RowProps {
   name: string;
   email: string;
   role: string;
-}
-
-export interface ActivityProps extends RowProps {
-  title: string;
-  startTime: string;
-  endTime: string;
-  address: string;
-  status: string;
-}
-
-export interface RowProps {
-  id: string;
 }
 
 interface IProps<T> {

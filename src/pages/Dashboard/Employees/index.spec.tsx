@@ -2,6 +2,7 @@
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -9,11 +10,15 @@ import * as auth from 'firebase/auth';
 
 import EmployeeDashboard from '.';
 import * as constant from './constant';
-import * as formConstant from './AddForm/constant';
 import { AuthProvider } from '../../../context/employeeContext';
 import * as API from '../../../api/apiLayer';
 import * as hooks from '../../../hooks/useEmployee';
 import { act } from 'react-dom/test-utils';
+
+const renderWithAuthProvider = (component: React.ReactElement): any =>
+  render(<AuthProvider>{component}</AuthProvider>);
+
+let mockData: any;
 
 jest.mock('firebase/auth');
 jest.mock('firebase/app');
@@ -25,7 +30,14 @@ jest.mock('./DeleteForm', () => ({
   ),
 }));
 
-describe('logic test', () => {
+jest.mock('./AddForm', () => ({
+  __esModule: true,
+  default: ({ onSubmit }: any) => (
+    <button data-testid="addForm" onClick={() => onSubmit(mockData)} />
+  ),
+}));
+
+describe('Employee Dashboard', () => {
   beforeEach(() => {
     // @ts-expect-error
     hooks.useAuth = jest.fn().mockReturnValue({
@@ -37,37 +49,30 @@ describe('logic test', () => {
       },
     });
     // @ts-expect-error
-    API.getEmployees = jest.fn().mockResolvedValue({
-      employees: [
-        {
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'jdoe@email.com',
-          role: 'Admin',
-        },
-      ],
-    });
+    API.getEmployees = jest.fn().mockResolvedValue([
+      {
+        id: 'FIREBASE_ID',
+        name: 'John Doe',
+        email: 'fake@email.com',
+        role: 'Admin',
+      },
+    ]);
     // @ts-expect-error
     API.deleteEmployees = jest.fn().mockResolvedValue({});
   });
 
   afterEach(() => {
     jest.clearAllMocks();
+    mockData = undefined;
   });
 
   test('open add employee form test', async () => {
-    render(
-      <AuthProvider>
-        <EmployeeDashboard />
-      </AuthProvider>,
-    );
+    renderWithAuthProvider(<EmployeeDashboard />);
 
     expect(screen.getByRole('table')).toBeInTheDocument();
     userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
 
-    expect(
-      await screen.findByText(formConstant.FORM_HEADLINE),
-    ).toBeInTheDocument();
+    expect(await screen.findByTestId('addForm')).toBeInTheDocument();
   });
 
   test('when getEmployee throw error returns empty list of employees', async () => {
@@ -75,68 +80,10 @@ describe('logic test', () => {
       API.getEmployees as jest.MockedFunction<typeof API.getEmployees>
     ).mockReturnValueOnce(Promise.reject(new Error('error', { cause: 1 })));
 
-    render(
-      <AuthProvider>
-        <EmployeeDashboard />
-      </AuthProvider>,
-    );
+    renderWithAuthProvider(<EmployeeDashboard />);
 
     expect(await screen.findByRole('table')).toBeInTheDocument();
     expect(screen.queryByText(/jdoe@email.com/)).not.toBeInTheDocument();
-  });
-
-  test('add employee form submit form after submit button clicked', async () => {
-    // @ts-expect-error
-    API.addEmployee = jest.fn().mockResolvedValue({});
-
-    // @ts-expect-error
-    auth.sendSignInLinkToEmail.mockResolvedValue();
-
-    render(
-      <AuthProvider>
-        <EmployeeDashboard />
-      </AuthProvider>,
-    );
-
-    userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-    userEvent.type(
-      await screen.findByRole('textbox', {
-        name: formConstant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
-      }),
-      'John',
-    );
-    userEvent.type(
-      await screen.findByRole('textbox', {
-        name: formConstant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
-      }),
-      'Doe',
-    );
-    userEvent.type(
-      await screen.findByRole('textbox', {
-        name: formConstant.INPUT_EMPLOYEE_EMAIL_LABEL,
-      }),
-      'jd@email.com',
-    );
-    userEvent.type(
-      await screen.findByRole('textbox', {
-        name: formConstant.INPUT_ROLE_LABEL,
-      }),
-      'Admin',
-    );
-
-    const button = await screen.findByText(formConstant.BUTTON_TEXT);
-    userEvent.click(button as Element);
-
-    expect(await screen.findByRole('table')).toBeInTheDocument();
-    expect(API.addEmployee).toHaveBeenCalledWith(
-      expect.stringContaining(''),
-      expect.objectContaining({
-        email: 'jd@email.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'Admin',
-      }),
-    );
   });
 
   it('hides the action button when employee is not an admin', async () => {
@@ -155,59 +102,131 @@ describe('logic test', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('displays deleteForm when delete button is clicked', async () => {
-    render(<EmployeeDashboard />);
+  describe('addEmployee', () => {
+    beforeEach(() => {
+      // @ts-expect-error
+      API.addEmployee = jest.fn().mockResolvedValue({});
+      // @ts-expect-error
+      auth.sendSignInLinkToEmail.mockResolvedValue();
+      mockData = {
+        employeeEmail: 'fake@email.com',
+        employeeFirstName: '',
+        employeeLastName: '',
+        role: '',
+      };
+    });
 
-    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    it('changes add employee button to close after click', async () => {
+      render(<EmployeeDashboard />);
+      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+      expect(await screen.findByText('Close')).toBeInTheDocument();
+    });
 
-    expect(await screen.findByTestId('deleteForm')).toBeInTheDocument();
+    it('changes back to Add employee when click on close', async () => {
+      render(<EmployeeDashboard />);
+      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+      userEvent.click(screen.getByText('Close'));
+      expect(screen.queryByText('Close')).not.toBeInTheDocument();
+      await act(async () => await Promise.resolve());
+    });
+
+    it('submit add employee form after submit button clicked', async () => {
+      mockData = {
+        employeeEmail: 'jd@email.com',
+        employeeFirstName: 'John',
+        employeeLastName: 'Doe',
+        role: 'Admin',
+      };
+
+      renderWithAuthProvider(<EmployeeDashboard />);
+
+      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+      userEvent.click(await screen.findByTestId('addForm'));
+
+      expect(await screen.findByRole('table')).toBeInTheDocument();
+      expect(API.addEmployee).toHaveBeenCalledWith(
+        expect.stringContaining(''),
+        {
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'jd@email.com',
+          firebase_id: expect.any(String),
+          role: 'Admin',
+          root: false,
+        },
+      );
+    });
+
+    it('calls sendSignInLinkToEmail after successful addEmployee', async () => {
+      mockData = {
+        ...mockData,
+        employeeEmail: 'fake@email.com',
+      };
+      renderWithAuthProvider(<EmployeeDashboard />);
+
+      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+      userEvent.click(await screen.findByTestId('addForm'));
+
+      await waitFor(() =>
+        expect(auth.sendSignInLinkToEmail).toHaveBeenCalledWith(
+          undefined,
+          'fake@email.com',
+          {
+            url: 'https://localhost:3000/email-signin',
+          },
+        ),
+      );
+    });
+
+    it('closes addForm after successful operation', async () => {
+      renderWithAuthProvider(<EmployeeDashboard />);
+
+      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+      userEvent.click(await screen.findByTestId('addForm'));
+
+      await waitForElementToBeRemoved(() => screen.queryByTestId('addForm'));
+    });
   });
 
-  it('calls deleteEmployee when clicking delete in DeleteForm', async () => {
-    render(<EmployeeDashboard />);
+  describe('DeleteForm', () => {
+    it('displays deleteForm when delete button is clicked', async () => {
+      render(<EmployeeDashboard />);
 
-    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-    userEvent.click(screen.getByTestId('deleteForm'));
+      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
 
-    expect(API.deleteEmployees).toHaveBeenCalledWith([], 'businessId');
-    await act(async () => await Promise.resolve());
-  });
+      expect(await screen.findByTestId('deleteForm')).toBeInTheDocument();
+    });
 
-  it('changes add employee button to close after click', async () => {
-    render(<EmployeeDashboard />);
+    it('calls deleteEmployee when clicking delete in DeleteForm', async () => {
+      render(<EmployeeDashboard />);
 
-    userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-    expect(await screen.findByText('Close')).toBeInTheDocument();
-  });
+      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+      userEvent.click(screen.getByTestId('deleteForm'));
 
-  it('changes back to Add employee when click on close', async () => {
-    render(<EmployeeDashboard />);
+      expect(API.deleteEmployees).toHaveBeenCalledWith([], 'businessId');
+      await act(async () => await Promise.resolve());
+    });
 
-    userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-    userEvent.click(screen.getByText('Close'));
-    expect(screen.queryByText('Close')).not.toBeInTheDocument();
-    await act(async () => await Promise.resolve());
-  });
+    it('changes delete employee button to close after click', async () => {
+      render(<EmployeeDashboard />);
 
-  it('changes delete employee button to close after click', async () => {
-    render(<EmployeeDashboard />);
+      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+      expect(await screen.findByText('Close')).toBeInTheDocument();
+    });
 
-    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-    expect(await screen.findByText('Close')).toBeInTheDocument();
-  });
+    it('changes back to delete employee when click on close', async () => {
+      render(<EmployeeDashboard />);
 
-  it('changes back to delete employee when click on close', async () => {
-    render(<EmployeeDashboard />);
+      userEvent.dblClick(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+      expect(await screen.findByText('Close')).toBeInTheDocument();
+    });
 
-    userEvent.dblClick(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-    expect(await screen.findByText('Close')).toBeInTheDocument();
-  });
+    it('closes the deleteForm on successful delete', async () => {
+      render(<EmployeeDashboard />);
+      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+      userEvent.click(screen.getByTestId('deleteForm'));
 
-  it('closes the deleteForm on successful delete', async () => {
-    render(<EmployeeDashboard />);
-    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-    userEvent.click(screen.getByTestId('deleteForm'));
-
-    await waitForElementToBeRemoved(() => screen.queryByTestId('deleteForm'));
+      await waitForElementToBeRemoved(() => screen.queryByTestId('deleteForm'));
+    });
   });
 });
