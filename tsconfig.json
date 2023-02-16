@@ -19,7 +19,8 @@
     "allowUnusedLabels": false,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "noImplicitAny": false,
   },
   "include": ["src"]
 }

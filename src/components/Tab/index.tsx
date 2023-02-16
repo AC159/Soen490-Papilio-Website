@@ -9,7 +9,7 @@ export declare interface TabInterface {
   horizontal?: boolean;
   to?: LinkProps['to'];
   isSelected: boolean;
-  icon?: 'ad' | 'home' | 'event' | 'employee' | 'feed';
+  icon?: 'ad' | 'home' | 'event' | 'employee' | 'feed' | 'billing';
   type?: 'button' | 'link';
   testId?: string;
 }
@@ -36,6 +36,7 @@ const Tab = ({
     event: IconNames.EVENT,
     employee: IconNames.EMPLOYEE,
     feed: IconNames.FEED,
+    billing: IconNames.BILLING,
   };
 
   const Content: React.ReactNode = (

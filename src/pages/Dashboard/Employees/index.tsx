@@ -116,7 +116,6 @@ const EmployeeDashboard = (): JSX.Element => {
         .then(async (res) => {
           // @ts-expect-error
           const { employees } = res;
-          // @ts-expect-error
           const employeeArray = employees.map((employee) => ({
             id: employee.firebase_id,
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -134,7 +133,7 @@ const EmployeeDashboard = (): JSX.Element => {
     })();
   }, [businessId]);
 
-  let currentForm = null;
+  let currentForm: React.ReactNode = null;
   if (formState === whichSectionIsOpen.Delete) {
     currentForm = (
       <DeleteForm onSubmit={onSubmitDelete} employees={employees} />
