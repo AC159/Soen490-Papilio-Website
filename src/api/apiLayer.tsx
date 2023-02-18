@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 import * as Interfaces from '../interfaces';
 import { formatDate } from '../utils';
 
@@ -45,7 +46,10 @@ export async function getActivities(
         id: activity.id?.toString(),
         title: activity.title,
         startTime: formatDate(activity.startTime),
-        endTime: activity.endTime ?? '',
+        endTime:
+          activity.endTime !== null
+            ? formatDate(activity.endTime)
+            : 'Not defined',
         address: activity.address,
         status: 'inactive',
       })),

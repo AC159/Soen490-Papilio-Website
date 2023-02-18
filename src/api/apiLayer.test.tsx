@@ -217,18 +217,21 @@ describe('api test', () => {
   });
 
   describe('getActivities related test', () => {
-    let date: any;
+    let date: string;
+    let otherDate: string;
     beforeEach(() => {
-      date = Date.now();
+      date = new Date(Date.now()).toISOString();
+      otherDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
       (
         global.fetch as jest.MockedFunction<typeof global.fetch>
-      ).mockResolvedValueOnce({
+      ).mockResolvedValue({
         json: async () => ({
           activities: [
             {
               id: 'activity_id',
               title: 'title',
               startTime: date,
+              endTime: otherDate,
               address: '1234 Main St.',
             },
           ],
@@ -273,11 +276,50 @@ describe('api test', () => {
         {
           id: 'activity_id',
           title: 'title',
-          startTime: formatDate(date),
+          startTime: expect.any(String),
           endTime: expect.any(String),
           address: '1234 Main St.',
           status: 'inactive',
         },
+      ]);
+    });
+
+    it('formats date values in each activities', async () => {
+      const result = await API.getActivities(BUSINESS_ID);
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          startTime: formatDate(date),
+          endTime: formatDate(otherDate),
+        }),
+      ]);
+    });
+
+    it('displays not defined when there are no values for end time', async () => {
+      (
+        global.fetch as jest.MockedFunction<typeof global.fetch>
+      ).mockResolvedValue({
+        json: async () => ({
+          activities: [
+            {
+              id: 'activity_id',
+              title: 'title',
+              startTime: date,
+              endTime: null,
+              address: '1234 Main St.',
+            },
+          ],
+          count: 0,
+          businessId: BUSINESS_ID,
+        }),
+      } as Response);
+
+      const result = await API.getActivities(BUSINESS_ID);
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          endTime: 'Not defined',
+        }),
       ]);
     });
   });
