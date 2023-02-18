@@ -22,17 +22,17 @@ describe('Activity dashboard test', () => {
       },
     });
 
-    (API.getActivites as jest.MockedFunction<typeof API.getActivites>) = jest.fn().mockResolvedValue({
+    (API.getActivities as jest.MockedFunction<typeof API.getActivities>) = jest.fn().mockResolvedValue({
       activities: [],
     });
   });
 
   afterEach(() => {
     (hooks.useAuth as jest.MockedFunction<typeof hooks.useAuth>).mockClear();
-    (API.getActivites as jest.MockedFunction<typeof API.getActivites>).mockClear();
+    (API.getActivities as jest.MockedFunction<typeof API.getActivities>).mockClear();
   });
 
-  test('open add employee form test', async () => {
+  test('open add activity form test', async () => {
     render(<AuthProvider><ActivityDashboard /></AuthProvider>);
 
     expect(screen.getByRole('table')).toBeInTheDocument();

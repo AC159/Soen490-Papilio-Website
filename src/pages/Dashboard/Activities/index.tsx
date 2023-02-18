@@ -1,19 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+// import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
-import Table from '../Activities/ActivityTable';
+// import { auth } from '../../../firebase';
+import Table, { Activity, activityTableHeader } from './Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
 import ListBanner from '../../../features/ListBanner';
 import AddForm, { IFormData } from './AddForm';
+import DeleteForm from './DeleteForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
-import { addActivity, getActivites } from '../../../api/apiLayer';
-import { IActivityData, IActivity } from '../../../interfaces';
+import {
+  addActivity,
+  deleteActivities,
+  getActivities,
+} from '../../../api/apiLayer';
+import { IActivityData } from '../../../interfaces';
 
-const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
+enum Section {
+  Table,
+  Add,
+  Delete,
+}
+
+const tabs: ITab[] = [
+  { label: constant.ALL_ACTIVITY_LABEL },
+];
 
 // TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
@@ -25,45 +40,92 @@ const Box = (): JSX.Element => (
 );
 
 const ActivityDashboard = (): JSX.Element => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activities, setActivities] = useState<IActivity[]>([]);
   const { businessId } = useParams();
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [currentSection, setCurrentSection] = useState(Section.Table);
 
-  const onSubmit = async (data: IFormData): Promise<void> => {
+  const handleActivityCreation = async (data: IFormData): Promise<void> => {
     const reqData: IActivityData = {
       activity: {
-        title: data.activityTitle,
-        description: data.activityDescription,
-        costPerIndividual: parseFloat(data.activityCostIndv),
-        costPerGroup: parseFloat(data.activityCostGroup),
-        groupSize: parseFloat(data.activityGroupSize),
-        startTime: data.activityStart,
-        endTime: data.activityEnd,
+        title: data.title,
+        address: data.address,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        description: data.description,
+        costPerIndividual: data.costPerIndividual,
+        costPerGroup: data.costPerGroup,
+        groupSize: data.groupSize,
       },
-      address: {
-        // TODO: Add address information to form
-        mention: data.activityLocation,
-        lineOne: '1234 Main Street',
-        lineTwo: '',
-        city: 'Montreal',
-        state: 'QC',
-        country: 'Canada',
-        postalCode: 'EXAMPLE',
-      },
-      // image: data.activityImage,  // TODO: Add image information
     };
-    await addActivity(businessId ?? '', reqData);
+
+    await addActivity(businessId ?? '', reqData).then(() => {
+      setCurrentSection(Section.Table);
+    });
+  };
+
+  const handleActivityDeletion = async (
+    activityIds: string[],
+  ): Promise<void> => {
+    await deleteActivities(activityIds, businessId ?? '').then(async () => {
+      setActivities(
+        activities.filter((activity) => !activityIds.includes(activity.id)),
+      );
+    });
+  };
+
+  const ActionList = (): JSX.Element => {
+    return (
+      <div className="flex space-x-2">
+        <Button
+          text={constant.ADD_ACTIVITY_BUTTON}
+          hasIcon={true}
+          icon={IconNames.ADD}
+          iconPosition="lhs"
+          variant="outline"
+          onClick={() => {
+            if (currentSection !== Section.Add) {
+              setCurrentSection(Section.Add);
+            } else {
+              setCurrentSection(Section.Table);
+            }
+          }}
+          size="sm"
+        />
+        <Button
+          text={constant.DELETE_ACTIVITY_BUTTON}
+          hasIcon={true}
+          icon={IconNames.DELETE}
+          iconPosition="lhs"
+          variant="outline"
+          onClick={() => {
+            if (currentSection !== Section.Delete) {
+              setCurrentSection(Section.Delete);
+            } else {
+              setCurrentSection(Section.Table);
+            }
+          }}
+          size="sm"
+        />
+      </div>
+    );
   };
 
   useEffect(() => {
-    void (async function getAllEmployees() {
-      await getActivites(businessId ?? '')
+    void (async function () {
+      await getActivities(businessId ?? '')
         .then(async (res) => {
+          // @ts-expect-error
           const { activities } = res;
-          const activitiesArray = activities.map((activity) => ({
-            ...activity,
+          // @ts-expect-error
+          const activityArray = activities.map((activity) => ({
+            id: activity.id,
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            title: activity.title,
+            startTime: (activity.startTime).substring(0, 10),
+            endTime: (activity.endTime).substring(0, 10),
+            address: activity.address,
           }));
-          setActivities(activitiesArray);
+          setActivities(activityArray);
         })
         .catch((error) => {
           if (error?.cause !== 1) {
@@ -73,7 +135,19 @@ const ActivityDashboard = (): JSX.Element => {
     })();
   }, [businessId]);
 
-  console.log(activities);
+  let currentForm = null;
+  if (currentSection === Section.Delete) {
+    currentForm = (
+      <DeleteForm onSubmit={handleActivityDeletion} activities={activities} />
+    );
+  } else if (currentSection === Section.Add) {
+    currentForm = <AddForm onSubmit={handleActivityCreation} />;
+  } else {
+    currentForm = (
+      <Table activities={activities} headerContent={activityTableHeader} />
+    );
+  }
+
   return (
     <>
       <PageHeader
@@ -90,25 +164,8 @@ const ActivityDashboard = (): JSX.Element => {
           </>
         }
       />
-      <ListBanner
-        tabs={tabs}
-        rhs={
-          <Button
-            text={constant.ADD_ACTIVITY_BUTTON}
-            hasIcon={true}
-            icon={IconNames.ADD}
-            iconPosition="lhs"
-            variant="outline"
-            onClick={() => {
-              setIsOpen(!isOpen);
-            }}
-            size="sm"
-          />
-        }
-      />
-      <div className="p-5">
-        {isOpen ? <AddForm onSubmit={onSubmit} /> : <Table />}
-      </div>
+      <ListBanner tabs={tabs} rhs={<ActionList />} />
+      <div className="p-3">{currentForm}</div>
     </>
   );
 };

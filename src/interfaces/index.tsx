@@ -26,35 +26,20 @@ export declare interface IBusinessData {
 }
 
 export declare interface IActivityData {
-  activity: IActivity;
-  address: {
-    mention: string;
-    lineOne: string;
-    lineTwo: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-  };
-}
-
-export declare interface IActivity {
-  id?: number;
-  title: string;
-  description: string;
-  costPerIndividual: number;
-  costPerGroup: number;
-  groupSize: number;
-  image?: null;
-  startTime: string;
-  endTime: string;
-  createdAt?: string;
-  updatedAt?: string;
-  businessId?: string;
+  activity: {
+    title: string;
+    description: string;
+    costPerIndividual: number;
+    costPerGroup: number;
+    groupSize: number;
+    startTime: string;
+    endTime: string;
+    address: string;
+  }
 }
 
 export declare interface IActivitiesResponse {
   businessId: string;
   count: number;
-  activities: IActivity[];
+  activities: IActivityData[];
 }

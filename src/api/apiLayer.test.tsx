@@ -206,7 +206,7 @@ describe('api test', () => {
 
   describe('getActivities related test', () => {
     it('should reject with an error when businessId is not present', async () => {
-      await API.getActivites('').catch((e) =>
+      await API.getActivities('').catch((e) =>
         expect(e).toEqual(new Error('No business Id', { cause: 1 })),
       );
     });
@@ -222,7 +222,7 @@ describe('api test', () => {
         }),
       } as Response);
 
-      const results = await API.getActivites(BUSINESS_ID);
+      const results = await API.getActivities(BUSINESS_ID);
 
       expect(global.fetch).toHaveBeenCalledWith(
         `/api/business/get/${BUSINESS_ID}/activities`,
@@ -245,7 +245,7 @@ describe('api test', () => {
         global.fetch as jest.MockedFunction<typeof global.fetch>
       ).mockRejectedValueOnce(new Error(message));
 
-      await API.getActivites(BUSINESS_ID).catch((e) =>
+      await API.getActivities(BUSINESS_ID).catch((e) =>
         expect(e).toEqual(new Error(message, { cause: 0 })),
       );
     });
@@ -264,16 +264,8 @@ describe('api test', () => {
           groupSize: 10,
           startTime: '1970-01-01T00:00:00.000Z',
           endTime: '2070-01-01T00:00:00.000Z',
-        },
-        address: {
-          mention: 'mention',
-          lineOne: '1234 Main Street',
-          lineTwo: '',
-          city: 'Montreal',
-          state: 'QC',
-          country: 'Canada',
-          postalCode: 'EXAMPLE',
-        },
+          address: '1234 Main Street, Montreal, QC, Canada, EXM PLE'
+        }
       };
     });
 
