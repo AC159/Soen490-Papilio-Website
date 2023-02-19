@@ -9,8 +9,8 @@ import Billing from './pages/Dashboard/Billing';
 import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
 import HomePage from './pages/Home';
-
 import { AuthProvider } from './context/employeeContext';
+import PaymentForm from './pages/Dashboard/Billing/PaymentForm';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +22,10 @@ const router = createBrowserRouter([
     path: '/signup',
     element: <LoginPage type="business" />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: '/payment',
+    element: <PaymentForm/>,
   },
   {
     path: '/admin',

@@ -2,6 +2,11 @@ import '../Ad/index.css';
 import CheckMark from '../../components/CheckMark';
 
 const Ad = (): JSX.Element => {
+  const handleSelect = (packageName: string, cost: string): void => {
+    const url = `/payment?package=${packageName}&cost=${cost}`;
+    window.location.href = url;
+  };
+
   return (
     <div className='createGrid flex flex-col'>
       <div className='basic'>
@@ -12,9 +17,9 @@ const Ad = (): JSX.Element => {
         <div><CheckMark/> Access to Activity Creation Center</div>
         <div><CheckMark/> Access to Employee Manager to easily access data about your team</div>
         <div><CheckMark/> Give access to <b className='font-extrabold text-lg xl:text-2xl'>1</b> employee (admin)</div>
-        <div className='text-lg xl:text-3xl font-bold pt-4 xl:pt-16 text-center'>9.99/month</div>
+        <div className='text-lg xl:text-3xl font-bold pt-4 xl:pt-16 text-center'>$9.99/month</div>
         <div className='text-center'>
-          <button className="bg-transparent hover:bg-white text-white text-md xl:text-xl text-center font-semibold hover:text-[#336964] py-2 px-4 border border-white hover:border-transparent rounded">
+          <button className="select-button basic-button" onClick={() => handleSelect('BASIC', '$9.99/month')}>
             SELECT
           </button>
         </div>
@@ -27,9 +32,9 @@ const Ad = (): JSX.Element => {
         <div><CheckMark/> Access to Activity Creation Center</div>
         <div><CheckMark/> Access to Employee Manager to easily access data about your team</div>
         <div><CheckMark/> Give access to <b className='font-extrabold text-lg xl:text-2xl'>3</b> employees (including admin)</div>
-        <div className='text-lg xl:text-3xl font-bold pt-4 xl:pt-16 text-center'>14.99/month</div>
+        <div className='text-lg xl:text-3xl font-bold pt-4 xl:pt-16 text-center'>$14.99/month</div>
         <div className='text-center'>
-          <button className="bg-transparent hover:bg-white text-white text-md xl:text-xl text-center font-semibold hover:text-[#BC5E00] py-2 px-4 border border-white hover:border-transparent rounded">
+          <button className="select-button pro-button" onClick={() => handleSelect('PRO', '$14.99/month')}>
             SELECT
           </button>
         </div>
@@ -42,9 +47,9 @@ const Ad = (): JSX.Element => {
         <div><CheckMark/> Access to Activity Creation Center</div>
         <div><CheckMark/> Access to Employee Manager to easily access data about your team</div>
         <div><CheckMark/> Give access to <b className='font-extrabold text-lg xl:text-2xl'>10</b> employees (including admin)</div>
-        <div className='text-lg xl:text-3xl font-bold pt-4 xl:pt-16 text-center'>19.99/month</div>
+        <div className='text-lg xl:text-3xl font-bold pt-4 xl:pt-16 text-center'>$19.99/month</div>
         <div className='text-center'>
-          <button className="bg-transparent hover:bg-white text-white text-md xl:text-xl text-center font-semibold hover:text-[#002436] py-2 px-4 border border-white hover:border-transparent rounded">
+          <button className="select-button ultimate-button" onClick={() => handleSelect('ULTIMATE', '$19.99/month')}>
             SELECT
           </button>
         </div>
