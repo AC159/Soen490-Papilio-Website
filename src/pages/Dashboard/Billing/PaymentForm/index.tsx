@@ -3,7 +3,7 @@ import Cards from 'react-credit-cards-2';
 import TextField from '@mui/material/TextField';
 import InputMask from 'react-input-mask';
 import Button from '../../../../components/Button';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 type Focused = 'name' | 'number' | 'expiry' | 'cvc';
 
@@ -15,12 +15,12 @@ const PaymentForm: React.FC = (): JSX.Element => {
   const [focus, setFocus] = useState<Focused | undefined>();
   const [saveCreditCardInfo, setSaveCreditCardInfo] = useState(false); // new state for saving credit card info
   const location = useLocation();
-  const navigate = useNavigate();
   const packageInfo = {
     packageName: (location?.search.includes('package=') ? new URLSearchParams(location.search).get('package') : '') ?? '',
     cost: (location?.search.includes('cost=') ? new URLSearchParams(location.search).get('cost') : '') ?? '',
   };
 
+  const timeOfpayment = new Date();
   const processPayment = async (): Promise<void> => {
     const paymentData = {
       creditNumber,
@@ -28,6 +28,8 @@ const PaymentForm: React.FC = (): JSX.Element => {
       cvc,
       expiry,
       saveCreditCardInfo,
+      packageInfo,
+      timeOfpayment,
     };
 
     // replace this with your own API call or method for sending the payment data to your backend
@@ -39,14 +41,6 @@ const PaymentForm: React.FC = (): JSX.Element => {
       .then(async response => await response.json())
       .then(data => {
         console.log('Payment successful:', data);
-
-        const queryParams = new URLSearchParams({
-          package: packageInfo.packageName,
-          cost: packageInfo.cost,
-          subscription: 'Active',
-        }).toString();
-
-        navigate(`/billing?${queryParams}`);
       })
       .catch(error => {
         console.error('Error processing payment:', error);
