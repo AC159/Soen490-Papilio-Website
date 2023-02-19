@@ -8,7 +8,6 @@ describe('Papilio Website', () => {
 
   afterEach(() => {
     // Delete business from database
-    // cy.request("DELETE", `business/${companyName}`);
   });
 
   const loggedInAdminEmployee = () => {

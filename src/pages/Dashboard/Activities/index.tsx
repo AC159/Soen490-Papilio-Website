@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-// import Table from '../Activities/ActivityTable';
 import Table, { activityTableHeader } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
