@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Table from '../Activities/ActivityTable';
+// import Table from '../Activities/ActivityTable';
+import Table, { activityTableHeader } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -10,8 +11,8 @@ import AddForm, { IFormData } from './AddForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
-import { addActivity, getActivites } from '../../../api/apiLayer';
-import { IActivityData, IActivity } from '../../../interfaces';
+import { addActivity, getActivities } from '../../../api/apiLayer';
+import { IActivityData, ActivityRowProps } from '../../../interfaces';
 
 const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
 
@@ -26,7 +27,7 @@ const Box = (): JSX.Element => (
 
 const ActivityDashboard = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [activities, setActivities] = useState<ActivityRowProps[]>([]);
   const { businessId } = useParams();
 
   const onSubmit = async (data: IFormData): Promise<void> => {
@@ -38,42 +39,25 @@ const ActivityDashboard = (): JSX.Element => {
         costPerGroup: parseFloat(data.activityCostGroup),
         groupSize: parseFloat(data.activityGroupSize),
         startTime: data.activityStart,
-        endTime: data.activityEnd,
-      },
-      address: {
-        // TODO: Add address information to form
-        mention: data.activityLocation,
-        lineOne: '1234 Main Street',
-        lineTwo: '',
-        city: 'Montreal',
-        state: 'QC',
-        country: 'Canada',
-        postalCode: 'EXAMPLE',
+        address: data.activityLocation,
       },
       // image: data.activityImage,  // TODO: Add image information
     };
-    await addActivity(businessId ?? '', reqData);
+    await addActivity(businessId ?? '', reqData).then(() => setIsOpen(false));
   };
 
   useEffect(() => {
     void (async function getAllEmployees() {
-      await getActivites(businessId ?? '')
-        .then(async (res) => {
-          const { activities } = res;
-          const activitiesArray = activities.map((activity) => ({
-            ...activity,
-          }));
-          setActivities(activitiesArray);
-        })
+      await getActivities(businessId ?? '')
+        .then(setActivities)
         .catch((error) => {
           if (error?.cause !== 1) {
             console.error(error.message);
           }
         });
     })();
-  }, [businessId]);
+  }, [businessId, isOpen]);
 
-  console.log(activities);
   return (
     <>
       <PageHeader
@@ -94,9 +78,9 @@ const ActivityDashboard = (): JSX.Element => {
         tabs={tabs}
         rhs={
           <Button
-            text={constant.ADD_ACTIVITY_BUTTON}
+            text={isOpen ? 'Close' : constant.ADD_ACTIVITY_BUTTON}
             hasIcon={true}
-            icon={IconNames.ADD}
+            icon={isOpen ? IconNames.CLOSE : IconNames.ADD}
             iconPosition="lhs"
             variant="outline"
             onClick={() => {
@@ -107,7 +91,11 @@ const ActivityDashboard = (): JSX.Element => {
         }
       />
       <div className="p-5">
-        {isOpen ? <AddForm onSubmit={onSubmit} /> : <Table />}
+        {isOpen ? (
+          <AddForm onSubmit={onSubmit} />
+        ) : (
+          <Table rowsData={activities} headerContent={activityTableHeader} />
+        )}
       </div>
     </>
   );

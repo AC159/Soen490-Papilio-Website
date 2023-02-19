@@ -1,9 +1,10 @@
+/* eslint multiline-ternary: ["error", "always-multiline"] */
 import { useEffect, useState } from 'react';
 import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
 import { auth } from '../../../firebase';
-import Table, { Employee, employeeTableHeader } from '../../../features/Table';
+import Table, { employeeTableHeader } from '../../../features/Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -18,7 +19,7 @@ import {
   deleteEmployees,
   getEmployees,
 } from '../../../api/apiLayer';
-import { IEmployeeData } from '../../../interfaces';
+import { IEmployeeData, EmployeeRowProps } from '../../../interfaces';
 import { useAuth } from '../../../hooks/useEmployee';
 
 enum Section {
@@ -45,16 +46,15 @@ const Box = (): JSX.Element => (
 const EmployeeDashboard = (): JSX.Element => {
   const { employee } = useAuth();
   const { businessId } = useParams();
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<EmployeeRowProps[]>([]);
   const [currentSection, setCurrentSection] = useState(Section.Table);
 
   const handleEmployeeCreation = async (data: IFormData): Promise<void> => {
     const reqData: IEmployeeData = {
-      firebaseId: '',
+      firebase_id: '',
       email: data.employeeEmail,
       firstName: data.employeeFirstName,
       lastName: data.employeeLastName,
-      businessId: businessId ?? '',
       role: data.role,
       root: false, // True only while creating the business
     };
@@ -75,65 +75,55 @@ const EmployeeDashboard = (): JSX.Element => {
       setEmployees(
         employees.filter((employee) => !employeeIds.includes(employee.id)),
       );
+      setCurrentSection(Section.Table);
     });
   };
 
   const ActionList = (): JSX.Element => {
-    if (employee.role !== 'Admin') {
-      return <></>;
+    switch (currentSection) {
+      case Section.Add:
+      case Section.Delete:
+        return (
+          <Button
+            text="Close"
+            icon={IconNames.CLOSE}
+            iconPosition="lhs"
+            variant="outline"
+            onClick={() => setCurrentSection(Section.Table)}
+            size="sm"
+            hasIcon
+          />
+        );
+      default:
+        return (
+          <div className="flex space-x-2">
+            <Button
+              text={constant.ADD_EMPLOYEE_BUTTON}
+              icon={IconNames.ADD}
+              iconPosition="lhs"
+              variant="outline"
+              onClick={() => setCurrentSection(Section.Add)}
+              size="sm"
+              hasIcon
+            />
+            <Button
+              text={constant.DELETE_EMPLOYEE_BUTTON}
+              icon={IconNames.DELETE}
+              iconPosition="lhs"
+              variant="outline"
+              onClick={() => setCurrentSection(Section.Delete)}
+              size="sm"
+              hasIcon
+            />
+          </div>
+        );
     }
-    return (
-      <div className="flex space-x-2">
-        <Button
-          text={constant.ADD_EMPLOYEE_BUTTON}
-          hasIcon={true}
-          icon={IconNames.ADD}
-          iconPosition="lhs"
-          variant="outline"
-          onClick={() => {
-            if (currentSection !== Section.Add) {
-              setCurrentSection(Section.Add);
-            } else {
-              setCurrentSection(Section.Table);
-            }
-          }}
-          size="sm"
-        />
-        <Button
-          text={constant.DELETE_EMPLOYEE_BUTTON}
-          hasIcon={true}
-          icon={IconNames.DELETE}
-          iconPosition="lhs"
-          variant="outline"
-          onClick={() => {
-            if (currentSection !== Section.Delete) {
-              setCurrentSection(Section.Delete);
-            } else {
-              setCurrentSection(Section.Table);
-            }
-          }}
-          size="sm"
-        />
-      </div>
-    );
   };
 
   useEffect(() => {
     void (async function () {
       await getEmployees(businessId ?? '')
-        .then(async (res) => {
-          // @ts-expect-error
-          const { employees } = res;
-          // @ts-expect-error
-          const employeeArray = employees.map((employee) => ({
-            id: employee.firebase_id,
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            name: `${employee.firstName} ${employee.lastName}`,
-            email: employee.email,
-            role: employee.role,
-          }));
-          setEmployees(employeeArray);
-        })
+        .then(setEmployees)
         .catch((error) => {
           if (error?.cause !== 1) {
             console.error(error.message);
@@ -151,7 +141,7 @@ const EmployeeDashboard = (): JSX.Element => {
     currentForm = <AddForm onSubmit={handleEmployeeCreation} />;
   } else {
     currentForm = (
-      <Table employees={employees} headerContent={employeeTableHeader} />
+      <Table rowsData={employees} headerContent={employeeTableHeader} />
     );
   }
 
@@ -171,7 +161,10 @@ const EmployeeDashboard = (): JSX.Element => {
           </>
         }
       />
-      <ListBanner tabs={tabs} rhs={<ActionList />} />
+      <ListBanner
+        tabs={tabs}
+        rhs={employee.role === 'Admin' && <ActionList />}
+      />
       <div className="p-3">{currentForm}</div>
     </>
   );
