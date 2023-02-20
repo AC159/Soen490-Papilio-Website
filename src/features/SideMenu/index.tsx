@@ -19,6 +19,12 @@ const tabs: ITab[] = [
     icon: 'ad',
     path: 'ads',
   },
+
+  {
+    label: 'Billing',
+    icon: 'billing',
+    path: 'billing',
+  },
   {
     label: 'Employees',
     icon: 'employee',

@@ -119,7 +119,7 @@ const ActivityDashboard = (): JSX.Element => {
     })();
   }, [businessId]);
 
-  let currentForm = null;
+  let currentForm: JSX.Element = <></>;
   if (currentSection === Section.Delete) {
     currentForm = (
       <DeleteForm onSubmit={handleActivityDeletion} activities={activities} />

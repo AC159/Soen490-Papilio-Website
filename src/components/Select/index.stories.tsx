@@ -24,7 +24,6 @@ const Template: ComponentStory<typeof Select> = (args: SelectInterface) => (
   <>
     <Select {...args} />
     <StateWrapper>
-      {/* @ts-expect-error */}
       {(value, onChange, onSelect) => (
         <SimplerSelect
           label="Select"
