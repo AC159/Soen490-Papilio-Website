@@ -1,4 +1,6 @@
+/* eslint-disable multiline-ternary */
 import * as Interfaces from '../interfaces';
+import { formatDate } from '../utils';
 
 export async function login(data: {
   businessId: string;
@@ -22,24 +24,35 @@ export async function login(data: {
   });
 }
 export async function register(data: any): Promise<any> {
-  console.log(data);
   return {
     ...data,
     name: '',
   };
 }
 export function logout(): void {}
-export async function getActivites(
+export async function getActivities(
   businessId: string,
-): Promise<Interfaces.IActivitiesResponse> {
+): Promise<Interfaces.ActivityRowProps[]> {
   if (businessId === '') {
     return await Promise.reject(new Error('No business Id', { cause: 1 }));
   }
-
   return await fetch(`/api/business/get/${businessId}/activities`, {
     method: 'GET',
   })
     .then(async (res) => await res.json())
+    .then(({ activities }) =>
+      activities.map((activity: any) => ({
+        id: activity.id?.toString(),
+        title: activity.title,
+        startTime: formatDate(activity.startTime),
+        endTime:
+          activity.endTime !== null
+            ? formatDate(activity.endTime)
+            : 'Not defined',
+        address: activity.address,
+        status: 'inactive',
+      })),
+    )
     .catch(
       async (error) =>
         await Promise.reject(new Error(error.message, { cause: 0 })),
@@ -50,10 +63,10 @@ export async function addActivity(
   businessId: string,
   data: Interfaces.IActivityData,
 ): Promise<Response> {
+  console.log('ADDING ACTIVITY');
   if (businessId === '') {
     return await Promise.reject(new Error('No business Id'));
   }
-
   return await fetch(`/api/business/addActivity/${businessId}`, {
     method: 'POST',
     headers: {
@@ -63,6 +76,25 @@ export async function addActivity(
   });
 }
 export function updateActivity(): void {}
+export async function deleteActivities(
+  activities: string[],
+  businessId: string,
+): Promise<void> {
+  activities.forEach(async (activity) => {
+    await deleteActivity(activity, businessId);
+  });
+}
+export async function deleteActivity(
+  activityId: string,
+  businessId: string,
+): Promise<Response> {
+  return await fetch(
+    `/api/business/${businessId}/removeActivity/${activityId}`,
+    {
+      method: 'DELETE',
+    },
+  );
+}
 export function updateProfile(): void {}
 export async function getProfile(businessId: string): Promise<Response> {
   return await fetch(`/api/business/get/${businessId}`, {
@@ -85,7 +117,9 @@ export async function addEmployee(
   });
 }
 
-export async function getEmployees(businessId: string): Promise<Response> {
+export async function getEmployees(
+  businessId: string,
+): Promise<Interfaces.EmployeeRowProps[]> {
   if (businessId === '') {
     return await Promise.reject(new Error('No business Id', { cause: 1 }));
   }
@@ -93,6 +127,15 @@ export async function getEmployees(businessId: string): Promise<Response> {
     method: 'GET',
   })
     .then(async (res) => await res.json())
+    .then(({ employees }) =>
+      employees.map((employee: any) => ({
+        id: employee.firebase_id,
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        name: `${employee.firstName} ${employee.lastName}`,
+        email: employee.email,
+        role: employee.role,
+      })),
+    )
     .catch(
       async (error) =>
         await Promise.reject(new Error(error.message, { cause: 0 })),
@@ -100,6 +143,26 @@ export async function getEmployees(businessId: string): Promise<Response> {
 }
 
 export function updateEmployeeRole(): void {}
+export async function deleteEmployees(
+  employees: string[],
+  businessId: string,
+): Promise<void> {
+  employees.forEach(async (employee) => {
+    await deleteEmployee(employee, businessId);
+  });
+}
+
+export async function deleteEmployee(
+  employeeId: string,
+  businessId: string,
+): Promise<Response> {
+  return await fetch(
+    `/api/business/${businessId}/removeEmployee/${employeeId}`,
+    {
+      method: 'DELETE',
+    },
+  );
+}
 export async function addBusiness(
   data: Interfaces.IBusinessData,
 ): Promise<Response> {

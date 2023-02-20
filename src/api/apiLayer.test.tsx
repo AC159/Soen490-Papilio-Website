@@ -1,5 +1,5 @@
-import 'jest';
 import { IActivityData } from '../interfaces';
+import { formatDate } from '../utils';
 
 import * as API from './apiLayer';
 
@@ -28,11 +28,11 @@ describe('api test', () => {
     ).mockResolvedValue(new Response());
   });
 
-  describe('login related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
+  afterEach(() => {
+    (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
+  });
 
+  describe('login related test', () => {
     it('should send the request to the correct endpoint and format the result', async () => {
       (
         global.fetch as jest.MockedFunction<typeof global.fetch>
@@ -68,20 +68,12 @@ describe('api test', () => {
   });
 
   describe('register related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should do something', async () => {
       await API.register(BUSINESS_ID);
     });
   });
 
   describe('getProfile related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       await API.getProfile(BUSINESS_ID);
 
@@ -93,17 +85,12 @@ describe('api test', () => {
   });
 
   describe('addEmployee related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       const formData = {
-        firebaseId: FIREBASE_ID,
+        firebase_id: FIREBASE_ID,
         email: 'jdoe@email.com',
         firstName: 'John',
         lastName: 'Doe',
-        businessId: BUSINESS_ID,
         role: 'Admin',
         root: false,
       };
@@ -124,8 +111,23 @@ describe('api test', () => {
   });
 
   describe('getEmployees related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
+    beforeEach(() => {
+      (
+        global.fetch as jest.MockedFunction<typeof global.fetch>
+      ).mockResolvedValue({
+        json: async () => ({
+          employees: [
+            {
+              firstName: 'John',
+              lastName: 'Doe',
+              firebase_id: FIREBASE_ID,
+              businessId: BUSINESS_ID,
+              email: 'fake@email.com',
+              role: 'Admin',
+            },
+          ],
+        }),
+      } as Response);
     });
 
     it('should reject with an error when businessId is not present', async () => {
@@ -135,23 +137,7 @@ describe('api test', () => {
     });
 
     it('should send the request to the correct endpoint', async () => {
-      (
-        global.fetch as jest.MockedFunction<typeof global.fetch>
-      ).mockResolvedValueOnce({
-        json: async () => ({
-          employees: [
-            {
-              firstName: 'John',
-              lastName: 'Doe',
-              firebase_id: FIREBASE_ID,
-              businessId: BUSINESS_ID,
-              role: 'Admin',
-            },
-          ],
-        }),
-      } as Response);
-
-      const results = await API.getEmployees(BUSINESS_ID);
+      await API.getEmployees(BUSINESS_ID);
 
       expect(global.fetch).toHaveBeenCalledWith(
         `/api/business/get/${BUSINESS_ID}/employees`,
@@ -159,30 +145,36 @@ describe('api test', () => {
           method: 'GET',
         },
       );
-      expect(results).toEqual(
-        expect.objectContaining({
-          employees: expect.arrayContaining([]),
-        }),
-      );
     });
 
     it('should throw when an error occur in the fetch', async () => {
       const message = 'Something wrong happened';
       (
         global.fetch as jest.MockedFunction<typeof global.fetch>
-      ).mockRejectedValueOnce(new Error(message));
+      ).mockRejectedValue(new Error(message));
 
       await API.getEmployees(BUSINESS_ID).catch((e) =>
         expect(e).toEqual(new Error(message, { cause: 0 })),
       );
     });
+
+    it('should return an array of employee', async () => {
+      const result = await API.getEmployees(BUSINESS_ID);
+
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            id: FIREBASE_ID,
+            name: 'John Doe',
+            email: 'fake@email.com',
+            role: 'Admin',
+          },
+        ]),
+      );
+    });
   });
 
   describe('addBusiness related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       const formData = {
         business: {
@@ -214,10 +206,6 @@ describe('api test', () => {
   });
 
   describe('getBusiness related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
-
     it('should send the request to the correct endpoint', async () => {
       await API.getBusiness(BUSINESS_ID);
 
@@ -229,41 +217,44 @@ describe('api test', () => {
   });
 
   describe('getActivities related test', () => {
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
+    let date: string;
+    let otherDate: string;
+    beforeEach(() => {
+      date = new Date(Date.now()).toISOString();
+      otherDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      (
+        global.fetch as jest.MockedFunction<typeof global.fetch>
+      ).mockResolvedValue({
+        json: async () => ({
+          activities: [
+            {
+              id: 'activity_id',
+              title: 'title',
+              startTime: date,
+              endTime: otherDate,
+              address: '1234 Main St.',
+            },
+          ],
+          count: 0,
+          businessId: BUSINESS_ID,
+        }),
+      } as Response);
     });
 
     it('should reject with an error when businessId is not present', async () => {
-      await API.getActivites('').catch((e) =>
+      await API.getActivities('').catch((e) =>
         expect(e).toEqual(new Error('No business Id', { cause: 1 })),
       );
     });
 
     it('should send the request to the correct endpoint', async () => {
-      (
-        global.fetch as jest.MockedFunction<typeof global.fetch>
-      ).mockResolvedValueOnce({
-        json: async () => ({
-          activities: [],
-          count: 0,
-          businessId: BUSINESS_ID,
-        }),
-      } as Response);
-
-      const results = await API.getActivites(BUSINESS_ID);
+      await API.getActivities(BUSINESS_ID);
 
       expect(global.fetch).toHaveBeenCalledWith(
         `/api/business/get/${BUSINESS_ID}/activities`,
         {
           method: 'GET',
         },
-      );
-      expect(results).toEqual(
-        expect.objectContaining({
-          activities: expect.arrayContaining([]),
-          count: 0,
-          businessId: BUSINESS_ID,
-        }),
       );
     });
 
@@ -273,17 +264,68 @@ describe('api test', () => {
         global.fetch as jest.MockedFunction<typeof global.fetch>
       ).mockRejectedValueOnce(new Error(message));
 
-      await API.getActivites(BUSINESS_ID).catch((e) =>
+      await API.getActivities(BUSINESS_ID).catch((e) =>
         expect(e).toEqual(new Error(message, { cause: 0 })),
       );
+    });
+
+    it('returns an array of activities', async () => {
+      const result = await API.getActivities(BUSINESS_ID);
+
+      expect(result).toEqual([
+        {
+          id: 'activity_id',
+          title: 'title',
+          startTime: expect.any(String),
+          endTime: expect.any(String),
+          address: '1234 Main St.',
+          status: 'inactive',
+        },
+      ]);
+    });
+
+    it('formats date values in each activities', async () => {
+      const result = await API.getActivities(BUSINESS_ID);
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          startTime: formatDate(date),
+          endTime: formatDate(otherDate),
+        }),
+      ]);
+    });
+
+    it('displays not defined when there are no values for end time', async () => {
+      (
+        global.fetch as jest.MockedFunction<typeof global.fetch>
+      ).mockResolvedValue({
+        json: async () => ({
+          activities: [
+            {
+              id: 'activity_id',
+              title: 'title',
+              startTime: date,
+              endTime: null,
+              address: '1234 Main St.',
+            },
+          ],
+          count: 0,
+          businessId: BUSINESS_ID,
+        }),
+      } as Response);
+
+      const result = await API.getActivities(BUSINESS_ID);
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          endTime: 'Not defined',
+        }),
+      ]);
     });
   });
 
   describe('addActivity related test', () => {
     let formData: IActivityData;
-    afterEach(() => {
-      (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
-    });
 
     beforeEach(() => {
       formData = {
@@ -295,15 +337,7 @@ describe('api test', () => {
           groupSize: 10,
           startTime: '1970-01-01T00:00:00.000Z',
           endTime: '2070-01-01T00:00:00.000Z',
-        },
-        address: {
-          mention: 'mention',
-          lineOne: '1234 Main Street',
-          lineTwo: '',
-          city: 'Montreal',
-          state: 'QC',
-          country: 'Canada',
-          postalCode: 'EXAMPLE',
+          address: '1234 Main Street, Montreal, QC, Canada, EXM PLE',
         },
       };
     });
@@ -327,6 +361,27 @@ describe('api test', () => {
           }),
         },
       );
+    });
+  });
+
+  describe('deleteEmployee', () => {
+    const businessId = 'businessId';
+
+    it('should send the request to the correct endpoint', async () => {
+      const employees = ['1234'];
+      await API.deleteEmployees(employees, businessId);
+      expect(global.fetch).toHaveBeenCalledWith(
+        `/api/business/${businessId}/removeEmployee/1234`,
+        {
+          method: 'DELETE',
+        },
+      );
+    });
+
+    it('calls fetch for each employee to delete', async () => {
+      const employees = ['1234', '2345'];
+      await API.deleteEmployees(employees, businessId);
+      expect(global.fetch).toHaveBeenCalledTimes(2);
     });
   });
 });

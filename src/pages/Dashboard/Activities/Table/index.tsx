@@ -1,35 +1,34 @@
 import { useCallback, useEffect, useState } from 'react';
 import Row, { ClickableRow } from './Row';
-import { RowProps } from '../../interfaces';
 
-export interface Employee extends RowProps {
-  name: string;
-  email: string;
-  role: string;
+export interface Activity {
+  id: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  address: string;
 }
 
-interface IProps<T> {
-  rowsData: RowProps[];
+interface IProps {
+  activities: Activity[];
   headerContent: string[];
   disabledRowId?: string;
-  onSelect?: (element: T) => void;
+  onSelect?: (activity: Activity) => void;
 }
 
-export const employeeTableHeader = ['Employee name', 'Email', 'Role'];
 export const activityTableHeader = [
   'Activity Title',
-  'Start Date',
-  'End Date',
+  'Start Date (yyyy-mm-dd)',
+  'End Date (yyyy-mm-dd)',
   'Location',
-  'Status',
 ];
 
-const Table = <T extends RowProps>({
-  rowsData,
+const Table = ({
+  activities,
   headerContent,
   disabledRowId,
   onSelect,
-}: IProps<T>): JSX.Element => {
+}: IProps): JSX.Element => {
   const [buffer, setBuffer] = useState<string[]>([]);
 
   useEffect(() => {
@@ -42,25 +41,27 @@ const Table = <T extends RowProps>({
 
   const handleOnClick = useCallback(
     // @ts-expect-error
-    (el: RowProps): void => onSelect(el),
+    (activity: Activity): void => onSelect(activity),
     [onSelect],
   );
 
-  const rows = rowsData.map((row) => {
-    const data = Object.entries(row)
-      .filter(([key, _]) => key !== 'id')
-      .reduce((acc: string[], [_, value]) => [...acc, value], []);
-
+  const activityRows = activities.map((activity) => {
+    const data = [
+      activity.title,
+      activity.startTime,
+      activity.endTime,
+      activity.address,
+    ];
     if (onSelect === undefined) {
-      return <Row key={`row-${row.id}`} data={data} />;
+      return <Row key={`activity-${activity.id}`} data={data} />;
     }
 
     return (
       <ClickableRow
-        key={`row-${row.id}`}
+        key={`activity-${activity.id}`}
         data={data}
-        onClick={() => handleOnClick(row)}
-        disabled={disabledRowId === row.id}
+        onClick={() => handleOnClick(activity)}
+        disabled={disabledRowId === activity.id}
       />
     );
   });
@@ -71,7 +72,7 @@ const Table = <T extends RowProps>({
         <thead className="bg-gray-100">
           <Row data={[...buffer, ...headerContent]} head />
         </thead>
-        <tbody>{rows}</tbody>
+        <tbody>{activityRows}</tbody>
       </table>
     </div>
   );

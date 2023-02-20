@@ -1,9 +1,8 @@
 export declare interface IEmployeeData {
-  firebaseId: string;
+  firebase_id: string;
   email: string;
   firstName: string;
   lastName: string;
-  businessId: string;
   role: string;
   root: boolean;
 }
@@ -26,15 +25,15 @@ export declare interface IBusinessData {
 }
 
 export declare interface IActivityData {
-  activity: IActivity;
-  address: {
-    mention: string;
-    lineOne: string;
-    lineTwo: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
+  activity: {
+    title: string;
+    description: string;
+    costPerIndividual: number;
+    costPerGroup: number;
+    groupSize: number;
+    startTime: string;
+    endTime: string;
+    address: string;
   };
 }
 
@@ -45,9 +44,10 @@ export declare interface IActivity {
   costPerIndividual: number;
   costPerGroup: number;
   groupSize: number;
+  address: string;
   image?: null;
   startTime: string;
-  endTime: string;
+  endTime?: string;
   createdAt?: string;
   updatedAt?: string;
   businessId?: string;
@@ -56,5 +56,23 @@ export declare interface IActivity {
 export declare interface IActivitiesResponse {
   businessId: string;
   count: number;
-  activities: IActivity[];
+  activities: IActivityData[];
+}
+
+export interface EmployeeRowProps extends RowProps {
+  name: string;
+  email: string;
+  role: string;
+}
+
+export interface ActivityRowProps extends RowProps {
+  title: string;
+  startTime: string;
+  endTime: string;
+  address: string;
+  status: string;
+}
+
+export interface RowProps {
+  id: string;
 }

@@ -20,6 +20,7 @@ export enum IconNames {
   EDIT_SQUARE = 'edit_square',
   SAVE = 'save',
   BILLING = 'payments',
+  CLOSE = 'close',
 }
 
 const Icon = ({ size, name }: IconInterface): JSX.Element => {
