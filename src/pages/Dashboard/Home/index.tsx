@@ -83,8 +83,8 @@ const HomeDashboard = (): JSX.Element => {
           </div>
         }
       />
-      <div className=" h-screen">
-        <div className="h-1/2 flex flex-row justify-between p-5 gap-5">
+      <div className="h-1/2">
+        <div className="h-full flex flex-row justify-between p-5 gap-5">
           <div className="w-1/2 bg-gray-50 p-2">
             <BarGraph
               data={viewedActivities}

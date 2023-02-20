@@ -6,9 +6,9 @@ export declare interface IDashboardContainer {
 
 const DashboardContainer = ({ children }: IDashboardContainer): JSX.Element => {
   return (
-    <div className="flex flex-row w-screen h-screen">
+    <div className="flex flex-row">
       <SideMenu />
-      <div className="flex-1 pl-48">{children}</div>
+      <div className="flex flex-col flex-1 pl-48">{children}</div>
     </div>
   );
 };
