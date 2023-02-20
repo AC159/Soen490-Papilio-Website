@@ -76,3 +76,13 @@ export interface ActivityRowProps extends RowProps {
 export interface RowProps {
   id: string;
 }
+
+export interface Datum {
+  primary: string;
+  secondary: number;
+}
+
+export interface GraphDataProps {
+  label: string;
+  data: Datum[];
+}

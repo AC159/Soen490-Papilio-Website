@@ -125,9 +125,8 @@ describe('Employee Dashboard', () => {
     it('changes back to Add employee when click on close', async () => {
       render(<EmployeeDashboard />);
       userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-      userEvent.click(screen.getByText('Close'));
-      expect(screen.queryByText('Close')).not.toBeInTheDocument();
-      await act(async () => await Promise.resolve());
+      userEvent.click(await screen.findByText('Close'));
+      await waitForElementToBeRemoved(() => screen.queryByText('Close'));
     });
 
     it('submit add employee form after submit button clicked', async () => {
@@ -201,7 +200,7 @@ describe('Employee Dashboard', () => {
       render(<EmployeeDashboard />);
 
       userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-      userEvent.click(screen.getByTestId('deleteForm'));
+      userEvent.click(await screen.findByTestId('deleteForm'));
 
       expect(API.deleteEmployees).toHaveBeenCalledWith([], 'businessId');
       await act(async () => await Promise.resolve());
@@ -224,7 +223,7 @@ describe('Employee Dashboard', () => {
     it('closes the deleteForm on successful delete', async () => {
       render(<EmployeeDashboard />);
       userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-      userEvent.click(screen.getByTestId('deleteForm'));
+      userEvent.click(await screen.findByTestId('deleteForm'));
 
       await waitForElementToBeRemoved(() => screen.queryByTestId('deleteForm'));
     });

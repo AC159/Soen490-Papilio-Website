@@ -58,14 +58,16 @@ describe('Delete Form', () => {
     (hooks.useAuth as jest.MockedFunction<typeof hooks.useAuth>).mockClear();
   });
 
-  it('displays the form headline', () => {
+  it('displays the form headline', async () => {
     render(<DeleteForm {...defaultProps} />);
     expect(screen.getByText(constant.FORM_HEADLINE)).toBeInTheDocument();
+    await act(async () => await Promise.resolve());
   });
 
-  it('displays a button to delete the employees', () => {
+  it('displays a button to delete the employees', async () => {
     render(<DeleteForm {...defaultProps} />);
     expect(screen.getByText(constant.BUTTON_TEXT)).toBeInTheDocument();
+    await act(async () => await Promise.resolve());
   });
 
   it('opens the submission modal when delete button is clicked', async () => {
@@ -78,6 +80,7 @@ describe('Delete Form', () => {
         'Are you sure you want to delete these employees?',
       ),
     ).toBeInTheDocument();
+    await act(async () => await Promise.resolve());
   });
 
   it('displays a delete button inside the delete modal', async () => {
@@ -86,6 +89,7 @@ describe('Delete Form', () => {
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(await screen.findByText(/^Delete$/)).toBeInTheDocument();
+    await act(async () => await Promise.resolve());
   });
 
   it('displays a cancel button inside the delete modal', async () => {
@@ -94,6 +98,7 @@ describe('Delete Form', () => {
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(await screen.findByText(/^Cancel$/)).toBeInTheDocument();
+    await act(async () => await Promise.resolve());
   });
 
   it('closes the modal without deleting anything when cancel is clicked', async () => {
@@ -103,7 +108,7 @@ describe('Delete Form', () => {
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
     userEvent.click(await screen.findByText(/^Cancel$/));
 
-    expect(screen.queryByText(/^Cancel$/)).not.toBeInTheDocument();
+    await waitForElementToBeRemoved(() => screen.queryByText(/^Cancel$/));
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
@@ -119,7 +124,7 @@ describe('Delete Form', () => {
     await act(async () => await Promise.resolve());
   });
 
-  it('passes the employees to the table components', () => {
+  it('passes the employees to the table components', async () => {
     jest.spyOn(Table, 'default');
 
     render(<DeleteForm {...defaultProps} employees={oneEmployee} />);
@@ -130,6 +135,7 @@ describe('Delete Form', () => {
       }),
       expect.anything(),
     );
+    await act(async () => await Promise.resolve());
   });
 
   it('insert the ids of deleted employees when click on user row', async () => {
@@ -153,6 +159,7 @@ describe('Delete Form', () => {
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(screen.queryByText(/^Delete$/)).not.toBeInTheDocument();
+    await act(async () => await Promise.resolve());
   });
 
   it('block admin from deleting themselves', async () => {
@@ -164,6 +171,7 @@ describe('Delete Form', () => {
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(screen.queryByText(/^Delete$/)).not.toBeInTheDocument();
+    await act(async () => await Promise.resolve());
   });
 
   it('closes the delete modal after successful delete', async () => {

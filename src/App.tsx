@@ -10,6 +10,7 @@ import ErrorPage from './pages/Error';
 import LoginPage from './pages/Login';
 import HomePage from './pages/Home';
 import { AuthProvider } from './context/employeeContext';
+import HomeDashboard from './pages/Dashboard/Home';
 import PaymentForm from './pages/Dashboard/Billing/PaymentForm';
 
 const router = createBrowserRouter([
@@ -37,7 +38,8 @@ const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       {
-        element: <div>Home</div>,
+        index: true,
+        element: <HomeDashboard />,
       },
       {
         path: 'employees',
