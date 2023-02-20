@@ -16,7 +16,6 @@ describe('Header tests', () => {
     );
 
     userEvent.click(await screen.findByText('Login'));
-
     expect(await screen.findByText(/Login Page/)).toBeInTheDocument();
   });
 

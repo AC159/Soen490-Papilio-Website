@@ -63,7 +63,6 @@ export async function addActivity(
   businessId: string,
   data: Interfaces.IActivityData,
 ): Promise<Response> {
-  console.log('ADDING ACTIVITY');
   if (businessId === '') {
     return await Promise.reject(new Error('No business Id'));
   }

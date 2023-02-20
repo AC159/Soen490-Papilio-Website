@@ -6,7 +6,6 @@ import { useAuth } from '../../hooks/useEmployee';
 
 const Dashboard = (): JSX.Element => {
   const { load } = useAuth();
-  console.log(useAuth());
   useEffect(() => {
     load();
   }, []);
