@@ -132,7 +132,7 @@ const EmployeeDashboard = (): JSX.Element => {
     })();
   }, [businessId]);
 
-  let currentForm = null;
+  let currentForm: JSX.Element = <></>;
   if (currentSection === Section.Delete) {
     currentForm = (
       <DeleteForm onSubmit={handleEmployeeDeletion} employees={employees} />

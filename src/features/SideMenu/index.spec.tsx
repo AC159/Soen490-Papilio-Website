@@ -15,7 +15,7 @@ describe('test side menu', () => {
 
     const links = screen.getAllByRole('link');
 
-    expect(links).toHaveLength(5);
+    expect(links).toHaveLength(6);
   });
 
   it('should logout and go back to home when clicking logout button', async () => {
@@ -30,7 +30,7 @@ describe('test side menu', () => {
       </AuthProvider>,
     );
 
-    expect(screen.getAllByRole('link')).toHaveLength(5);
+    expect(screen.getAllByRole('link')).toHaveLength(6);
     userEvent.click(screen.getByText(/Logout/));
 
     expect(await screen.findByText(/HOME PAGE/)).toBeInTheDocument();

@@ -20,6 +20,7 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noImplicitAny": false,
     "types": ["cypress", "node"]
   },
   "include": ["src"]

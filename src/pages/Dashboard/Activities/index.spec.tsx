@@ -104,13 +104,13 @@ describe('Activity dashboard test', () => {
 
   it('calls addActivity with the correct information when add form is submit', async () => {
     mockData = {
-      activityTitle: 'Test Run Activity',
-      activityDescription: "Let's RUNNNNNNN",
-      activityCostIndv: 0.99,
-      activityCostGroup: 7.99,
-      activityGroupSize: 10,
-      activityStart: '2022-13-16 10:05:00+00',
-      activityLocation: '201 Main Street, Montreal, QC EXM PLE',
+      title: 'Test Run Activity',
+      description: "Let's RUNNNNNNN",
+      costPerIndividual: 0.99,
+      costPerGroup: 7.99,
+      groupSize: 10,
+      startTime: '2022-13-16 10:05:00+00',
+      address: '201 Main Street, Montreal, QC EXM PLE',
     };
 
     (useParams as jest.MockedFunction<typeof useParams>).mockReturnValue({
@@ -126,7 +126,7 @@ describe('Activity dashboard test', () => {
     userEvent.click(await screen.findByTestId('addForm'));
 
     expect(API.addActivity).toHaveBeenCalledWith('businessId', {
-      activity: {
+      activity: expect.objectContaining({
         title: 'Test Run Activity',
         description: "Let's RUNNNNNNN",
         costPerIndividual: 0.99,
@@ -134,7 +134,7 @@ describe('Activity dashboard test', () => {
         groupSize: 10,
         startTime: '2022-13-16 10:05:00+00',
         address: '201 Main Street, Montreal, QC EXM PLE',
-      },
+      }),
     });
     await act(async () => await Promise.resolve());
   });

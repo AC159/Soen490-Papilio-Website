@@ -25,7 +25,16 @@ export declare interface IBusinessData {
 }
 
 export declare interface IActivityData {
-  activity: IActivity;
+  activity: {
+    title: string;
+    description: string;
+    costPerIndividual: number;
+    costPerGroup: number;
+    groupSize: number;
+    startTime: string;
+    endTime: string;
+    address: string;
+  };
 }
 
 export declare interface IActivity {
@@ -47,7 +56,7 @@ export declare interface IActivity {
 export declare interface IActivitiesResponse {
   businessId: string;
   count: number;
-  activities: IActivity[];
+  activities: IActivityData[];
 }
 
 export interface EmployeeRowProps extends RowProps {
