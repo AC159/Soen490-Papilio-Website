@@ -1,3 +1,5 @@
+/* eslint-disable multiline-ternary */
+// @ts-nocheck
 import React, { useState } from 'react';
 import Cards from 'react-credit-cards-2';
 import TextField from '@mui/material/TextField';
@@ -16,8 +18,14 @@ const PaymentForm: React.FC = (): JSX.Element => {
   const [saveCreditCardInfo, setSaveCreditCardInfo] = useState(false); // new state for saving credit card info
   const location = useLocation();
   const packageInfo = {
-    packageName: (location?.search.includes('package=') ? new URLSearchParams(location.search).get('package') : '') ?? '',
-    cost: (location?.search.includes('cost=') ? new URLSearchParams(location.search).get('cost') : '') ?? '',
+    packageName:
+      (location?.search.includes('package=')
+        ? new URLSearchParams(location.search).get('package')
+        : '') ?? '',
+    cost:
+      (location?.search.includes('cost=')
+        ? new URLSearchParams(location.search).get('cost')
+        : '') ?? '',
   };
 
   const timeOfpayment = new Date();
@@ -37,11 +45,11 @@ const PaymentForm: React.FC = (): JSX.Element => {
       body: JSON.stringify(paymentData),
       headers: { 'Content-Type': 'application/json' },
     })
-      .then(async response => await response.json())
-      .then(data => {
+      .then(async (response) => await response.json())
+      .then((data) => {
         console.log('Payment successful:', data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error processing payment:', error);
       });
   };
@@ -100,11 +108,7 @@ const PaymentForm: React.FC = (): JSX.Element => {
               }}
             >
               {() => (
-                <TextField
-                  label="CVC"
-                  variant="outlined"
-                  className="w-full"
-                />
+                <TextField label="CVC" variant="outlined" className="w-full" />
               )}
             </InputMask>
           </div>
@@ -127,9 +131,21 @@ const PaymentForm: React.FC = (): JSX.Element => {
             </InputMask>
           </div>
           <div className="relative">
-            <label htmlFor="save-credit-card-info" className="flex items-center space-x-2">
-              <input type="checkbox" id="save-credit-card-info" checked={saveCreditCardInfo} onChange={() => setSaveCreditCardInfo(!saveCreditCardInfo)} className="form-checkbox" />
-              <span>Do you want to save the credit card information for recurring payments?</span>
+            <label
+              htmlFor="save-credit-card-info"
+              className="flex items-center space-x-2"
+            >
+              <input
+                type="checkbox"
+                id="save-credit-card-info"
+                checked={saveCreditCardInfo}
+                onChange={() => setSaveCreditCardInfo(!saveCreditCardInfo)}
+                className="form-checkbox"
+              />
+              <span>
+                Do you want to save the credit card information for recurring
+                payments?
+              </span>
             </label>
           </div>
         </div>
@@ -143,11 +159,7 @@ const PaymentForm: React.FC = (): JSX.Element => {
           />
         </div>
         <div className="mt-8 flex justify-center">
-          <Button
-            size="md"
-            text="Pay"
-            onClick={processPayment}
-          />
+          <Button size="md" text="Pay" onClick={processPayment} />
         </div>
       </div>
     </div>
