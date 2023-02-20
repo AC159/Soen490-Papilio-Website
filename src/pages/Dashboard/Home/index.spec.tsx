@@ -3,6 +3,7 @@ import HomeDashboard from '.';
 import { BarGraph } from '../../../features/BarGraph';
 import { registeredActivity, viewedActivity } from '../../../fakeData';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('../../../features/BarGraph', () => ({
   BarGraph: jest.fn(() => <div data-testid="BarGraph" />),
@@ -132,9 +133,11 @@ describe('Dashboard Home', () => {
 
   it('filters the statistics for the selected activity for the Activity view graph', () => {
     render(<HomeDashboard />);
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: 'activity 2' }),
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'activity 2' }),
+      ),
     );
 
     expect(BarGraph).toHaveBeenNthCalledWith(
@@ -147,11 +150,13 @@ describe('Dashboard Home', () => {
     );
   });
 
-  it('filters the statistics for the selected activity for the Activity registered graph', () => {
+  it('filters the statistics for the selected activity for the Activity registered graph', async () => {
     render(<HomeDashboard />);
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: 'activity 2' }),
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'activity 2' }),
+      ),
     );
 
     expect(BarGraph).toHaveBeenLastCalledWith(
@@ -160,6 +165,7 @@ describe('Dashboard Home', () => {
       }),
       expect.anything(),
     );
+    await act(async () => await Promise.resolve());
   });
 
   it('remove the filter on Activity view graph when coming back to all activities', () => {
