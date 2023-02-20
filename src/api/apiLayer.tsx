@@ -36,7 +36,6 @@ export async function getActivities(
   if (businessId === '') {
     return await Promise.reject(new Error('No business Id', { cause: 1 }));
   }
-
   return await fetch(`/api/business/get/${businessId}/activities`, {
     method: 'GET',
   })
@@ -64,10 +63,10 @@ export async function addActivity(
   businessId: string,
   data: Interfaces.IActivityData,
 ): Promise<Response> {
+  console.log('ADDING ACTIVITY');
   if (businessId === '') {
     return await Promise.reject(new Error('No business Id'));
   }
-
   return await fetch(`/api/business/addActivity/${businessId}`, {
     method: 'POST',
     headers: {
@@ -77,6 +76,25 @@ export async function addActivity(
   });
 }
 export function updateActivity(): void {}
+export async function deleteActivities(
+  activities: string[],
+  businessId: string,
+): Promise<void> {
+  activities.forEach(async (activity) => {
+    await deleteActivity(activity, businessId);
+  });
+}
+export async function deleteActivity(
+  activityId: string,
+  businessId: string,
+): Promise<Response> {
+  return await fetch(
+    `/api/business/${businessId}/removeActivity/${activityId}`,
+    {
+      method: 'DELETE',
+    },
+  );
+}
 export function updateProfile(): void {}
 export async function getProfile(businessId: string): Promise<Response> {
   return await fetch(`/api/business/get/${businessId}`, {

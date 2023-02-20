@@ -337,7 +337,7 @@ describe('api test', () => {
           groupSize: 10,
           startTime: '1970-01-01T00:00:00.000Z',
           endTime: '2070-01-01T00:00:00.000Z',
-          address: '',
+          address: '1234 Main Street, Montreal, QC, Canada, EXM PLE',
         },
       };
     });
