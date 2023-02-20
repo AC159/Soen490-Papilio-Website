@@ -32,7 +32,6 @@ const PaymentForm: React.FC = (): JSX.Element => {
       timeOfpayment,
     };
 
-    // replace this with your own API call or method for sending the payment data to your backend
     fetch('/api/payment', {
       method: 'POST',
       body: JSON.stringify(paymentData),
