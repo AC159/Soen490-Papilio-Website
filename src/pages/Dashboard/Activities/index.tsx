@@ -121,8 +121,8 @@ const ActivityDashboard = (): JSX.Element => {
             id: activity.id,
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             title: activity.title,
-            startTime: (activity.startTime).substring(0, 10),
-            endTime: (activity.endTime).substring(0, 10),
+            startTime: activity.startTime?.substring(0, 10),
+            endTime: activity.endTime?.substring(0, 10),
             address: activity.address,
           }));
           setActivities(activityArray);
