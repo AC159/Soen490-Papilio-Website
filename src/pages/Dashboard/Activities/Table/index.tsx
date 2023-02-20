@@ -16,7 +16,12 @@ interface IProps {
   onSelect?: (activity: Activity) => void;
 }
 
-export const activityTableHeader = ['Activity Title', 'Start Date (yyyy-mm-dd)', 'End Date (yyyy-mm-dd)', 'Location'];
+export const activityTableHeader = [
+  'Activity Title',
+  'Start Date (yyyy-mm-dd)',
+  'End Date (yyyy-mm-dd)',
+  'Location',
+];
 
 const Table = ({
   activities,
@@ -41,7 +46,12 @@ const Table = ({
   );
 
   const activityRows = activities.map((activity) => {
-    const data = [activity.title, activity.startTime, activity.endTime, activity.address];
+    const data = [
+      activity.title,
+      activity.startTime,
+      activity.endTime,
+      activity.address,
+    ];
     if (onSelect === undefined) {
       return <Row key={`activity-${activity.id}`} data={data} />;
     }

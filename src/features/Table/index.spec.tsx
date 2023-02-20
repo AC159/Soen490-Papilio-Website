@@ -19,7 +19,7 @@ const fiveEmployees = Array.from('01234', (id) => ({
 }));
 
 const defaultProps = {
-  employees: [],
+  rowsData: [],
   headerContent: [],
 };
 
@@ -47,7 +47,7 @@ describe('Table', () => {
   });
 
   it('displays row element in the table body', () => {
-    render(<Table {...defaultProps} employees={oneEmployee} />);
+    render(<Table {...defaultProps} rowsData={oneEmployee} />);
     expect(Row).toHaveBeenNthCalledWith(
       2,
       {
@@ -58,7 +58,7 @@ describe('Table', () => {
   });
 
   it('displays 5 rows in the table body when 5 employees are passed', () => {
-    render(<Table {...defaultProps} employees={fiveEmployees} />);
+    render(<Table {...defaultProps} rowsData={fiveEmployees} />);
     expect(Row).toHaveBeenLastCalledWith(
       {
         data: [
@@ -76,7 +76,7 @@ describe('Table', () => {
     render(
       <Table
         {...defaultProps}
-        employees={oneEmployee}
+        rowsData={oneEmployee}
         onSelect={mockOnSelect}
       />,
     );
@@ -101,7 +101,7 @@ describe('Table', () => {
     render(
       <Table
         {...defaultProps}
-        employees={oneEmployee}
+        rowsData={oneEmployee}
         onSelect={mockOnSelect}
       />,
     );
@@ -114,7 +114,7 @@ describe('Table', () => {
   });
 
   it('disabled click on body row when no onSelect function is passed', () => {
-    render(<Table {...defaultProps} employees={oneEmployee} />);
+    render(<Table {...defaultProps} rowsData={oneEmployee} />);
     expect(Row).toHaveBeenLastCalledWith(
       {
         data: [oneEmployee[0].name, oneEmployee[0].email, oneEmployee[0].role],
@@ -129,7 +129,7 @@ describe('Table', () => {
     render(
       <Table
         {...defaultProps}
-        employees={oneEmployee}
+        rowsData={oneEmployee}
         onSelect={mockOnSelect}
         disabledRowId={id}
       />,

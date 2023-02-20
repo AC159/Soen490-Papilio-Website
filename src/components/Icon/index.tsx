@@ -19,6 +19,7 @@ export enum IconNames {
   FEED = 'feed',
   EDIT_SQUARE = 'edit_square',
   SAVE = 'save',
+  CLOSE = 'close',
 }
 
 const Icon = ({ size, name }: IconInterface): JSX.Element => {

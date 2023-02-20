@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import Table, { Activity, activityTableHeader } from './Table';
+import Table, { activityTableHeader } from '../../../features/Table';
+// import Table, { activityTableHeader } from './Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
@@ -16,7 +17,7 @@ import {
   deleteActivities,
   getActivities,
 } from '../../../api/apiLayer';
-import { IActivityData } from '../../../interfaces';
+import { IActivityData, ActivityRowProps } from '../../../interfaces';
 
 enum Section {
   Table,
@@ -24,9 +25,7 @@ enum Section {
   Delete,
 }
 
-const tabs: ITab[] = [
-  { label: constant.ALL_ACTIVITY_LABEL },
-];
+const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
 
 // TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
@@ -39,7 +38,7 @@ const Box = (): JSX.Element => (
 
 const ActivityDashboard = (): JSX.Element => {
   const { businessId } = useParams();
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [activities, setActivities] = useState<ActivityRowProps[]>([]);
   const [currentSection, setCurrentSection] = useState(Section.Table);
 
   const handleActivityCreation = async (data: IFormData): Promise<void> => {
@@ -109,22 +108,9 @@ const ActivityDashboard = (): JSX.Element => {
   };
 
   useEffect(() => {
-    void (async function () {
+    void (async function getAllEmployees() {
       await getActivities(businessId ?? '')
-        .then(async (res) => {
-          // @ts-expect-error
-          const { activities } = res;
-          // @ts-expect-error
-          const activityArray = activities.map((activity) => ({
-            id: activity.id,
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            title: activity.title,
-            startTime: activity.startTime?.substring(0, 10),
-            endTime: activity.endTime?.substring(0, 10),
-            address: activity.address,
-          }));
-          setActivities(activityArray);
-        })
+        .then(setActivities)
         .catch((error) => {
           if (error?.cause !== 1) {
             console.error(error.message);
@@ -142,7 +128,7 @@ const ActivityDashboard = (): JSX.Element => {
     currentForm = <AddForm onSubmit={handleActivityCreation} />;
   } else {
     currentForm = (
-      <Table activities={activities} headerContent={activityTableHeader} />
+      <Table rowsData={activities} headerContent={activityTableHeader} />
     );
   }
 
@@ -162,6 +148,7 @@ const ActivityDashboard = (): JSX.Element => {
           </>
         }
       />
+
       <ListBanner tabs={tabs} rhs={<ActionList />} />
       <div className="p-3">{currentForm}</div>
     </>
