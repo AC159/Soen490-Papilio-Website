@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-// import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
-// import { auth } from '../../../firebase';
 import Table, { Activity, activityTableHeader } from './Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
