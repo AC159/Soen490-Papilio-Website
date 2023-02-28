@@ -9,10 +9,8 @@ import { useSearchParams } from 'react-router-dom';
 
 type Focused = 'name' | 'number' | 'expiry' | 'cvc';
 
-const packageCost = (bundle): string => {
+const bundleCost = (bundle): string => {
   switch (bundle) {
-    case 'BASIC':
-      return '$9.99/month';
     case 'PRO':
       return '$14.99/month';
     case 'ULTIMATE':
@@ -70,7 +68,7 @@ const PaymentForm: React.FC = (): JSX.Element => {
           <div className="mb-2">
             <span className="text-gray-700">Cost:</span>{' '}
             <span className="font-bold">
-              {packageCost(searchParams.get('package'))}
+              {bundleCost(searchParams.get('package'))}
             </span>
           </div>
         </div>
