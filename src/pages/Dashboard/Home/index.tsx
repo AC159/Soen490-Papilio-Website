@@ -17,9 +17,7 @@ const HomeDashboard = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    console.log(currentActivity);
     if (currentActivity !== '') {
-      console.log('HERE');
       setViewedActivities(
         viewedActivity.filter((activity) => activity.label === currentActivity),
       );

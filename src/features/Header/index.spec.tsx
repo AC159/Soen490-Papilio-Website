@@ -1,5 +1,6 @@
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import Header from '.';
@@ -15,7 +16,7 @@ describe('Header tests', () => {
       </MemoryRouter>,
     );
 
-    userEvent.click(await screen.findByText('Login'));
+    await act(async () => userEvent.click(await screen.findByText('Login')));
     expect(await screen.findByText(/Login Page/)).toBeInTheDocument();
   });
 
@@ -29,7 +30,9 @@ describe('Header tests', () => {
       </MemoryRouter>,
     );
 
-    userEvent.click(await screen.findByText(/Get Started/));
+    await act(async () =>
+      userEvent.click(await screen.findByText(/Get Started/)),
+    );
 
     expect(await screen.findByText(/Admin Page/)).toBeInTheDocument();
   });

@@ -1,5 +1,6 @@
-import { screen, render, waitFor } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 
 import AdminForm, { IFormData } from '.';
 
@@ -39,33 +40,39 @@ describe('profile form test', () => {
       />,
     );
 
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /First name/i }),
-      'John',
+    await act(async () =>
+      userEvent.type(
+        await screen.findByRole('textbox', { name: /First name/i }),
+        'John',
+      ),
     );
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /Last name/i }),
-      'Doe',
+    await act(async () =>
+      userEvent.type(
+        await screen.findByRole('textbox', { name: /Last name/i }),
+        'Doe',
+      ),
     );
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /Email/i }),
-      'jdoe@email.com',
+    await act(async () =>
+      userEvent.type(
+        await screen.findByRole('textbox', { name: /Email/i }),
+        'jdoe@email.com',
+      ),
     );
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /Password/i }),
-      'password',
+    await act(async () =>
+      userEvent.type(
+        await screen.findByRole('textbox', { name: /Password/i }),
+        'password',
+      ),
     );
-    userEvent.click(await screen.findByText('Next'));
+    await act(async () => userEvent.click(await screen.findByText('Next')));
 
-    await waitFor(() =>
-      expect(mockOnSubmit).toHaveBeenCalledWith({
-        adminFirstName: 'John',
-        adminLastName: 'Doe',
-        adminEmail: 'jdoe@email.com',
-        adminPassword: 'password',
-        role: 'Admin',
-      }),
-    );
+    expect(mockOnSubmit).toHaveBeenCalledWith({
+      adminFirstName: 'John',
+      adminLastName: 'Doe',
+      adminEmail: 'jdoe@email.com',
+      adminPassword: 'password',
+      role: 'Admin',
+    });
   });
 
   it('should send inputs value to save when back', async () => {
@@ -79,23 +86,31 @@ describe('profile form test', () => {
       />,
     );
 
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /First name/i }),
-      'John',
+    await act(async () =>
+      userEvent.type(
+        await screen.findByRole('textbox', { name: /First name/i }),
+        'John',
+      ),
     );
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /Last name/i }),
-      'Doe',
+    await act(async () =>
+      userEvent.type(
+        await screen.findByRole('textbox', { name: /Last name/i }),
+        'Doe',
+      ),
     );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /Email/i }),
-      'jdoe@email.com',
+    await act(async () =>
+      userEvent.type(
+        screen.getByRole('textbox', { name: /Email/i }),
+        'jdoe@email.com',
+      ),
     );
-    userEvent.type(
-      screen.getByRole('textbox', { name: /Password/i }),
-      'password',
+    await act(async () =>
+      userEvent.type(
+        screen.getByRole('textbox', { name: /Password/i }),
+        'password',
+      ),
     );
-    userEvent.click(screen.getByText('Back'));
+    await act(async () => userEvent.click(screen.getByText('Back')));
 
     expect(mockOnBack).toHaveBeenCalledWith({
       adminFirstName: 'John',

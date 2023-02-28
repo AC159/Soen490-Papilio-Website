@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/return-await */
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
 
 import AddForm from '.';
 import * as constant from './constant';
@@ -17,7 +18,7 @@ const fillOtherInputs = (component: null | HTMLElement = null): void =>
     .getAllByRole('textbox')
     .filter((textbox) => textbox !== component)
     .forEach((textbox) => {
-      userEvent.type(textbox, 'as');
+      act(() => userEvent.type(textbox, 'as'));
     });
 
 describe('Employee AddForm', () => {
@@ -44,14 +45,23 @@ describe('Employee AddForm', () => {
     const mockOnSubmit = jest.fn();
     render(<AddForm onSubmit={mockOnSubmit} />);
     fillOtherInputs();
-    userEvent.click(screen.getByRole('button', { name: constant.BUTTON_TEXT }));
+    act(() =>
+      userEvent.click(
+        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+      ),
+    );
     await waitFor(() => expect(mockOnSubmit).toHaveBeenCalled());
   });
 
   it('disables onSubmit button while waiting for the form to be submitted', async () => {
     const mockOnSubmit = jest.fn();
     render(<AddForm onSubmit={mockOnSubmit} />);
-    userEvent.click(screen.getByRole('button', { name: constant.BUTTON_TEXT }));
+    fillOtherInputs();
+    act(() =>
+      userEvent.click(
+        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+      ),
+    );
     await waitFor(async () =>
       expect(
         await screen.findByRole('button', { name: constant.BUTTON_TEXT }),
@@ -70,7 +80,7 @@ describe('Employee AddForm', () => {
       const value = 'value';
       render(<AddForm {...defaultProps} />);
 
-      userEvent.type(screen.getByRole('textbox', { name }), value);
+      act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
 
       expect(await screen.findByRole('textbox', { name })).toHaveProperty(
         'value',
@@ -87,10 +97,12 @@ describe('Employee AddForm', () => {
       const value = 'value';
       render(<AddForm onSubmit={mockOnSubmit} />);
 
-      userEvent.type(screen.getByRole('textbox', { name }), value);
+      act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
       fillOtherInputs(screen.getByRole('textbox', { name }));
-      userEvent.click(
-        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+      act(() =>
+        userEvent.click(
+          screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+        ),
       );
 
       await waitFor(() =>
@@ -108,14 +120,19 @@ describe('Employee AddForm', () => {
       const value = 'value';
       render(<AddForm onSubmit={mockOnSubmit} />);
 
-      userEvent.type(screen.getByRole('textbox', { name }), value);
-      userEvent.click(
-        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+      act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
+      fillOtherInputs(screen.getByRole('textbox', { name }));
+      act(() =>
+        userEvent.click(
+          screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+        ),
       );
 
-      expect(
-        getErrorSpan(await screen.findByRole('textbox', { name })),
-      ).toBeEmptyDOMElement();
+      await waitFor(async () =>
+        expect(
+          getErrorSpan(await screen.findByRole('textbox', { name })),
+        ).toBeEmptyDOMElement(),
+      );
     });
 
   const itDisplaysAnErrorWhenFieldIsTooShort = (): void =>
@@ -124,23 +141,29 @@ describe('Employee AddForm', () => {
       const value = 'v';
       render(<AddForm onSubmit={mockOnSubmit} />);
 
-      userEvent.type(
-        screen.getByRole('textbox', {
-          name: constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
-        }),
-        value,
-      );
-      userEvent.click(
-        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
-      );
-
-      expect(
-        getErrorSpan(
-          await screen.findByRole('textbox', {
+      act(() =>
+        userEvent.type(
+          screen.getByRole('textbox', {
             name: constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
           }),
+          value,
         ),
-      ).not.toBeEmptyDOMElement();
+      );
+      act(() =>
+        userEvent.click(
+          screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+        ),
+      );
+
+      await waitFor(async () =>
+        expect(
+          getErrorSpan(
+            await screen.findByRole('textbox', {
+              name: constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+            }),
+          ),
+        ).not.toBeEmptyDOMElement(),
+      );
     });
 
   describe('firstName', () => {
