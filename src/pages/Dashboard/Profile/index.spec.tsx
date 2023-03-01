@@ -1,8 +1,9 @@
 import userEvent from '@testing-library/user-event';
-import { screen, render, act } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import ProfileDashboard from '.';
 import { IconNames } from '../../../components/Icon';
 import * as API from '../../../api/apiLayer';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('../../../api/apiLayer', () => ({
   getProfile: jest.fn(),
@@ -10,7 +11,9 @@ jest.mock('../../../api/apiLayer', () => ({
 
 describe('dashboard profile test', () => {
   beforeEach(() => {
-    (API.getProfile as jest.MockedFunction<typeof API.getProfile>).mockResolvedValue(new Response());
+    (
+      API.getProfile as jest.MockedFunction<typeof API.getProfile>
+    ).mockResolvedValue(new Response());
   });
 
   afterEach(() => {
@@ -41,7 +44,10 @@ describe('dashboard profile test', () => {
     userEvent.click(screen.getAllByText(IconNames.EDIT_SQUARE)[0]);
     expect(await screen.findAllByRole('textbox')).toHaveLength(1);
     expect(await screen.findAllByTestId('field')).toHaveLength(6);
-    await act(async () => userEvent.click(await screen.findByText(IconNames.SAVE)));
+
+    await act(async () =>
+      userEvent.click(await screen.findByText(IconNames.SAVE)),
+    );
 
     expect(await screen.findAllByTestId('field')).toHaveLength(7);
   });

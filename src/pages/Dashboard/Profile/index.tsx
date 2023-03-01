@@ -59,6 +59,7 @@ const ProfileDashboard = (): JSX.Element => {
           const onSubmit = async (data: IProfileInformation): Promise<void> => {
             setProfile(data);
             setIsEditing(false);
+            console.log('HERE HERE HERE');
           };
 
           return (

@@ -29,7 +29,7 @@ const initialState: IFormData = {
   costPerIndividual: 0,
   costPerGroup: 0,
   groupSize: 0,
-  image: null,
+  // image: null,
 };
 
 const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
@@ -39,32 +39,25 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mt-4.5">{constant.FORM_HEADLINE}</h2>
+      <h2 className="text-2xl font-semibold mt-4.5">
+        {constant.FORM_HEADLINE}
+      </h2>
       <Input
-        {...register(constant.INPUT_TITLE, {
-          required: false,
-          pattern: /.*/,
-        })}
+        {...register(constant.INPUT_TITLE)}
         placeholder={constant.INPUT_TITLE_PLACEHOLDER}
         label={constant.INPUT_TITLE_LABEL}
         hasLabel
       />
       <Input
-        {...register(constant.INPUT_ADDRESS, {
-          required: false,
-          pattern: /.*/,
-        })}
+        {...register(constant.INPUT_ADDRESS)}
         placeholder={constant.INPUT_ADDRESS_PLACEHOLDER}
         label={constant.INPUT_ADDRESS_LABEL}
         hasLabel
       />
-      <div className='flex'>
-        <div className='pr-10'>
+      <div className="flex">
+        <div className="pr-10">
           <Input
-            {...register(constant.INPUT_STARTTIME, {
-              required: false,
-              pattern: /.*/,
-            })}
+            {...register(constant.INPUT_STARTTIME)}
             placeholder={constant.INPUT_STARTTIME_PLACEHOLDER}
             label={constant.INPUT_STARTTIME_LABEL}
             hasLabel
@@ -72,10 +65,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         </div>
         <div>
           <Input
-            {...register(constant.INPUT_ENDTIME, {
-              required: false,
-              pattern: /.*/,
-            })}
+            {...register(constant.INPUT_ENDTIME)}
             placeholder={constant.INPUT_ENDTIME_PLACEHOLDER}
             label={constant.INPUT_ENDTIME_LABEL}
             hasLabel
@@ -83,32 +73,23 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         </div>
       </div>
       <Input
-        {...register(constant.INPUT_DESCRIPTION, {
-          required: false,
-          pattern: /.*/,
-        })}
+        {...register(constant.INPUT_DESCRIPTION)}
         placeholder={constant.INPUT_DESCRIPTION_PLACEHOLDER}
         label={constant.INPUT_DESCRIPTION_LABEL}
         hasLabel
       />
-      <div className='flex'>
-        <div className='pr-10'>
+      <div className="flex">
+        <div className="pr-10">
           <Input
-            {...register(constant.INPUT_COST_PER_INDV, {
-              required: false,
-              pattern: /.*/,
-            })}
+            {...register(constant.INPUT_COST_PER_INDV)}
             placeholder={constant.INPUT_COST_PER_INDV_PLACEHOLDER}
             label={constant.INPUT_COST_PER_INDV_LABEL}
             hasLabel
           />
         </div>
-        <div className='pr-10'>
+        <div className="pr-10">
           <Input
-            {...register(constant.INPUT_COST_PER_GRP, {
-              required: false,
-              pattern: /.*/,
-            })}
+            {...register(constant.INPUT_COST_PER_GRP)}
             placeholder={constant.INPUT_COST_PER_GRP_PLACEHOLDER}
             label={constant.INPUT_COST_PER_GRP_LABEL}
             hasLabel
@@ -116,18 +97,15 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         </div>
         <div>
           <Input
-            {...register(constant.INPUT_GROUP_SIZE, {
-              required: false,
-              pattern: /.*/,
-            })}
+            {...register(constant.INPUT_GROUP_SIZE)}
             placeholder={constant.INPUT_GROUP_SIZE_PLACEHOLDER}
             label={constant.INPUT_GROUP_SIZE_LABEL}
             hasLabel
           />
         </div>
       </div>
-      <UploadImage/>
-      <br/>
+      <UploadImage />
+      <br />
       <Button text={constant.BUTTON_TEXT} onClick={submit} />
     </div>
   );

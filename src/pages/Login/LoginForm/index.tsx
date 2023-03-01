@@ -31,26 +31,20 @@ const LoginForm = ({ onSubmit }: ILoginForm): JSX.Element => {
       buttonOnClick={submit}
     >
       <Input
-        {...register(constant.INPUT_EMAIL, { required: false, pattern: /.*/ })}
+        {...register(constant.INPUT_EMAIL)}
         placeholder={constant.INPUT_EMAIL_PLACEHOLDER}
         label={constant.INPUT_EMAIL_LABEL}
         hasLabel
       />
       <Input
-        {...register(constant.INPUT_PASSWORD, {
-          required: false,
-          pattern: /.*/,
-        })}
+        {...register(constant.INPUT_PASSWORD)}
         placeholder={constant.INPUT_PASSWORD_PLACEHOLDER}
         label={constant.INPUT_PASSWORD_LABEL}
         type="password"
         hasLabel
       />
       <Input
-        {...register(constant.INPUT_BUSINESS_ID, {
-          required: false,
-          pattern: /.*/,
-        })}
+        {...register(constant.INPUT_BUSINESS_ID)}
         placeholder={constant.INPUT_BUSINESS_ID_PLACEHOLDER}
         label={constant.INPUT_BUSINESS_ID_LABEL}
         hasLabel

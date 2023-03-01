@@ -1,23 +1,7 @@
-import { ERROR_CODE } from '../../utils/enum';
-
 export declare interface IErrorMessage {
   isError: boolean;
   message: string;
 }
-
-export const createMessage = (
-  error: number,
-  requiredMessage: string = '',
-  patternMessage: string = '',
-): string => {
-  if (error === ERROR_CODE.PATTERN_ERROR) {
-    return patternMessage;
-  }
-  if (error === ERROR_CODE.REQUIRED_ERROR) {
-    return requiredMessage;
-  }
-  return 'There was an unexpected error. Please try again.';
-};
 
 const ErrorMessage = ({ isError, message }: IErrorMessage): JSX.Element => {
   if (!isError) return <></>;

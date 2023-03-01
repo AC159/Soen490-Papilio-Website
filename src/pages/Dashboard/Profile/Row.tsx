@@ -20,11 +20,7 @@ const Row = ({
 
   return (
     <div className="border rounded-sm border-brand-blue-dark bg-brand-blue-light p-4 flex-1 group flex flex-row items-center justify-between">
-      <Input
-        {...register(data, { required: false, pattern: /.*/ })}
-        placeholder=""
-        variant="ghost"
-      />
+      <Input {...register(data)} placeholder="" variant="ghost" />
       <Button variant="ghost" icon={IconNames.SAVE} onClick={submit} hasIcon />
     </div>
   );
