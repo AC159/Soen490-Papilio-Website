@@ -1,8 +1,9 @@
 import type { InputInterface } from '..';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
-import useFormData from '../../../hooks/useFormData';
+import useFormData, { InputOptionsProps } from '../../../hooks/useFormData';
 import * as constant from './constant';
+import ErrorMessage from '../../../components/ErrorMessage';
 
 export declare interface IAdminForm {
   initialState: IFormData;
@@ -19,34 +20,44 @@ export declare interface IFormData {
 }
 
 declare interface InputsProps extends InputInterface {
-  pattern: RegExp;
+  options: InputOptionsProps;
 }
 
 const inputs: InputsProps[] = [
   {
     name: 'adminFirstName',
     label: 'First name',
-    pattern: /.{2,}/,
+    options: {
+      minLength: 2,
+    },
   },
   {
     name: 'adminLastName',
     label: 'Last name',
-    pattern: /.{2,}/,
+    options: {
+      minLength: 2,
+    },
   },
   {
     name: 'adminEmail',
     label: 'Email',
-    pattern: /.+@.+\..*/,
+    options: {
+      pattern: /.+@.+\..*/,
+    },
   },
   {
     name: 'adminPassword',
     label: 'Password',
-    pattern: /.+/,
+    options: {
+      required: true,
+    },
   },
   {
     name: 'role',
     label: 'Role',
-    pattern: /Admin/,
+    options: {
+      pattern: /Admin/,
+    },
   },
 ];
 
@@ -56,7 +67,7 @@ const AdminForm = ({
   onBack,
 }: IAdminForm): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [formData, _, __, register, submit] = useFormData<any>({
+  const [formData, _, errors, register, submit] = useFormData<any>({
     initialState,
     onSubmit,
   });
@@ -67,16 +78,25 @@ const AdminForm = ({
         {constant.FORM_TITLE}
       </h2>
       <div className="flex-1">
-        {inputs.map(({ name, label, pattern }) => (
-          <Input
-            key={name}
-            {...register(name, { required: false, pattern })}
-            placeholder=""
-            label={label}
-            size="sm"
-            labelPosition="left"
-            hasLabel
-          />
+        {inputs.map(({ name, label, options }) => (
+          <>
+            <Input
+              key={name}
+              {...register(name, options)}
+              placeholder=""
+              label={label}
+              size="sm"
+              labelPosition="left"
+              hasLabel
+            />
+            <div className="ml-48 pl-4">
+              <ErrorMessage
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                isError={!!errors[name]}
+                message={errors[name]}
+              />
+            </div>
+          </>
         ))}
       </div>
       <div className="flex justify-between items-center mt-6">

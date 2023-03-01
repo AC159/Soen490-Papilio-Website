@@ -13,7 +13,7 @@ export const DEFAULT_PATTERN_MESSAGE =
 export const getDefaultMinLengthMessage = (len: number): string =>
   `This field should be ${len} characters long.`;
 
-declare interface IError {
+export declare interface InputOptionsProps {
   required?: boolean | RequiredProps;
   pattern?: RegExp | PatternProps;
   minLength?: number | MinLengthProps;
@@ -72,7 +72,7 @@ const useFormData = <T extends {}>({
   T,
   boolean,
   IErrorMessages,
-  (name: string, options?: IError) => IRegisterReturn,
+  (name: string, options?: InputOptionsProps) => IRegisterReturn,
   () => Promise<void>,
 ] => {
   const [formData, setFormData] = useState<T>(initialState);
