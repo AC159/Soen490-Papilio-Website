@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
+import {
+  combine,
+  match,
+  required,
+  validateFields,
+} from '../utils/formValidation';
 
-import { ERROR_CODE } from '../utils/enum';
-
-export declare interface IErrorTemplate {
-  [key: string]: IError;
-}
+export const DEFAULT_REQUIRED_MESSAGE = 'This field is required';
+export const DEFAULT_PATTERN_MESSAGE =
+  "This field doesn't match the required pattern.";
 
 declare interface IError {
-  required: boolean;
-  pattern: RegExp;
+  required?: boolean | RequiredProps;
+  pattern?: RegExp | PatternProps;
 }
 
 declare interface IErrorMessages {
-  [key: string]: number;
+  [key: string]: string;
 }
 
 declare interface IRegisterReturn {
@@ -24,10 +28,33 @@ declare interface IRegisterReturn {
   isError: boolean;
 }
 
+declare interface ValidatorProps {
+  [key: string]: Function;
+}
+
+export declare interface RequiredProps {
+  required: boolean;
+  message: string;
+}
+
+export declare interface PatternProps {
+  pattern: RegExp;
+  message: string;
+}
+
 export declare interface IUseFormData<T> {
   initialState: T;
   onSubmit: (data: T) => Promise<void>;
 }
+
+const validatorType = (type: 'required' | 'pattern'): Function => {
+  switch (type) {
+    case 'required':
+      return required;
+    case 'pattern':
+      return match;
+  }
+};
 
 const useFormData = <T extends {}>({
   initialState,
@@ -35,13 +62,13 @@ const useFormData = <T extends {}>({
 }: IUseFormData<T>): [
   T,
   boolean,
-  { [key: string]: number },
-  (name: string, options: IError) => IRegisterReturn,
+  IErrorMessages,
+  (name: string, options?: IError) => IRegisterReturn,
   () => Promise<void>,
 ] => {
   const [formData, setFormData] = useState<T>(initialState);
   const [errors, setError] = useState<IErrorMessages>({});
-  const [validation, setValidation] = useState<IErrorTemplate>({});
+  const [validators, setValidators] = useState<ValidatorProps>({});
   const [loading, setLoading] = useState<boolean>(false);
 
   const submit = async (): Promise<void> => {
@@ -53,56 +80,79 @@ const useFormData = <T extends {}>({
   };
 
   const validateFormData = async (): Promise<T> => {
-    const result = Object.entries(validation)
-      .map(([key, value]) => {
-        const temp = validate(value, key, formData[key as keyof T]);
-        setError((prev) => ({ ...prev, ...temp }));
-        return temp;
-      })
-      .filter((x) => Object.keys(x).length > 0);
+    const errors = validateFields(validators, formData);
+    setError(errors);
 
-    if (Object.keys(result).length === 0) {
+    if (Object.values(errors).every((error) => error === undefined)) {
       return await Promise.resolve(formData);
+    } else {
+      return await Promise.reject(new Error('Error(s) are present'));
     }
-    return await Promise.reject(new Error('Error are present'));
   };
 
-  const validate = (error: IError, key: string, value: any): IErrorMessages => {
-    let result: IErrorMessages = {};
-    result[key] = errors[key as keyof IErrorMessages];
-    if (error.required && value === '') {
-      result[key] = ERROR_CODE.REQUIRED_ERROR;
-      // setError(prev => ({ ...prev, [key]: ERROR_CODE.REQUIRED_ERROR }));
-    } else if (typeof value === 'string' && !error.pattern.test(value)) {
-      result[key] = ERROR_CODE.PATTERN_ERROR;
-      // setError(prev => ({ ...prev, [key]: ERROR_CODE.PATTERN_ERROR }));
-    } else {
-      setError((prev) => {
-        const { [key]: string, ...rest } = prev;
-        return rest;
-      });
-      result = {};
+  const validates = (key: string, value: any): void => {
+    const prev = errors[key];
+    if (prev !== undefined) {
+      setError((prev) => ({
+        ...prev,
+        [key]: validators[key](value),
+      }));
     }
-    return result;
   };
 
   const register = (
     name: string,
-    options: { required: boolean; pattern: RegExp },
+    options: {
+      required?: boolean | RequiredProps;
+      pattern?: RegExp | PatternProps;
+    } = {},
   ): IRegisterReturn => {
     useEffect(() => {
-      setValidation((prev) => ({ ...prev, [name]: options }));
+      let validators: Function[] = [];
+      if (options.required !== undefined) {
+        if (typeof options.required === 'object' && options.required.required) {
+          validators = [
+            ...validators,
+            validatorType('required')(options.required.message),
+          ];
+        } else {
+          validators = [
+            ...validators,
+            validatorType('required')(DEFAULT_REQUIRED_MESSAGE),
+          ];
+        }
+      }
+      if (options.pattern !== undefined) {
+        if (options.pattern instanceof RegExp) {
+          validators = [
+            ...validators,
+            validatorType('pattern')(options.pattern, DEFAULT_PATTERN_MESSAGE),
+          ];
+        } else {
+          validators = [
+            ...validators,
+            validatorType('pattern')(
+              options.pattern.pattern,
+              options.pattern.message,
+            ),
+          ];
+        }
+      }
+      setValidators((prev) => ({
+        ...prev,
+        [name]: combine(...validators),
+      }));
     }, []);
 
     const onBlur = (): void =>
       setError((prev) => ({
         ...prev,
-        ...validate(options, name, formData[name as keyof T]),
+        [name]: validators[name](formData[name as keyof T]),
       }));
     const value = formData[name as keyof T];
 
     const onManualChange = (name: string, value: string): void => {
-      validate(validation[name], name, value);
+      validates(name, value);
       setFormData((data: T) => ({ ...data, [name]: value }));
     };
 
@@ -120,7 +170,7 @@ const useFormData = <T extends {}>({
   const onChange = (e: React.FormEvent<HTMLInputElement>): void => {
     const name = e.currentTarget.name;
     const value = e.currentTarget.value;
-    validate(validation[name], name, value);
+    validates(name, value);
     setFormData((data: T) => ({ ...data, [name]: value }));
   };
 
