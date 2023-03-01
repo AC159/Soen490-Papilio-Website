@@ -8,6 +8,7 @@ import useFormData, {
   RequiredProps,
   DEFAULT_PATTERN_MESSAGE,
   DEFAULT_REQUIRED_MESSAGE,
+  MinLengthProps,
 } from './useFormData';
 
 const UserFormDataExample = ({
@@ -18,6 +19,7 @@ const UserFormDataExample = ({
   options: {
     required?: boolean | RequiredProps;
     pattern?: RegExp | PatternProps;
+    minLength?: number | MinLengthProps;
   };
 }): JSX.Element => {
   const [formData, loading, errors, register, submit] = useFormData({
@@ -126,6 +128,31 @@ describe('useFormData', () => {
     const options = {
       ...defaultOptions,
       pattern: { pattern: /aaa/, message: errorMessage },
+    };
+    render(<UserFormDataExample {...defaultProps} options={options} />);
+    act(() => userEvent.type(screen.getByRole('textbox'), 'a'));
+    act(() => userEvent.click(screen.getByText(/Value:/)));
+    expect(await screen.findByTestId('error')).toHaveTextContent(errorMessage);
+  });
+
+  it('display an error message when the input is not long enough', async () => {
+    const options = {
+      ...defaultOptions,
+      minLength: 2,
+    };
+    render(<UserFormDataExample {...defaultProps} options={options} />);
+    act(() => userEvent.type(screen.getByRole('textbox'), 'a'));
+    act(() => userEvent.click(screen.getByText(/Value:/)));
+    expect(await screen.findByTestId('error')).toHaveTextContent(
+      'This field should be 2 characters long.',
+    );
+  });
+
+  it('display a custom error when the input is not long enough', async () => {
+    const errorMessage = 'Field should be this long.';
+    const options = {
+      ...defaultOptions,
+      minLength: { minLength: 2, message: errorMessage },
     };
     render(<UserFormDataExample {...defaultProps} options={options} />);
     act(() => userEvent.type(screen.getByRole('textbox'), 'a'));

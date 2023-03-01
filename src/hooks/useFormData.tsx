@@ -3,16 +3,20 @@ import {
   combine,
   match,
   required,
+  hasLength,
   validateFields,
 } from '../utils/formValidation';
 
 export const DEFAULT_REQUIRED_MESSAGE = 'This field is required';
 export const DEFAULT_PATTERN_MESSAGE =
   "This field doesn't match the required pattern.";
+export const getDefaultMinLengthMessage = (len: number): string =>
+  `This field should be ${len} characters long.`;
 
 declare interface IError {
   required?: boolean | RequiredProps;
   pattern?: RegExp | PatternProps;
+  minLength?: number | MinLengthProps;
 }
 
 declare interface IErrorMessages {
@@ -39,6 +43,11 @@ export declare interface RequiredProps {
 
 export declare interface PatternProps {
   pattern: RegExp;
+  message: string;
+}
+
+export declare interface MinLengthProps {
+  minLength: number;
   message: string;
 }
 
@@ -105,6 +114,7 @@ const useFormData = <T extends {}>({
     options: {
       required?: boolean | RequiredProps;
       pattern?: RegExp | PatternProps;
+      minLength?: number | MinLengthProps;
     } = {},
   ): IRegisterReturn => {
     useEffect(() => {
@@ -135,6 +145,22 @@ const useFormData = <T extends {}>({
               options.pattern.pattern,
               options.pattern.message,
             ),
+          ];
+        }
+      }
+      if (options.minLength !== undefined) {
+        if (typeof options.minLength === 'number') {
+          validators = [
+            ...validators,
+            hasLength(
+              options.minLength,
+              getDefaultMinLengthMessage(options.minLength),
+            ),
+          ];
+        } else {
+          validators = [
+            ...validators,
+            hasLength(options.minLength.minLength, options.minLength.message),
           ];
         }
       }
