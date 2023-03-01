@@ -28,6 +28,7 @@ const inputs: InputsProps[] = [
     name: 'adminFirstName',
     label: 'First name',
     options: {
+      required: true,
       minLength: 2,
     },
   },
@@ -35,6 +36,7 @@ const inputs: InputsProps[] = [
     name: 'adminLastName',
     label: 'Last name',
     options: {
+      required: true,
       minLength: 2,
     },
   },
@@ -42,6 +44,7 @@ const inputs: InputsProps[] = [
     name: 'adminEmail',
     label: 'Email',
     options: {
+      required: true,
       pattern: /.+@.+\..*/,
     },
   },
@@ -56,6 +59,7 @@ const inputs: InputsProps[] = [
     name: 'role',
     label: 'Role',
     options: {
+      required: true,
       pattern: /Admin/,
     },
   },
