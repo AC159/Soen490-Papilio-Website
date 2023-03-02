@@ -76,7 +76,7 @@ const useFormData = <T extends {}>({
   () => Promise<void>,
 ] => {
   const [formData, setFormData] = useState<T>(initialState);
-  const [errors, setError] = useState<IErrorMessages>({});
+  const [errors, setErrors] = useState<IErrorMessages>({});
   const [validators, setValidators] = useState<ValidatorProps>({});
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -84,13 +84,13 @@ const useFormData = <T extends {}>({
     setLoading(true);
     await validateFormData()
       .then(onSubmit)
-      .catch((e) => console.error(e.message));
+      .catch((e) => setErrors((prev) => ({ ...prev, general: e.message })));
     setLoading(false);
   };
 
   const validateFormData = async (): Promise<T> => {
     const errors = validateFields(validators, formData);
-    setError(errors);
+    setErrors(errors);
 
     if (Object.values(errors).every((error) => error === undefined)) {
       return await Promise.resolve(formData);
@@ -102,7 +102,7 @@ const useFormData = <T extends {}>({
   const validates = (key: string, value: any): void => {
     const prev = errors[key];
     if (prev !== undefined) {
-      setError((prev) => ({
+      setErrors((prev) => ({
         ...prev,
         [key]: validators[key](value),
       }));
@@ -125,7 +125,8 @@ const useFormData = <T extends {}>({
             ...validators,
             validatorType('required')(options.required.message),
           ];
-        } else {
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        } else if (options.required) {
           validators = [
             ...validators,
             validatorType('required')(DEFAULT_REQUIRED_MESSAGE),
@@ -171,7 +172,7 @@ const useFormData = <T extends {}>({
     }, []);
 
     const onBlur = (): void =>
-      setError((prev) => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: validators[name](formData[name as keyof T]),
       }));

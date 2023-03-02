@@ -28,6 +28,9 @@ const UserFormDataExample = ({
   });
   return (
     <>
+      <span data-testid="general-error">
+        {errors.general && errors.general}
+      </span>
       <p>Value: {formData.field}</p>
       <Input {...register('field', options)} placeholder="" />
       <span data-testid="error">{errors.field && errors.field}</span>
@@ -158,5 +161,21 @@ describe('useFormData', () => {
     act(() => userEvent.type(screen.getByRole('textbox'), 'a'));
     act(() => userEvent.click(screen.getByText(/Value:/)));
     expect(await screen.findByTestId('error')).toHaveTextContent(errorMessage);
+  });
+
+  it('saves submit error as general error', async () => {
+    const errorMessage = 'There was an error';
+    const mockSubmit = jest.fn().mockRejectedValue(new Error(errorMessage));
+    render(
+      <UserFormDataExample
+        {...defaultProps}
+        options={{ required: false }}
+        onSubmit={mockSubmit}
+      />,
+    );
+    await act(async () => userEvent.click(screen.getByRole('button')));
+    expect(await screen.findByTestId('general-error')).toHaveTextContent(
+      errorMessage,
+    );
   });
 });
