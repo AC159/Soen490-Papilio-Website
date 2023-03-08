@@ -51,6 +51,10 @@ export async function getActivities(
             : 'Not defined',
         address: activity.address,
         status: 'inactive',
+        description: activity.description,
+        costPerIndividual: activity.costPerIndividual,
+        costPerGroup: activity.costPerGroup,
+        groupSize: activity.groupSize,
       })),
     )
     .catch(

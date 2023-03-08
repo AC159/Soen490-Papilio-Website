@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
+// import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
-import Table, { activityTableHeader } from '../../../features/Table';
-// import Table, { activityTableHeader } from './Table';
+// import { auth } from '../../../firebase';
+import Table, { Activity, activityTableHeader } from './Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
 import PageHeader from '../../../features/PageHeader';
 import ListBanner from '../../../features/ListBanner';
 import AddForm, { IFormData } from './AddForm';
 import DeleteForm from './DeleteForm';
+import EditForm from './EditForm';
 import { ITab } from '../../../features/TabList';
 import { IconNames } from '../../../components/Icon';
 import * as constant from './constant';
@@ -17,15 +19,18 @@ import {
   deleteActivities,
   getActivities,
 } from '../../../api/apiLayer';
-import { IActivityData, ActivityRowProps } from '../../../interfaces';
+import { IActivityData } from '../../../interfaces';
 
 enum Section {
   Table,
   Add,
   Delete,
+  Edit,
 }
 
-const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
+const tabs: ITab[] = [
+  { label: constant.ALL_ACTIVITY_LABEL },
+];
 
 // TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
@@ -38,8 +43,9 @@ const Box = (): JSX.Element => (
 
 const ActivityDashboard = (): JSX.Element => {
   const { businessId } = useParams();
-  const [activities, setActivities] = useState<ActivityRowProps[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [currentSection, setCurrentSection] = useState(Section.Table);
+  const [currentActivity, setCurrentActivity] = useState<Activity>();
 
   const handleActivityCreation = async (data: IFormData): Promise<void> => {
     const reqData: IActivityData = {
@@ -68,6 +74,26 @@ const ActivityDashboard = (): JSX.Element => {
         activities.filter((activity) => !activityIds.includes(activity.id)),
       );
     });
+  };
+
+  const handleEditActivity = async (data: Activity): Promise<void> => {
+    setCurrentActivity(data);
+    if (currentSection !== Section.Edit) {
+      setCurrentSection(Section.Edit);
+    } else {
+      setCurrentSection(Section.Table);
+    }
+    console.log(currentActivity);
+  };
+
+  const handleEdit = (activity: Activity): void => {
+    setCurrentActivity(activity);
+    if (currentSection !== Section.Edit) {
+      setCurrentSection(Section.Edit);
+    } else {
+      setCurrentSection(Section.Table);
+    }
+    console.log(activity.title);
   };
 
   const ActionList = (): JSX.Element => {
@@ -108,9 +134,27 @@ const ActivityDashboard = (): JSX.Element => {
   };
 
   useEffect(() => {
-    void (async function getAllEmployees() {
+    void (async function getAllActivities() {
       await getActivities(businessId ?? '')
+        // @ts-expect-error
         .then(setActivities)
+        .then(async (res) => {
+          // @ts-expect-error
+          const { activities } = res;
+          const activityArray = activities.map((activity) => ({
+            id: activity.id,
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            title: activity.title,
+            startTime: (activity.startTime).substring(0, 10),
+            endTime: (activity.endTime).substring(0, 10),
+            address: activity.address,
+            description: activity.description,
+            costPerIndividual: activity.costPerIndividual,
+            costPerGroup: activity.costPerGroup,
+            groupSize: activity.groupSize,
+          }));
+          setActivities(activityArray);
+        })
         .catch((error) => {
           if (error?.cause !== 1) {
             console.error(error.message);
@@ -126,9 +170,11 @@ const ActivityDashboard = (): JSX.Element => {
     );
   } else if (currentSection === Section.Add) {
     currentForm = <AddForm onSubmit={handleActivityCreation} />;
+  } else if (currentSection === Section.Edit) {
+    currentForm = <EditForm onSubmit={handleEditActivity} activity={currentActivity as Activity}/>;
   } else {
     currentForm = (
-      <Table rowsData={activities} headerContent={activityTableHeader} />
+      <Table activities={activities} headerContent={activityTableHeader} onEdit={handleEdit}/>
     );
   }
 
@@ -148,7 +194,6 @@ const ActivityDashboard = (): JSX.Element => {
           </>
         }
       />
-
       <ListBanner tabs={tabs} rhs={<ActionList />} />
       <div className="p-3">{currentForm}</div>
     </>
