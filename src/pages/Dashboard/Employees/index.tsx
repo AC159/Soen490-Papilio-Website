@@ -80,7 +80,6 @@ const EmployeeDashboard = (): JSX.Element => {
   };
 
   const ActionList = (): JSX.Element => {
-    console.log(currentSection);
     switch (currentSection) {
       case Section.Add:
       case Section.Delete:

@@ -36,7 +36,7 @@ const defaultProps = {
 };
 
 const selectOneEmployee = (): void =>
-  userEvent.click(screen.getByRole('checkbox'));
+  act(() => userEvent.click(screen.getByRole('checkbox')));
 
 const renderWithPortal = (component: React.ReactElement): any =>
   render(<div id="portalRoot">{component}</div>);
@@ -73,7 +73,7 @@ describe('Delete Form', () => {
   it('opens the submission modal when delete button is clicked', async () => {
     renderWithPortal(<DeleteForm {...defaultProps} />);
     selectOneEmployee();
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+    act(() => userEvent.click(screen.getByText(constant.BUTTON_TEXT)));
 
     expect(
       await screen.findByText(
@@ -86,7 +86,7 @@ describe('Delete Form', () => {
   it('displays a delete button inside the delete modal', async () => {
     renderWithPortal(<DeleteForm {...defaultProps} />);
     selectOneEmployee();
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+    act(() => userEvent.click(screen.getByText(constant.BUTTON_TEXT)));
 
     expect(await screen.findByText(/^Delete$/)).toBeInTheDocument();
     await act(async () => await Promise.resolve());
@@ -95,7 +95,7 @@ describe('Delete Form', () => {
   it('displays a cancel button inside the delete modal', async () => {
     renderWithPortal(<DeleteForm {...defaultProps} />);
     selectOneEmployee();
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+    act(() => userEvent.click(screen.getByText(constant.BUTTON_TEXT)));
 
     expect(await screen.findByText(/^Cancel$/)).toBeInTheDocument();
     await act(async () => await Promise.resolve());
@@ -105,10 +105,12 @@ describe('Delete Form', () => {
     const mockOnSubmit = jest.fn();
     renderWithPortal(<DeleteForm {...defaultProps} onSubmit={mockOnSubmit} />);
     selectOneEmployee();
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
-    userEvent.click(await screen.findByText(/^Cancel$/));
+    await act(async () =>
+      userEvent.click(await screen.findByText(constant.BUTTON_TEXT)),
+    );
+    await act(async () => userEvent.click(screen.getByText(/^Cancel$/)));
 
-    await waitForElementToBeRemoved(() => screen.queryByText(/^Cancel$/));
+    expect(screen.queryByText(/^Cancel$/)).not.toBeInTheDocument();
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
@@ -117,11 +119,10 @@ describe('Delete Form', () => {
     renderWithPortal(<DeleteForm {...defaultProps} onSubmit={mockOnSubmit} />);
 
     selectOneEmployee();
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
-    userEvent.click(await screen.findByText(/^Delete$/));
+    act(() => userEvent.click(screen.getByText(constant.BUTTON_TEXT)));
+    await act(async () => userEvent.click(await screen.findByText(/^Delete$/)));
 
     expect(mockOnSubmit).toHaveBeenCalled();
-    await act(async () => await Promise.resolve());
   });
 
   it('passes the employees to the table components', async () => {
@@ -144,8 +145,10 @@ describe('Delete Form', () => {
       <DeleteForm employees={oneEmployee} onSubmit={mockOnSubmit} />,
     );
 
-    userEvent.click(screen.getByRole('checkbox'));
-    userEvent.click(await screen.findByText(constant.BUTTON_TEXT));
+    await act(async () => userEvent.click(await screen.findByRole('checkbox')));
+    await act(async () =>
+      userEvent.click(await screen.findByText(constant.BUTTON_TEXT)),
+    );
     userEvent.click(await screen.findByText(/^Delete$/));
 
     expect(mockOnSubmit).toHaveBeenCalledWith(['a']);
@@ -155,7 +158,9 @@ describe('Delete Form', () => {
   it('removes the id of the deleted employee when double click on user row', async () => {
     renderWithPortal(<DeleteForm {...defaultProps} employees={oneEmployee} />);
 
-    userEvent.dblClick(screen.getByRole('checkbox'));
+    await act(async () =>
+      userEvent.dblClick(await screen.findByRole('checkbox')),
+    );
     userEvent.click(screen.getByText(constant.BUTTON_TEXT));
 
     expect(screen.queryByText(/^Delete$/)).not.toBeInTheDocument();
@@ -180,8 +185,8 @@ describe('Delete Form', () => {
       <DeleteForm employees={oneEmployee} onSubmit={mockOnSubmit} />,
     );
 
-    userEvent.click(screen.getByRole('checkbox'));
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+    act(() => userEvent.click(screen.getByRole('checkbox')));
+    act(() => userEvent.click(screen.getByText(constant.BUTTON_TEXT)));
     userEvent.click(await screen.findByText(/^Delete$/));
 
     await waitForElementToBeRemoved(() => screen.queryByText(/^Delete$/));

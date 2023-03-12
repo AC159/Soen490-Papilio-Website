@@ -5,9 +5,20 @@ import Cards from 'react-credit-cards-2';
 import TextField from '@mui/material/TextField';
 import InputMask from 'react-input-mask';
 import Button from '../../../../components/Button';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 type Focused = 'name' | 'number' | 'expiry' | 'cvc';
+
+const bundleCost = (bundle): string => {
+  switch (bundle) {
+    case 'PRO':
+      return '$14.99/month';
+    case 'ULTIMATE':
+      return '$19.99/month';
+    default:
+      return '$9.99/month';
+  }
+};
 
 const PaymentForm: React.FC = (): JSX.Element => {
   const [creditNumber, setCreditNumber] = useState('');
@@ -16,17 +27,7 @@ const PaymentForm: React.FC = (): JSX.Element => {
   const [expiry, setExpiry] = useState('');
   const [focus, setFocus] = useState<Focused | undefined>();
   const [saveCreditCardInfo, setSaveCreditCardInfo] = useState(false); // new state for saving credit card info
-  const location = useLocation();
-  const packageInfo = {
-    packageName:
-      (location?.search.includes('package=')
-        ? new URLSearchParams(location.search).get('package')
-        : '') ?? '',
-    cost:
-      (location?.search.includes('cost=')
-        ? new URLSearchParams(location.search).get('cost')
-        : '') ?? '',
-  };
+  const [searchParams] = useSearchParams();
 
   const timeOfpayment = new Date();
   const processPayment = async (): Promise<void> => {
@@ -36,7 +37,9 @@ const PaymentForm: React.FC = (): JSX.Element => {
       cvc,
       expiry,
       saveCreditCardInfo,
-      packageInfo,
+      packageInfo: {
+        packageName: searchParams.get('package') | '',
+      },
       timeOfpayment,
     };
 
@@ -60,11 +63,13 @@ const PaymentForm: React.FC = (): JSX.Element => {
           <h2 className="text-2xl font-bold mb-4">Payment Information </h2>
           <div className="mb-2">
             <span className="text-gray-700">Package Name:</span>{' '}
-            <span className="font-bold">{packageInfo.packageName}</span>
+            <span className="font-bold">{searchParams.get('package')}</span>
           </div>
           <div className="mb-2">
             <span className="text-gray-700">Cost:</span>{' '}
-            <span className="font-bold">{packageInfo.cost}</span>
+            <span className="font-bold">
+              {bundleCost(searchParams.get('package'))}
+            </span>
           </div>
         </div>
         <div className="space-y-4">

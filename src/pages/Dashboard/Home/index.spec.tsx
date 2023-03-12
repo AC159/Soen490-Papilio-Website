@@ -49,9 +49,11 @@ describe('Dashboard Home', () => {
 
   it('changes activities when new one is selected in select', () => {
     render(<HomeDashboard />);
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: 'activity 2' }),
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'activity 2' }),
+      ),
     );
 
     expect(
@@ -100,9 +102,11 @@ describe('Dashboard Home', () => {
 
   it('displays a title for the specific activity when selected', () => {
     render(<HomeDashboard />);
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: 'activity 2' }),
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'activity 2' }),
+      ),
     );
 
     expect(BarGraph).toHaveBeenNthCalledWith(
@@ -123,9 +127,11 @@ describe('Dashboard Home', () => {
 
   it('displays a subtitle for the specific activity slected', async () => {
     render(<HomeDashboard />);
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: 'activity 2' }),
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'activity 2' }),
+      ),
     );
 
     expect(await screen.findByText('Activity 2', { selector: 'h5' }));
@@ -170,13 +176,17 @@ describe('Dashboard Home', () => {
 
   it('remove the filter on Activity view graph when coming back to all activities', () => {
     render(<HomeDashboard />);
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: 'activity 2' }),
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'activity 2' }),
+      ),
     );
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getAllByRole('option')[0],
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getAllByRole('option')[0],
+      ),
     );
 
     expect(BarGraph).toHaveBeenNthCalledWith(
@@ -191,13 +201,17 @@ describe('Dashboard Home', () => {
 
   it('remove the filter on Activity registered graph when coming back to all activities', () => {
     render(<HomeDashboard />);
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getByRole('option', { name: 'activity 2' }),
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getByRole('option', { name: 'activity 2' }),
+      ),
     );
-    userEvent.selectOptions(
-      screen.getByRole('combobox'),
-      screen.getAllByRole('option')[0],
+    act(() =>
+      userEvent.selectOptions(
+        screen.getByRole('combobox'),
+        screen.getAllByRole('option')[0],
+      ),
     );
 
     expect(BarGraph).toHaveBeenLastCalledWith(

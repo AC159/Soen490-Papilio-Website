@@ -1,26 +1,14 @@
-import { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Button from './';
 
-const TestButton = (): JSX.Element => {
-  const [value, setValue] = useState(false);
-  return (
-    <>
-      <Button
-        testId='button-test'
-        text='button'
-        onClick={() => { setValue(!value); }}
-      />
-      {value && <span>Clicked</span>}
-    </>
-  );
-};
+describe('Button', () => {
+  it('fires onClick where the button is click', () => {
+    const mockOnClick = jest.fn();
+    render(<Button text="button" onClick={mockOnClick} />);
 
-test('mechanism test', async () => {
-  render(<TestButton />);
-
-  await userEvent.click(screen.getByTestId('button-test'));
-  expect(screen.getByText(/Clicked/)).toBeInTheDocument();
+    userEvent.click(screen.getByRole('button'));
+    expect(mockOnClick).toHaveBeenCalled();
+  });
 });

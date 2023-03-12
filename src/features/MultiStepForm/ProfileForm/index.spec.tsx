@@ -1,5 +1,5 @@
 // import { AddressAutofill } from '@mapbox/search-js-react';
-import { screen, render, waitFor } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
@@ -91,7 +91,9 @@ describe('profile form test', () => {
 
       render(<ProfilForm {...defaultProps} onSubmit={mockSubmit} />);
 
-      userEvent.type(await screen.findByRole('textbox', { name }), innerText);
+      await act(async () =>
+        userEvent.type(await screen.findByRole('textbox', { name }), innerText),
+      );
       await act(async () => userEvent.click(await screen.findByText(/Next/)));
 
       expect(mockSubmit).toHaveBeenCalledWith(
@@ -139,49 +141,4 @@ describe('profile form test', () => {
     itSavesNewValueOnSubmitting('postalCode', 'Postal code');
   });
   describe('country', () => {});
-
-  it('should accept inputs and send data on submit', async () => {
-    const mockOnSubmit = jest.fn();
-    render(<ProfilForm initialState={initialState} onSubmit={mockOnSubmit} />);
-
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /Business name/i }),
-      'My Awesome Business',
-    );
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /Address/i }),
-      '1234 Awesome St',
-    );
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /Postal Code/i }),
-      'H3B 5G1',
-    );
-    userEvent.type(
-      await screen.findByRole('textbox', { name: /City/i }),
-      'Montreal',
-    );
-    // userEvent.type(
-    //   await screen.findByRole('textbox', { name: /Province/i }),
-    //   'QC',
-    // );
-    // userEvent.type(
-    //   await screen.findByRole('textbox', { name: /Country/i }),
-    //   'Canada',
-    // );
-    userEvent.click(await screen.findByText('Next'));
-
-    await waitFor(() =>
-      expect(mockOnSubmit).toHaveBeenCalledWith(
-        expect.objectContaining({
-          businessName: 'My Awesome Business',
-          addressLineOne: '1234 Awesome St',
-          addressLineTwo: '',
-          postalCode: 'H3B 5G1',
-          city: 'Montreal',
-          // country: 'Canada',
-          // province: 'QC',
-        }),
-      ),
-    );
-  });
 });

@@ -10,6 +10,17 @@ const defaultProps = {
   onSubmit: async (): Promise<void> => {},
 };
 
+const getErrorSpan = (component): any =>
+  component.parentElement?.nextElementSibling;
+
+const fillOtherInputs = (component: null | HTMLElement = null): void =>
+  screen
+    .getAllByRole('textbox')
+    .filter((textbox) => textbox !== component)
+    .forEach((textbox) => {
+      act(() => userEvent.type(textbox, 'as'));
+    });
+
 describe('Employee AddForm', () => {
   it('displays form header', () => {
     render(<AddForm {...defaultProps} />);
@@ -23,14 +34,39 @@ describe('Employee AddForm', () => {
     ).toBeInTheDocument();
   });
 
+  it('initially display an enabled submit button', () => {
+    render(<AddForm {...defaultProps} />);
+    expect(
+      screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+    ).not.toBeDisabled();
+  });
+
   it('calls onSubmit when submit button is clicked', async () => {
     const mockOnSubmit = jest.fn();
     render(<AddForm onSubmit={mockOnSubmit} />);
-
-    userEvent.click(screen.getByRole('button', { name: constant.BUTTON_TEXT }));
-
+    fillOtherInputs();
+    act(() =>
+      userEvent.click(
+        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+      ),
+    );
     await waitFor(() => expect(mockOnSubmit).toHaveBeenCalled());
-    await act(async () => await Promise.resolve());
+  });
+
+  it('disables onSubmit button while waiting for the form to be submitted', async () => {
+    const mockOnSubmit = jest.fn();
+    render(<AddForm onSubmit={mockOnSubmit} />);
+    fillOtherInputs();
+    act(() =>
+      userEvent.click(
+        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+      ),
+    );
+    await waitFor(async () =>
+      expect(
+        await screen.findByRole('button', { name: constant.BUTTON_TEXT }),
+      ).toBeDisabled(),
+    );
   });
 
   const itDisplaysATextBox = (name: string): void =>
@@ -44,7 +80,7 @@ describe('Employee AddForm', () => {
       const value = 'value';
       render(<AddForm {...defaultProps} />);
 
-      userEvent.type(screen.getByRole('textbox', { name }), value);
+      act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
 
       expect(await screen.findByRole('textbox', { name })).toHaveProperty(
         'value',
@@ -56,14 +92,17 @@ describe('Employee AddForm', () => {
     name: string,
     field: string,
   ): void =>
-    it('submits firstName value when submitting', async () => {
+    it(`submits ${field} value when submitting`, async () => {
       const mockOnSubmit = jest.fn();
       const value = 'value';
       render(<AddForm onSubmit={mockOnSubmit} />);
 
-      userEvent.type(screen.getByRole('textbox', { name }), value);
-      userEvent.click(
-        screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+      act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
+      fillOtherInputs(screen.getByRole('textbox', { name }));
+      act(() =>
+        userEvent.click(
+          screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+        ),
       );
 
       await waitFor(() =>
@@ -75,6 +114,58 @@ describe('Employee AddForm', () => {
       );
     });
 
+  const itDisplaysNoErrorMessageWhenNoError = (name: string): void =>
+    it('display no error message when there are no error', async () => {
+      const mockOnSubmit = jest.fn();
+      const value = 'value';
+      render(<AddForm onSubmit={mockOnSubmit} />);
+
+      act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
+      fillOtherInputs(screen.getByRole('textbox', { name }));
+      act(() =>
+        userEvent.click(
+          screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+        ),
+      );
+
+      await waitFor(async () =>
+        expect(
+          getErrorSpan(await screen.findByRole('textbox', { name })),
+        ).toBeEmptyDOMElement(),
+      );
+    });
+
+  const itDisplaysAnErrorWhenFieldIsTooShort = (): void =>
+    it('displays an error message when the first name is too short', async () => {
+      const mockOnSubmit = jest.fn();
+      const value = 'v';
+      render(<AddForm onSubmit={mockOnSubmit} />);
+
+      act(() =>
+        userEvent.type(
+          screen.getByRole('textbox', {
+            name: constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+          }),
+          value,
+        ),
+      );
+      act(() =>
+        userEvent.click(
+          screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+        ),
+      );
+
+      await waitFor(async () =>
+        expect(
+          getErrorSpan(
+            await screen.findByRole('textbox', {
+              name: constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+            }),
+          ),
+        ).not.toBeEmptyDOMElement(),
+      );
+    });
+
   describe('firstName', () => {
     itDisplaysATextBox(constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL);
     itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL);
@@ -82,6 +173,10 @@ describe('Employee AddForm', () => {
       constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
       'employeeFirstName',
     );
+    itDisplaysNoErrorMessageWhenNoError(
+      constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+    );
+    itDisplaysAnErrorWhenFieldIsTooShort();
   });
 
   describe('lastName', () => {
@@ -90,6 +185,9 @@ describe('Employee AddForm', () => {
     itSubmitsFieldValueWhenSubmitting(
       constant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
       'employeeLastName',
+    );
+    itDisplaysNoErrorMessageWhenNoError(
+      constant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
     );
   });
 
@@ -100,11 +198,13 @@ describe('Employee AddForm', () => {
       constant.INPUT_EMPLOYEE_EMAIL_LABEL,
       'employeeEmail',
     );
+    itDisplaysNoErrorMessageWhenNoError(constant.INPUT_EMPLOYEE_EMAIL_LABEL);
   });
 
   describe('role', () => {
     itDisplaysATextBox(constant.INPUT_ROLE_LABEL);
     itSavesFieldWhenTypeIntoTextBox(constant.INPUT_ROLE_LABEL);
     itSubmitsFieldValueWhenSubmitting(constant.INPUT_ROLE_LABEL, 'role');
+    itDisplaysNoErrorMessageWhenNoError(constant.INPUT_ROLE_LABEL);
   });
 });
