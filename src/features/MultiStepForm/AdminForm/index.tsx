@@ -93,12 +93,14 @@ const AdminForm = ({
               labelPosition="left"
               hasLabel
             />
-            <div className="ml-48 pl-4">
-              <ErrorMessage
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                isError={!!errors[name]}
-                message={errors[name]}
-              />
+            <div className="justify-end flex">
+              <div className="w-4/6">
+                <ErrorMessage
+                  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                  isError={!!errors[name]}
+                  message={errors[name]}
+                />
+              </div>
             </div>
           </>
         ))}
