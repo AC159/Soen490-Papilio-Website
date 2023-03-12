@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from '../../../../components/Button';
 import Input from '../../../../components/Input';
 import { Activity } from '../Table';
@@ -6,12 +7,27 @@ import * as constant from './constant';
 
 export declare interface EditInterface {
   activity: Activity;
-  onSubmit: (data: Activity) => Promise<void>;
+  onSubmit: (activityId: string, data: Activity) => Promise<void>;
 }
 
 const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
-  const handleOnChange = (): void => {
-    console.log('IN ON CHANGE');
+  const [inputValue, setInputValue] = useState(
+    {
+      id: activity.id,
+      title: activity.title,
+      address: activity.address,
+      startTime: activity.startTime,
+      endTime: activity.endTime,
+      description: activity.description,
+      costPerIndividual: activity.costPerIndividual,
+      costPerGroup: activity.costPerGroup,
+      groupSize: activity.groupSize,
+    },
+  );
+
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setInputValue({ ...inputValue, [event.target.name]: event.target.value });
+    console.log(inputValue);
   };
 
   return (
@@ -20,7 +36,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
       <Input
         name={constant.INPUT_TITLE}
         onChange={handleOnChange}
-        value={activity.title}
+        value={inputValue.title}
         placeholder={constant.INPUT_TITLE_PLACEHOLDER}
         label={constant.INPUT_TITLE_LABEL}
         hasLabel
@@ -28,7 +44,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
       <Input
         name={constant.INPUT_ADDRESS}
         onChange={handleOnChange}
-        value={activity.address}
+        value={inputValue.address}
         placeholder={constant.INPUT_ADDRESS_PLACEHOLDER}
         label={constant.INPUT_ADDRESS_LABEL}
         hasLabel
@@ -38,7 +54,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
           <Input
             name={constant.INPUT_STARTTIME}
             onChange={handleOnChange}
-            value={activity.startTime}
+            value={inputValue.startTime}
             placeholder={constant.INPUT_STARTTIME_PLACEHOLDER}
             label={constant.INPUT_STARTTIME_LABEL}
             hasLabel
@@ -48,7 +64,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
           <Input
             name={constant.INPUT_ENDTIME}
             onChange={handleOnChange}
-            value={activity.endTime}
+            value={inputValue.endTime}
             placeholder={constant.INPUT_ENDTIME_PLACEHOLDER}
             label={constant.INPUT_ENDTIME_LABEL}
             hasLabel
@@ -58,7 +74,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
       <Input
         name={constant.INPUT_DESCRIPTION}
         onChange={handleOnChange}
-        value={activity.description}
+        value={inputValue.description}
         placeholder={constant.INPUT_DESCRIPTION_PLACEHOLDER}
         label={constant.INPUT_DESCRIPTION_LABEL}
         hasLabel
@@ -68,7 +84,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
           <Input
             name={constant.INPUT_COST_PER_INDV}
             onChange={handleOnChange}
-            value={activity.costPerIndividual}
+            value={inputValue.costPerIndividual}
             placeholder={constant.INPUT_COST_PER_INDV_PLACEHOLDER}
             label={constant.INPUT_COST_PER_INDV_LABEL}
             hasLabel
@@ -78,7 +94,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
           <Input
             name={constant.INPUT_COST_PER_GRP}
             onChange={handleOnChange}
-            value={activity.costPerGroup}
+            value={inputValue.costPerGroup}
             placeholder={constant.INPUT_COST_PER_GRP_PLACEHOLDER}
             label={constant.INPUT_COST_PER_GRP_LABEL}
             hasLabel
@@ -88,7 +104,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
           <Input
             name={constant.INPUT_GROUP_SIZE}
             onChange={handleOnChange}
-            value={activity.groupSize}
+            value={inputValue.groupSize}
             placeholder={constant.INPUT_GROUP_SIZE_PLACEHOLDER}
             label={constant.INPUT_GROUP_SIZE_LABEL}
             hasLabel
@@ -99,7 +115,7 @@ const EditForm = ({ activity, onSubmit }: EditInterface): JSX.Element => {
       <br/>
       <Button
         text={constant.BUTTON_TEXT}
-        onClick={async () => await onSubmit(activity)}
+        onClick={async () => await onSubmit(activity.id, inputValue)}
       />
     </div>
   );

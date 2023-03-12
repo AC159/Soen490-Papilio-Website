@@ -16,7 +16,7 @@ export declare interface InputInterface {
   variant?: 'normal' | 'ghost';
   isError?: boolean;
   autoComplete?: string;
-  onChange: (data: React.FormEvent<HTMLInputElement>) => void;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
 }
 

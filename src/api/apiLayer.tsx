@@ -79,7 +79,23 @@ export async function addActivity(
     body: JSON.stringify(data),
   });
 }
-export function updateActivity(): void {}
+export async function updateActivity(
+  activityId: string,
+  data: Interfaces.UpdateActivityData,
+): Promise<Response> {
+  console.log('UPDATING ACTIVITY');
+  if (activityId === '') {
+    return await Promise.reject(new Error('No activity Id'));
+  }
+  return await fetch(`/api/activity/update/${activityId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+}
+
 export async function deleteActivities(
   activities: string[],
   businessId: string,

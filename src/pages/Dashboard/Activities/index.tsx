@@ -18,8 +18,9 @@ import {
   addActivity,
   deleteActivities,
   getActivities,
+  updateActivity,
 } from '../../../api/apiLayer';
-import { IActivityData } from '../../../interfaces';
+import { IActivityData, UpdateActivityData } from '../../../interfaces';
 
 enum Section {
   Table,
@@ -76,14 +77,22 @@ const ActivityDashboard = (): JSX.Element => {
     });
   };
 
-  const handleEditActivity = async (data: Activity): Promise<void> => {
-    setCurrentActivity(data);
-    if (currentSection !== Section.Edit) {
-      setCurrentSection(Section.Edit);
-    } else {
+  const handleEditActivity = async (activityId: string, data: Activity): Promise<void> => {
+    const reqData: UpdateActivityData = {
+      update: {
+        title: data.title,
+        address: data.address,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        description: data.description,
+        costPerIndividual: data.costPerIndividual,
+        costPerGroup: data.costPerGroup,
+        groupSize: data.groupSize,
+      },
+    };
+    await updateActivity(activityId ?? '', reqData).then(() => {
       setCurrentSection(Section.Table);
-    }
-    console.log(currentActivity);
+    });
   };
 
   const handleEdit = (activity: Activity): void => {

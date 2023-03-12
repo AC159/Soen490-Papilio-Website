@@ -37,6 +37,19 @@ export declare interface IActivityData {
   };
 }
 
+export declare interface UpdateActivityData {
+  update: {
+    title: string;
+    description: string;
+    costPerIndividual: number;
+    costPerGroup: number;
+    groupSize: number;
+    startTime: string;
+    endTime: string;
+    address: string;
+  };
+}
+
 export declare interface IActivity {
   id?: number;
   title: string;
