@@ -1,23 +1,14 @@
-import {} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import ErrorMessage from '.';
 
-import { createMessage } from '.';
-import { ERROR_CODE } from '../../utils/enum';
+describe('ErrorMessage', () => {
+  it('display nothing if there is no error', () => {
+    render(<ErrorMessage isError={false} message="message" />);
+    expect(screen.queryByText('message')).not.toBeInTheDocument();
+  });
 
-const PATTERN_MESSAGE = 'PATTERN_MESSAGE';
-const REQUIRED_MESSAGE = 'REQUIRED_MESSAGE';
-
-describe('error message test', () => {
-  describe('createMessage logic', () => {
-    it('should display the pattern message when error is pattern related', () => {
-      const result = createMessage(ERROR_CODE.PATTERN_ERROR, REQUIRED_MESSAGE, PATTERN_MESSAGE);
-
-      expect(result).toEqual(PATTERN_MESSAGE);
-    });
-
-    it('should display the required message when error is required related', () => {
-      const result = createMessage(ERROR_CODE.REQUIRED_ERROR, REQUIRED_MESSAGE, PATTERN_MESSAGE);
-
-      expect(result).toEqual(REQUIRED_MESSAGE);
-    });
+  it('displays an error message if there is an error', () => {
+    render(<ErrorMessage isError={true} message="message" />);
+    expect(screen.getByText('message')).toBeInTheDocument();
   });
 });

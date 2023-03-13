@@ -2,7 +2,7 @@ import Input from '../../../components/Input';
 import BoxForm from '../../../features/BoxForm';
 import useFormData from '../../../hooks/useFormData';
 import * as constant from './constant';
-import ErrorMessage, { createMessage } from '../../../components/ErrorMessage';
+import ErrorMessage from '../../../components/ErrorMessage';
 
 export declare interface IBusinessForm {
   onSubmit: (data: IFormData) => Promise<void>;
@@ -30,18 +30,14 @@ const BusinessForm = ({ onSubmit }: IBusinessForm): JSX.Element => {
     >
       <Input
         {...register(constant.INPUT_BUSINESS_ID, {
-          required: true,
-          pattern: /.*/,
+          required: { required: true, message: constant.REQUIRED_MESSAGE },
         })}
         placeholder={constant.INPUT_BUSINESS_PLACEHOLDER}
       />
       <ErrorMessage
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         isError={!!errors[constant.INPUT_BUSINESS_ID]}
-        message={createMessage(
-          errors[constant.INPUT_BUSINESS_ID],
-          constant.REQUIRED_MESSAGE,
-        )}
+        message={errors[constant.INPUT_BUSINESS_ID]}
       />
     </BoxForm>
   );

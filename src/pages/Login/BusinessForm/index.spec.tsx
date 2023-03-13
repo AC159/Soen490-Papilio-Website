@@ -16,15 +16,24 @@ describe('business id form test', () => {
     );
 
     expect(screen.getByText(constant.FORM_HEADING)).toBeInTheDocument();
-    userEvent.type(screen.getByRole('textbox'), 'MyAmazingBillionDollarCompany');
+    act(() =>
+      userEvent.type(
+        screen.getByRole('textbox'),
+        'MyAmazingBillionDollarCompany',
+      ),
+    );
 
-    await act(async () => userEvent.click(await screen.findByText(constant.SUBMIT_BUTTON_TEXT)));
+    await act(async () =>
+      userEvent.click(await screen.findByText(constant.SUBMIT_BUTTON_TEXT)),
+    );
 
-    await waitFor(() => expect(mockOnSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        [constant.INPUT_BUSINESS_ID]: 'MyAmazingBillionDollarCompany',
-      }),
-    ));
+    await waitFor(() =>
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          [constant.INPUT_BUSINESS_ID]: 'MyAmazingBillionDollarCompany',
+        }),
+      ),
+    );
   });
 
   test('error when not providing a businessId', async () => {
@@ -37,9 +46,13 @@ describe('business id form test', () => {
     );
 
     expect(screen.getByText(constant.FORM_HEADING)).toBeInTheDocument();
-    await act(async () => userEvent.click(await screen.findByText(constant.SUBMIT_BUTTON_TEXT)));
+    await act(async () =>
+      userEvent.click(await screen.findByText(constant.SUBMIT_BUTTON_TEXT)),
+    );
 
-    await waitFor(() => expect(mockOnSubmit).not.toHaveBeenCalled());
-    expect(await screen.findByText(constant.REQUIRED_MESSAGE)).toBeInTheDocument();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(
+      await screen.findByText(constant.REQUIRED_MESSAGE),
+    ).toBeInTheDocument();
   });
 });
