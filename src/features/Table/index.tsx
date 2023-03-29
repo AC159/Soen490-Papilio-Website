@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import Row, { ClickableRow } from './Row';
+import Row, { ClickableRow, RowAction } from './Row';
 import { RowProps } from '../../interfaces';
 
 export interface Employee extends RowProps {
@@ -12,6 +12,7 @@ interface IProps<T> {
   rowsData: RowProps[];
   headerContent: string[];
   disabledRowId?: string;
+  rowActions?: RowAction[];
   onSelect?: (element: T) => void;
 }
 
@@ -28,6 +29,7 @@ const Table = <T extends RowProps>({
   rowsData,
   headerContent,
   disabledRowId,
+  rowActions,
   onSelect,
 }: IProps<T>): JSX.Element => {
   const [buffer, setBuffer] = useState<string[]>([]);
@@ -47,12 +49,14 @@ const Table = <T extends RowProps>({
   );
 
   const rows = rowsData.map((row) => {
+    const rowId = row.id;
+
     const data = Object.entries(row)
       .filter(([key, _]) => key !== 'id')
       .reduce((acc: string[], [_, value]) => [...acc, value], []);
 
     if (onSelect === undefined) {
-      return <Row key={`row-${row.id}`} data={data} />;
+      return <Row key={`row-${row.id}`} data={data} rowId={rowId} rowActions={rowActions} />;
     }
 
     return (

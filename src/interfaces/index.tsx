@@ -63,6 +63,8 @@ export interface EmployeeRowProps extends RowProps {
   name: string;
   email: string;
   role: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface ActivityRowProps extends RowProps {

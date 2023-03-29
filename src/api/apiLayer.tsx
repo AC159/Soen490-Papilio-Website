@@ -95,6 +95,24 @@ export async function deleteActivity(
     },
   );
 }
+
+export async function editEmployee(
+  businessId: string,
+  employeeId: string,
+  data: Interfaces.IEmployeeData,
+): Promise<Response> {
+  if (!businessId || !employeeId) {
+    return await Promise.reject(new Error('Missing business ID or employee ID'));
+  }
+  return await fetch(`/api/business/${businessId}/editEmployee/${employeeId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ employee: data }),
+  });
+}
+
 export function updateProfile(): void {}
 export async function getProfile(businessId: string): Promise<Response> {
   return await fetch(`/api/business/get/${businessId}`, {
