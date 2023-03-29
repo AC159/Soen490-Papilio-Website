@@ -202,6 +202,18 @@ const EmployeeDashboard = (): JSX.Element => {
           .catch((e: Error) => alert('Error while deleting employee: ' + e.message));
       },
     },
+    {
+      label: 'Edit User Profile',
+      onClick: (employeeId: string) => {
+        const employee = employees.find((emp) => emp.id === employeeId);
+        if (employee) {
+          setSelectedEmployee(employee);
+          setCurrentSection(Section.Edit);
+        } else {
+          alert('Employee not found!');
+        }
+      },
+    },
 
     {
       label: 'Reset Password',
@@ -216,31 +228,19 @@ const EmployeeDashboard = (): JSX.Element => {
       label: 'Suspend User Access',
       onClick: (employeeId: string): void => {
         suspendUserAccess(employeeId)
-          .then(() => console.log(`User access suspended for user with UID ${employeeId}`))
-          .catch((error) => console.error(`Error suspending access for user with UID ${employeeId}:`, error));
+          .then(() => console.log(`User access suspended for user with ID ${employeeId}`))
+          .catch((error) => console.error(`Error suspending access for user with ID ${employeeId}:`, error));
       },
     },
     {
       label: 'Activate Access',
       onClick: (employeeId: string): void => {
         activateUserAccess(employeeId)
-          .then(() => console.log(`User access activated for user with UID ${employeeId}`))
-          .catch((error) => console.error(`Error activating access for user with UID ${employeeId}:`, error));
+          .then(() => console.log(`User access activated for user with ID ${employeeId}`))
+          .catch((error) => console.error(`Error activating access for user with ID ${employeeId}:`, error));
       },
     },
 
-    {
-      label: 'Edit User Profile',
-      onClick: (employeeId: string) => {
-        const employee = employees.find((emp) => emp.id === employeeId);
-        if (employee) {
-          setSelectedEmployee(employee);
-          setCurrentSection(Section.Edit);
-        } else {
-          alert('Employee not found!');
-        }
-      },
-    },
   ];
   let currentForm: JSX.Element = <></>;
   if (currentSection === Section.Delete) {
