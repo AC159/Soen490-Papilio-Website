@@ -239,7 +239,7 @@ const EmployeeDashboard = (): JSX.Element => {
           .then(() => console.log(`User access activated for user with ID ${employeeId}`))
           .catch((error) => console.error(`Error activating access for user with ID ${employeeId}:`, error));
       },
-    }
+    },
 
   ];
   let currentForm: JSX.Element = <></>;

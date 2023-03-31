@@ -148,91 +148,90 @@ describe('Employee Dashboard', () => {
 
       expect(await screen.findByRole('table')).toBeInTheDocument();
 
-       await act(async () => {
-    userEvent.click(await screen.findByTestId('addForm'));
-  });
-        expect.stringContaining(''),
-        {
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'jd@email.com',
-          firebase_id: expect.any(String),
-          role: 'Admin',
-          root: false,
-        },
-      );
-    });
-
-    it('calls sendSignInLinkToEmail after successful addEmployee', async () => {
-      mockData = {
-        ...mockData,
-        employeeEmail: 'fake@email.com',
+      await act(async () => {
+        userEvent.click(await screen.findByTestId('addForm'));
+      });
+      expect.stringContaining(''),
+      {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'jd@email.com',
+        firebase_id: expect.any(String),
+        role: 'Admin',
+        root: false,
       };
-      renderWithAuthProvider(<EmployeeDashboard />);
-
-      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-      userEvent.click(await screen.findByTestId('addForm'));
-
-      await waitFor(() =>
-        expect(auth.sendSignInLinkToEmail).toHaveBeenCalledWith(
-          undefined,
-          'fake@email.com',
-          {
-            url: 'https://localhost:3000/email-signin',
-          },
-        ),
-      );
-    });
-
-    it('closes addForm after successful operation', async () => {
-      renderWithAuthProvider(<EmployeeDashboard />);
-
-      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-      userEvent.click(await screen.findByTestId('addForm'));
-
-      await waitForElementToBeRemoved(() => screen.queryByTestId('addForm'));
     });
   });
 
-  describe('DeleteForm', () => {
-    it('displays deleteForm when delete button is clicked', async () => {
-      render(<EmployeeDashboard />);
+  it('calls sendSignInLinkToEmail after successful addEmployee', async () => {
+    mockData = {
+      ...mockData,
+      employeeEmail: 'fake@email.com',
+    };
+    renderWithAuthProvider(<EmployeeDashboard />);
 
-      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+    userEvent.click(await screen.findByTestId('addForm'));
 
-      expect(await screen.findByTestId('deleteForm')).toBeInTheDocument();
-    });
+    await waitFor(() =>
+      expect(auth.sendSignInLinkToEmail).toHaveBeenCalledWith(
+        undefined,
+        'fake@email.com',
+        {
+          url: 'https://localhost:3000/email-signin',
+        },
+      ),
+    );
+  });
 
-    it('calls deleteEmployee when clicking delete in DeleteForm', async () => {
-      render(<EmployeeDashboard />);
+  it('closes addForm after successful operation', async () => {
+    renderWithAuthProvider(<EmployeeDashboard />);
 
-      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-      userEvent.click(await screen.findByTestId('deleteForm'));
+    userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+    userEvent.click(await screen.findByTestId('addForm'));
 
-      expect(API.deleteEmployees).toHaveBeenCalledWith([], 'businessId');
-      await act(async () => await Promise.resolve());
-    });
+    await waitForElementToBeRemoved(() => screen.queryByTestId('addForm'));
+  });
+});
 
-    it('changes delete employee button to close after click', async () => {
-      render(<EmployeeDashboard />);
+describe('DeleteForm', () => {
+  it('displays deleteForm when delete button is clicked', async () => {
+    render(<EmployeeDashboard />);
 
-      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-      expect(await screen.findByText('Close')).toBeInTheDocument();
-    });
+    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
 
-    it('changes back to delete employee when click on close', async () => {
-      render(<EmployeeDashboard />);
+    expect(await screen.findByTestId('deleteForm')).toBeInTheDocument();
+  });
 
-      userEvent.dblClick(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-      expect(await screen.findByText('Close')).toBeInTheDocument();
-    });
+  it('calls deleteEmployee when clicking delete in DeleteForm', async () => {
+    render(<EmployeeDashboard />);
 
-    it('closes the deleteForm on successful delete', async () => {
-      render(<EmployeeDashboard />);
-      userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
-      userEvent.click(await screen.findByTestId('deleteForm'));
+    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    userEvent.click(await screen.findByTestId('deleteForm'));
 
-      await waitForElementToBeRemoved(() => screen.queryByTestId('deleteForm'));
-    });
+    expect(API.deleteEmployees).toHaveBeenCalledWith([], 'businessId');
+    await act(async () => await Promise.resolve());
+  });
+
+  it('changes delete employee button to close after click', async () => {
+    render(<EmployeeDashboard />);
+
+    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    expect(await screen.findByText('Close')).toBeInTheDocument();
+  });
+
+  it('changes back to delete employee when click on close', async () => {
+    render(<EmployeeDashboard />);
+
+    userEvent.dblClick(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    expect(await screen.findByText('Close')).toBeInTheDocument();
+  });
+
+  it('closes the deleteForm on successful delete', async () => {
+    render(<EmployeeDashboard />);
+    userEvent.click(screen.getByText(constant.DELETE_EMPLOYEE_BUTTON));
+    userEvent.click(await screen.findByTestId('deleteForm'));
+
+    await waitForElementToBeRemoved(() => screen.queryByTestId('deleteForm'));
   });
 });
