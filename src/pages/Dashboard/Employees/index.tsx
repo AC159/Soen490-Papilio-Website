@@ -203,7 +203,7 @@ const EmployeeDashboard = (): JSX.Element => {
       },
     },
     {
-      label: 'Edit User Profile',
+      label: 'Edit Employee Profile',
       onClick: (employeeId: string) => {
         const employee = employees.find((emp) => emp.id === employeeId);
         if (employee) {
@@ -225,7 +225,7 @@ const EmployeeDashboard = (): JSX.Element => {
     },
 
     {
-      label: 'Suspend User Access',
+      label: 'Suspend Employee Access',
       onClick: (employeeId: string): void => {
         suspendUserAccess(employeeId)
           .then(() => console.log(`User access suspended for user with ID ${employeeId}`))
@@ -233,13 +233,13 @@ const EmployeeDashboard = (): JSX.Element => {
       },
     },
     {
-      label: 'Activate Access',
+      label: 'Activate Employee Access',
       onClick: (employeeId: string): void => {
         activateUserAccess(employeeId)
           .then(() => console.log(`User access activated for user with ID ${employeeId}`))
           .catch((error) => console.error(`Error activating access for user with ID ${employeeId}:`, error));
       },
-    },
+    }
 
   ];
   let currentForm: JSX.Element = <></>;

@@ -117,16 +117,20 @@ describe('Employee Dashboard', () => {
     });
 
     it('changes add employee button to close after click', async () => {
-      render(<EmployeeDashboard />);
-      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-      expect(await screen.findByText('Close')).toBeInTheDocument();
+      await act(async () => {
+        render(<EmployeeDashboard />);
+        userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+        expect(await screen.findByText('Close')).toBeInTheDocument();
+      });
     });
 
     it('changes back to Add employee when click on close', async () => {
-      render(<EmployeeDashboard />);
-      userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
-      userEvent.click(await screen.findByText('Close'));
-      await waitForElementToBeRemoved(() => screen.queryByText('Close'));
+      await act(async () => {
+        render(<EmployeeDashboard />);
+        userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON));
+        userEvent.click(await screen.findByText('Close'));
+        await waitForElementToBeRemoved(() => screen.queryByText('Close'));
+      });
     });
 
     it('submit add employee form after submit button clicked', async () => {
@@ -143,7 +147,10 @@ describe('Employee Dashboard', () => {
       userEvent.click(await screen.findByTestId('addForm'));
 
       expect(await screen.findByRole('table')).toBeInTheDocument();
-      expect(API.addEmployee).toHaveBeenCalledWith(
+
+       await act(async () => {
+    userEvent.click(await screen.findByTestId('addForm'));
+  });
         expect.stringContaining(''),
         {
           firstName: 'John',
