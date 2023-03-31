@@ -52,6 +52,8 @@ describe('Table', () => {
       2,
       {
         data: [oneEmployee[0].name, oneEmployee[0].email, oneEmployee[0].role],
+        rowActions: undefined,
+        rowId: oneEmployee[0].id,
       },
       expect.anything(),
     );
@@ -66,6 +68,8 @@ describe('Table', () => {
           fiveEmployees[4].email,
           fiveEmployees[4].role,
         ],
+        rowActions: undefined,
+        rowId: fiveEmployees[4].id,
       },
       expect.anything(),
     );
@@ -118,6 +122,8 @@ describe('Table', () => {
     expect(Row).toHaveBeenLastCalledWith(
       {
         data: [oneEmployee[0].name, oneEmployee[0].email, oneEmployee[0].role],
+        rowActions: undefined,
+        rowId: oneEmployee[0].id,
       },
       expect.anything(),
     );
