@@ -1,6 +1,9 @@
 /* eslint multiline-ternary: ["error", "always-multiline"] */
 import { useEffect, useState } from 'react';
-import { sendSignInLinkToEmail } from 'firebase/auth';
+import {
+  // sendSignInLinkToEmail,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
 import { useParams } from 'react-router-dom';
 
 import { auth } from '../../../firebase';
@@ -48,24 +51,30 @@ const EmployeeDashboard = (): JSX.Element => {
   const { businessId } = useParams();
   const [employees, setEmployees] = useState<EmployeeRowProps[]>([]);
   const [currentSection, setCurrentSection] = useState(Section.Table);
+  const [token, setToken] = useState(false);
 
-  const handleEmployeeCreation = async (data: IFormData): Promise<void> => {
-    const reqData: IEmployeeData = {
-      firebase_id: '',
-      email: data.employeeEmail,
-      firstName: data.employeeFirstName,
-      lastName: data.employeeLastName,
-      role: data.role,
-      root: false, // True only while creating the business
-    };
-
-    await addEmployee(businessId ?? '', reqData).then(async () => {
-      await sendSignInLinkToEmail(auth, data.employeeEmail, {
-        url: 'https://localhost:3000/email-signin',
-      }).then(() => {
+  const handleEmployeeCreation = async (data: IFormData): Promise<any> => {
+    return await createUserWithEmailAndPassword(
+      auth,
+      data.employeeEmail,
+      data.employeePassword,
+    )
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        const reqData: IEmployeeData = {
+          firebase_id: user.uid,
+          firstName: data.employeeFirstName,
+          lastName: data.employeeLastName,
+          email: data.employeeEmail,
+          role: data.role,
+          root: false, // True only while creating the business
+        };
+        return await addEmployee(businessId ?? '', reqData);
+      })
+      .then(() => {
         setCurrentSection(Section.Table);
+        setToken(!token);
       });
-    });
   };
 
   const handleEmployeeDeletion = async (
@@ -130,7 +139,7 @@ const EmployeeDashboard = (): JSX.Element => {
           }
         });
     })();
-  }, [businessId]);
+  }, [businessId, token]);
 
   let currentForm: JSX.Element = <></>;
   if (currentSection === Section.Delete) {
