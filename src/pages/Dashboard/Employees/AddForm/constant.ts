@@ -12,4 +12,7 @@ export const INPUT_EMPLOYEE_EMAIL_PLACEHOLDER = 'Enter employee email';
 export const INPUT_ROLE = 'role';
 export const INPUT_ROLE_LABEL = 'Employee role';
 export const INPUT_ROLE_PLACEHOLDER = 'Enter employee role';
+export const INPUT_EMPLOYEE_PASSWORD = 'employeePassword';
+export const INPUT_EMPLOYEE_PASSWORD_LABEL = 'Employee password';
+export const INPUT_EMPLOYEE_PASSWORD_PLACEHOLDER = 'Enter employee password';
 export const BUTTON_TEXT = 'Add employee';

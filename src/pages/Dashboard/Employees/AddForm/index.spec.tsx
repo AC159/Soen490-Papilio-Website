@@ -18,7 +18,7 @@ const fillOtherInputs = (component: null | HTMLElement = null): void =>
     .getAllByRole('textbox')
     .filter((textbox) => textbox !== component)
     .forEach((textbox) => {
-      act(() => userEvent.type(textbox, 'as'));
+      act(() => userEvent.type(textbox, 'as@c.co'));
     });
 
 describe('Employee AddForm', () => {
@@ -91,10 +91,10 @@ describe('Employee AddForm', () => {
   const itSubmitsFieldValueWhenSubmitting = (
     name: string,
     field: string,
+    value: string = 'value',
   ): void =>
     it(`submits ${field} value when submitting`, async () => {
       const mockOnSubmit = jest.fn();
-      const value = 'value';
       render(<AddForm onSubmit={mockOnSubmit} />);
 
       act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
@@ -114,10 +114,12 @@ describe('Employee AddForm', () => {
       );
     });
 
-  const itDisplaysNoErrorMessageWhenNoError = (name: string): void =>
+  const itDisplaysNoErrorMessageWhenNoError = (
+    name: string,
+    value: string = 'value',
+  ): void =>
     it('display no error message when there are no error', async () => {
       const mockOnSubmit = jest.fn();
-      const value = 'value';
       render(<AddForm onSubmit={mockOnSubmit} />);
 
       act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
@@ -135,8 +137,69 @@ describe('Employee AddForm', () => {
       );
     });
 
-  const itDisplaysAnErrorWhenFieldIsTooShort = (): void =>
+  const itDisplaysAnErrorWhenFieldIsTooShort = (name: string): void =>
     it('displays an error message when the first name is too short', async () => {
+      const mockOnSubmit = jest.fn();
+      const value = 'v';
+      render(<AddForm onSubmit={mockOnSubmit} />);
+
+      act(() => userEvent.type(screen.getByRole('textbox', { name }), value));
+      act(() =>
+        userEvent.click(
+          screen.getByRole('button', { name: constant.BUTTON_TEXT }),
+        ),
+      );
+
+      await waitFor(async () =>
+        expect(
+          getErrorSpan(await screen.findByRole('textbox', { name })),
+        ).not.toBeEmptyDOMElement(),
+      );
+    });
+
+  describe('firstName', () => {
+    itDisplaysATextBox(constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL);
+    itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL);
+    itSubmitsFieldValueWhenSubmitting(
+      constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+      'employeeFirstName',
+    );
+    itDisplaysNoErrorMessageWhenNoError(
+      constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+    );
+    itDisplaysAnErrorWhenFieldIsTooShort(
+      constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+    );
+  });
+
+  describe('lastName', () => {
+    itDisplaysATextBox(constant.INPUT_EMPLOYEE_LAST_NAME_LABEL);
+    itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_LAST_NAME_LABEL);
+    itSubmitsFieldValueWhenSubmitting(
+      constant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
+      'employeeLastName',
+    );
+    itDisplaysNoErrorMessageWhenNoError(
+      constant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
+    );
+    itDisplaysAnErrorWhenFieldIsTooShort(
+      constant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
+    );
+  });
+
+  describe('email', () => {
+    itDisplaysATextBox(constant.INPUT_EMPLOYEE_EMAIL_LABEL);
+    itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_EMAIL_LABEL);
+    itSubmitsFieldValueWhenSubmitting(
+      constant.INPUT_EMPLOYEE_EMAIL_LABEL,
+      'employeeEmail',
+      'v@email.com',
+    );
+    itDisplaysNoErrorMessageWhenNoError(
+      constant.INPUT_EMPLOYEE_EMAIL_LABEL,
+      'v@email.com',
+    );
+    it('display an error when email is not an email', async () => {
       const mockOnSubmit = jest.fn();
       const value = 'v';
       render(<AddForm onSubmit={mockOnSubmit} />);
@@ -144,7 +207,7 @@ describe('Employee AddForm', () => {
       act(() =>
         userEvent.type(
           screen.getByRole('textbox', {
-            name: constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
+            name: constant.INPUT_EMPLOYEE_EMAIL_LABEL,
           }),
           value,
         ),
@@ -165,40 +228,16 @@ describe('Employee AddForm', () => {
         ).not.toBeEmptyDOMElement(),
       );
     });
-
-  describe('firstName', () => {
-    itDisplaysATextBox(constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL);
-    itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL);
-    itSubmitsFieldValueWhenSubmitting(
-      constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
-      'employeeFirstName',
-    );
-    itDisplaysNoErrorMessageWhenNoError(
-      constant.INPUT_EMPLOYEE_FIRST_NAME_LABEL,
-    );
-    itDisplaysAnErrorWhenFieldIsTooShort();
   });
 
-  describe('lastName', () => {
-    itDisplaysATextBox(constant.INPUT_EMPLOYEE_LAST_NAME_LABEL);
-    itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_LAST_NAME_LABEL);
+  describe('password', () => {
+    itDisplaysATextBox(constant.INPUT_EMPLOYEE_PASSWORD_LABEL);
+    itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_PASSWORD_LABEL);
     itSubmitsFieldValueWhenSubmitting(
-      constant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
-      'employeeLastName',
+      constant.INPUT_EMPLOYEE_PASSWORD_LABEL,
+      'employeePassword',
     );
-    itDisplaysNoErrorMessageWhenNoError(
-      constant.INPUT_EMPLOYEE_LAST_NAME_LABEL,
-    );
-  });
-
-  describe('email', () => {
-    itDisplaysATextBox(constant.INPUT_EMPLOYEE_EMAIL_LABEL);
-    itSavesFieldWhenTypeIntoTextBox(constant.INPUT_EMPLOYEE_EMAIL_LABEL);
-    itSubmitsFieldValueWhenSubmitting(
-      constant.INPUT_EMPLOYEE_EMAIL_LABEL,
-      'employeeEmail',
-    );
-    itDisplaysNoErrorMessageWhenNoError(constant.INPUT_EMPLOYEE_EMAIL_LABEL);
+    itDisplaysNoErrorMessageWhenNoError(constant.INPUT_EMPLOYEE_PASSWORD_LABEL);
   });
 
   describe('role', () => {
