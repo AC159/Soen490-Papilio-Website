@@ -4,12 +4,22 @@ import { BarGraph } from '../../../features/BarGraph';
 import { registeredActivity, viewedActivity } from '../../../fakeData';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
+import * as API from '../../../api/apiLayer';
 
+jest.mock('../../../api/apiLayer');
 jest.mock('../../../features/BarGraph', () => ({
   BarGraph: jest.fn(() => <div data-testid="BarGraph" />),
 }));
 
 describe('Dashboard Home', () => {
+  beforeEach(() => {
+    // @ts-expect-error
+    API.getActivitiesStatistics.mockResolvedValue({
+      activityVisited: viewedActivity,
+      activityRegistered: registeredActivity,
+    });
+  });
+
   it('displays a welcome message', () => {
     render(<HomeDashboard />);
     expect(screen.getByText('Overview')).toBeInTheDocument();
@@ -138,6 +148,8 @@ describe('Dashboard Home', () => {
   });
 
   it('filters the statistics for the selected activity for the Activity view graph', () => {
+    // @ts-expect-error
+    API.getActivitiesStatistics.mockResolvedValue(viewedActivity);
     render(<HomeDashboard />);
     act(() =>
       userEvent.selectOptions(
@@ -146,32 +158,10 @@ describe('Dashboard Home', () => {
       ),
     );
 
-    expect(BarGraph).toHaveBeenNthCalledWith(
-      // @ts-expect-error
-      BarGraph.mock.calls.length - 1,
-      expect.objectContaining({
-        data: viewedActivity.filter((x) => x.label === 'activity 2'),
-      }),
-      expect.anything(),
+    expect(API.getActivitiesStatistics).toHaveBeenCalledWith(
+      expect.any(String),
+      'activity 2',
     );
-  });
-
-  it('filters the statistics for the selected activity for the Activity registered graph', async () => {
-    render(<HomeDashboard />);
-    act(() =>
-      userEvent.selectOptions(
-        screen.getByRole('combobox'),
-        screen.getByRole('option', { name: 'activity 2' }),
-      ),
-    );
-
-    expect(BarGraph).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        data: registeredActivity.filter((x) => x.label === 'activity 2'),
-      }),
-      expect.anything(),
-    );
-    await act(async () => await Promise.resolve());
   });
 
   it('remove the filter on Activity view graph when coming back to all activities', () => {

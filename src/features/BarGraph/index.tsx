@@ -19,6 +19,7 @@ export const BarGraph = ({ data, title }: BarGraphProps): JSX.Element => {
     (): Array<AxisOptions<Datum>> => [
       {
         getValue: (datum) => datum.secondary,
+        min: 0,
       },
     ],
     [],

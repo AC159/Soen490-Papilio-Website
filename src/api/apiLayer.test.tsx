@@ -2,6 +2,12 @@ import { IActivityData } from '../interfaces';
 import { formatDate } from '../utils';
 
 import * as API from './apiLayer';
+import * as Realm from './realm';
+
+jest.mock('./realm', () => ({
+  __esModule: true,
+  getCollection: jest.fn(),
+}));
 
 const BUSINESS_ID = 'businessId';
 const FIREBASE_ID = 'firebaseId';
@@ -29,7 +35,7 @@ describe('api test', () => {
   });
 
   afterEach(() => {
-    (global.fetch as jest.MockedFunction<typeof global.fetch>).mockClear();
+    jest.clearAllMocks();
   });
 
   describe('login related test', () => {
@@ -382,6 +388,137 @@ describe('api test', () => {
       const employees = ['1234', '2345'];
       await API.deleteEmployees(employees, businessId);
       expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('statistics', () => {
+    let mockFind;
+    const data = [
+      {
+        _id: '111111',
+        activityId: 147,
+        activityVisited: { timestamp: ['2023-03-25 22:52:04'], count: 1 },
+        activityRegistered: { timestamp: ['2023-03-25 22:52:04'], count: 1 },
+      },
+    ];
+
+    beforeEach(() => {
+      mockFind = jest.fn();
+      // @ts-expect-error
+      Realm.getCollection.mockImplementation(() => ({
+        find: mockFind,
+      }));
+    });
+
+    it('should format the statisctis per date', () => {
+      expect(API.formatStatistics(data)).toEqual([
+        {
+          label: 'activity 147',
+          data: [
+            {
+              primary: 'Sat Mar 25 2023',
+              secondary: 1,
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('should format the data correctly for 1 row', () => {
+      const data = ['2023-03-25 22:52:04'];
+
+      expect(API.formatTimestamp(data)).toEqual([
+        {
+          primary: 'Sat Mar 25 2023',
+          secondary: 1,
+        },
+      ]);
+    });
+
+    it('should format the data correctly for 2 row of different date', () => {
+      const data = ['2023-03-25 22:52:04', '2023-03-26 22:52:04'];
+
+      expect(API.formatTimestamp(data)).toEqual([
+        {
+          primary: 'Sat Mar 25 2023',
+          secondary: 1,
+        },
+        {
+          primary: 'Sun Mar 26 2023',
+          secondary: 1,
+        },
+      ]);
+    });
+
+    it('should format the data correctly for 2 row of same date', () => {
+      const data = ['2023-03-25 22:52:04', '2023-03-25 23:52:04'];
+
+      expect(API.formatTimestamp(data)).toEqual([
+        {
+          primary: 'Sat Mar 25 2023',
+          secondary: 2,
+        },
+      ]);
+    });
+
+    it('should format data correctly for many rows of differen dates', () => {
+      const data = [
+        '2023-03-25 22:52:04',
+        '2023-03-25 23:52:04',
+        '2023-03-26 22:52:04',
+        '2023-03-26 23:52:04',
+      ];
+      expect(API.formatTimestamp(data)).toEqual([
+        {
+          primary: 'Sat Mar 25 2023',
+          secondary: 2,
+        },
+        {
+          primary: 'Sun Mar 26 2023',
+          secondary: 2,
+        },
+      ]);
+    });
+
+    it('should sort dates in order', () => {
+      const data = [
+        '2023-03-27 22:52:04',
+        '2023-03-26 23:52:04',
+        '2023-03-24 22:52:04',
+        '2023-03-25 23:52:04',
+      ];
+      expect(API.formatTimestamp(data)).toEqual([
+        {
+          primary: 'Fri Mar 24 2023',
+          secondary: 1,
+        },
+        {
+          primary: 'Sat Mar 25 2023',
+          secondary: 1,
+        },
+        {
+          primary: 'Sun Mar 26 2023',
+          secondary: 1,
+        },
+        {
+          primary: 'Mon Mar 27 2023',
+          secondary: 1,
+        },
+      ]);
+    });
+
+    it('builds the dataset from the business collection', async () => {
+      mockFind.mockResolvedValue([]);
+
+      await API.getActivitiesStatistics('ABC');
+
+      expect(Realm.getCollection).toHaveBeenCalledWith('ABC');
+    });
+
+    it('find all the document when no activity selected', async () => {
+      mockFind = jest.fn().mockResolvedValue([]);
+      await API.getActivitiesStatistics('ABC');
+      expect(mockFind).toHaveBeenCalledWith();
     });
   });
 });

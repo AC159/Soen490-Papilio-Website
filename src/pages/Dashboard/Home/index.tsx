@@ -3,8 +3,11 @@ import { registeredActivity, viewedActivity } from '../../../fakeData';
 import { BarGraph } from '../../../features/BarGraph';
 import PageHeader from '../../../features/PageHeader';
 import { GraphDataProps } from '../../../interfaces';
+import { useParams } from 'react-router-dom';
+import { getActivitiesStatistics } from '../../../api/apiLayer';
 
 const HomeDashboard = (): JSX.Element => {
+  const { businessId } = useParams();
   const [currentActivity, setActivity] = useState('');
   const [activities, setActivities] = useState<string[]>([]);
   const [viewedActivities, setViewedActivities] =
@@ -17,19 +20,17 @@ const HomeDashboard = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    if (currentActivity !== '') {
-      setViewedActivities(
-        viewedActivity.filter((activity) => activity.label === currentActivity),
+    const getStatistics = async (): Promise<void> => {
+      const stats = await getActivitiesStatistics(
+        businessId ?? '',
+        currentActivity,
       );
-      setRegisteredActivities(
-        registeredActivity.filter(
-          (activity) => activity.label === currentActivity,
-        ),
-      );
-    } else {
-      setViewedActivities(viewedActivity);
-      setRegisteredActivities(registeredActivity);
-    }
+      setViewedActivities(stats.activityVisited);
+      setRegisteredActivities(stats.activityRegistered);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    getStatistics();
   }, [currentActivity]);
 
   const handleActivityChange = (
