@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { sendSignInLinkToEmail } from 'firebase/auth';
 import { useParams } from 'react-router-dom';
-
-// import { auth } from '../../../firebase';
 import Table, { Activity, activityTableHeader } from './Table';
 import Button from '../../../components/Button';
 import SearchBar from '../../../features/SearchBar';
@@ -33,7 +30,6 @@ const tabs: ITab[] = [
   { label: constant.ALL_ACTIVITY_LABEL },
 ];
 
-// TODO: --- THIS IS A PLACEHOLDER --- Replace with real component.
 const Box = (): JSX.Element => (
   <div className="border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white">
     <span className="material-symbols-outlined">expand_more</span>
@@ -147,23 +143,6 @@ const ActivityDashboard = (): JSX.Element => {
       await getActivities(businessId ?? '')
         // @ts-expect-error
         .then(setActivities)
-        .then(async (res) => {
-          // @ts-expect-error
-          const { activities } = res;
-          const activityArray = activities.map((activity) => ({
-            id: activity.id,
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            title: activity.title,
-            startTime: (activity.startTime).substring(0, 10),
-            endTime: (activity.endTime).substring(0, 10),
-            address: activity.address,
-            description: activity.description,
-            costPerIndividual: activity.costPerIndividual,
-            costPerGroup: activity.costPerGroup,
-            groupSize: activity.groupSize,
-          }));
-          setActivities(activityArray);
-        })
         .catch((error) => {
           if (error?.cause !== 1) {
             console.error(error.message);
