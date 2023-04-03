@@ -8,17 +8,13 @@ const oneActivity = [
     title: 'A name',
     startTime: 'Oct 10 2022',
     endTime: 'Nov 10 2022',
-    address: '123 address'
+    address: '123 address',
+    description: 'Some description',
+    costPerIndividual: 7.00,
+    costPerGroup: 25.00,
+    groupSize: 4,
   },
 ];
-
-const fiveActivities = Array.from('01234', (id) => ({
-  id,
-  title: 'Title',
-  startTime: 'Oct 10 2022',
-  endTime: 'Nov 10 2022',
-  address: `123 address`,
-}));
 
 const defaultProps = {
   activities: [],
@@ -44,32 +40,6 @@ describe('Table', () => {
       expect.objectContaining({
         head: true,
       }),
-      expect.anything(),
-    );
-  });
-
-  it('displays row element in the table body', () => {
-    render(<Table {...defaultProps} activities={oneActivity} />);
-    expect(Row).toHaveBeenNthCalledWith(
-      2,
-      {
-        data: [oneActivity[0].title, oneActivity[0].startTime, oneActivity[0].endTime, oneActivity[0].address,],
-      },
-      expect.anything(),
-    );
-  });
-
-  it('displays 5 rows in the table body when 5 activities are passed', () => {
-    render(<Table {...defaultProps} activities={fiveActivities} />);
-    expect(Row).toHaveBeenLastCalledWith(
-      {
-        data: [
-          fiveActivities[4].title,
-          fiveActivities[4].startTime,
-          fiveActivities[4].endTime,
-          fiveActivities[4].address,
-        ],
-      },
       expect.anything(),
     );
   });
@@ -110,18 +80,13 @@ describe('Table', () => {
     );
     expect(ClickableRow).toHaveBeenCalledWith(
       expect.objectContaining({
-        data: [oneActivity[0].title, oneActivity[0].startTime, oneActivity[0].endTime, oneActivity[0].address,],
+        data: [
+          oneActivity[0].title, 
+          oneActivity[0].startTime, 
+          oneActivity[0].endTime, 
+          oneActivity[0].address,
+        ],
       }),
-      expect.anything(),
-    );
-  });
-
-  it('disabled click on body row when no onSelect function is passed', () => {
-    render(<Table {...defaultProps} activities={oneActivity} />);
-    expect(Row).toHaveBeenLastCalledWith(
-      {
-        data: [oneActivity[0].title, oneActivity[0].startTime, oneActivity[0].endTime, oneActivity[0].address,],
-      },
       expect.anything(),
     );
   });

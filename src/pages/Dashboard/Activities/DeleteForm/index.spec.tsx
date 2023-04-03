@@ -15,6 +15,10 @@ const oneActivity = [
   {
     id: 'a',
     title: 'A name',
+    description: 'Some description',
+    costPerIndividual: 7.00,
+    costPerGroup: 25.00,
+    groupSize: 4,
     startTime: 'Oct 10 2022',
     endTime: 'Nov 10 2022',
     address: '123 address'
