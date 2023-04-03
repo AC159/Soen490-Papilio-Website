@@ -1,8 +1,10 @@
 import '../Ad/index.css';
 import CheckMark from '../../components/CheckMark';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const Ad = (): JSX.Element => {
+  const { businessId } = useParams();
+
   return (
     <div className="createGrid flex flex-col">
       <div className="basic">
@@ -42,7 +44,7 @@ const Ad = (): JSX.Element => {
             className="select-button basic-button"
             to={{
               pathname: '/payment',
-              search: '?package=BASIC',
+              search: `?package=BASIC&id=${businessId ?? ''}`,
             }}
           >
             Select
@@ -86,7 +88,7 @@ const Ad = (): JSX.Element => {
             className="select-button basic-button"
             to={{
               pathname: '/payment',
-              search: '?package=PRO',
+              search: `?package=PRO&id=${businessId ?? ''}`,
             }}
           >
             Select
@@ -130,7 +132,7 @@ const Ad = (): JSX.Element => {
             className="select-button basic-button"
             to={{
               pathname: '/payment',
-              search: '?package=ULTIMATE',
+              search: `?package=ULTIMATE&id=${businessId ?? ''}`,
             }}
           >
             Select

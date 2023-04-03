@@ -5,7 +5,7 @@ import Cards from 'react-credit-cards-2';
 import TextField from '@mui/material/TextField';
 import InputMask from 'react-input-mask';
 import Button from '../../../../components/Button';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 type Focused = 'name' | 'number' | 'expiry' | 'cvc';
 
@@ -20,6 +20,17 @@ const bundleCost = (bundle): string => {
   }
 };
 
+const bundleValue = (bundle): number => {
+  switch (bundle) {
+    case 'PRO':
+      return 2;
+    case 'ULTIMATE':
+      return 3;
+    default:
+      return 1;
+  }
+};
+
 const PaymentForm: React.FC = (): JSX.Element => {
   const [creditNumber, setCreditNumber] = useState('');
   const [creditName, setCreditName] = useState('');
@@ -28,33 +39,23 @@ const PaymentForm: React.FC = (): JSX.Element => {
   const [focus, setFocus] = useState<Focused | undefined>();
   const [saveCreditCardInfo, setSaveCreditCardInfo] = useState(false); // new state for saving credit card info
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  const timeOfpayment = new Date();
+  // const timeOfpayment = new Date();
   const processPayment = async (): Promise<void> => {
-    const paymentData = {
-      creditNumber,
-      creditName,
-      cvc,
-      expiry,
-      saveCreditCardInfo,
-      packageInfo: {
-        packageName: searchParams.get('package') | '',
-      },
-      timeOfpayment,
+    const businessId = searchParams.get('id');
+    const data = {
+      adTier: bundleValue(searchParams.get('package')),
     };
-
-    fetch('/api/payment', {
-      method: 'POST',
-      body: JSON.stringify(paymentData),
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(async (response) => await response.json())
-      .then((data) => {
-        console.log('Payment successful:', data);
-      })
-      .catch((error) => {
-        console.error('Error processing payment:', error);
-      });
+    await fetch(`/api/business/${businessId ?? ''}/registerAdTier`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(() => {
+      navigate(`/${businessId ?? ''}/dashboard/billing`);
+    });
   };
   return (
     <div className="max-w-lg mx-auto">
