@@ -2,7 +2,6 @@
 import {
   render,
   screen,
-  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -108,10 +107,15 @@ describe('Employee Dashboard', () => {
       API.addEmployee = jest.fn().mockResolvedValue({});
       // @ts-expect-error
       auth.sendSignInLinkToEmail.mockResolvedValue();
+      // @ts-expect-error
+      auth.createUserWithEmailAndPassword.mockResolvedValue({
+        user: { uid: 'firebaseId' },
+      });
       mockData = {
         employeeEmail: 'fake@email.com',
         employeeFirstName: '',
         employeeLastName: '',
+        employeePassword: '',
         role: '',
       };
     });
@@ -124,12 +128,13 @@ describe('Employee Dashboard', () => {
       expect(await screen.findByText('Close')).toBeInTheDocument();
     });
 
-    it('changes back to Add employee when click on close', async () => {
+    it('changes button back to Add employee when click on close', async () => {
       render(<EmployeeDashboard />);
-      await act(async () =>
-        userEvent.click(await screen.findByText(constant.ADD_EMPLOYEE_BUTTON)),
+      act(() =>
+        userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON)),
       );
-      await act(async () => userEvent.click(await screen.findByText('Close')));
+      const closeButton = await screen.findByText('Close');
+      act(() => userEvent.click(closeButton));
       expect(screen.queryByText('Close')).not.toBeInTheDocument();
     });
 
@@ -138,6 +143,7 @@ describe('Employee Dashboard', () => {
         employeeEmail: 'jd@email.com',
         employeeFirstName: 'John',
         employeeLastName: 'Doe',
+        password: '1234',
         role: 'Admin',
       };
 
@@ -162,27 +168,27 @@ describe('Employee Dashboard', () => {
       );
     });
 
-    it('calls sendSignInLinkToEmail after successful addEmployee', async () => {
+    it('first calls createUserWithEmailAndPassword when submitting', async () => {
       mockData = {
         ...mockData,
         employeeEmail: 'fake@email.com',
+        employeePassword: 'password',
       };
+
       renderWithAuthProvider(<EmployeeDashboard />);
 
       act(() =>
         userEvent.click(screen.getByText(constant.ADD_EMPLOYEE_BUTTON)),
       );
-      userEvent.click(await screen.findByTestId('addForm'));
+      const formButton = await screen.findByTestId('addForm');
+      act(() => userEvent.click(formButton));
 
-      await waitFor(() =>
-        expect(auth.sendSignInLinkToEmail).toHaveBeenCalledWith(
-          undefined,
-          'fake@email.com',
-          {
-            url: 'https://localhost:3000/email-signin',
-          },
-        ),
+      expect(auth.createUserWithEmailAndPassword).toHaveBeenCalledWith(
+        undefined,
+        'fake@email.com',
+        'password',
       );
+      await waitForElementToBeRemoved(() => screen.queryByTestId('addForm'));
     });
 
     it('closes addForm after successful operation', async () => {

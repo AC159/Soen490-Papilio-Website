@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable multiline-ternary */
 import * as Interfaces from '../interfaces';
 import { formatDate } from '../utils';
+import { getCollection } from './realm';
 
 export async function login(data: {
   businessId: string;
@@ -178,4 +180,71 @@ export async function getBusiness(businessId: string): Promise<Response> {
     method: 'GET',
     mode: 'no-cors',
   });
+}
+
+export const formatStatistics = (
+  stats: any[],
+  field: string = 'activityVisited',
+): any[] => {
+  return (
+    stats
+      .map((stat) => ({
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        label: `activity ${stat.activityId}`,
+        data: formatTimestamp(stat[field].timestamp),
+      }))
+      // @ts-expect-error
+      .sort((a, b) => new Date(a.data[0].primary) - new Date(b.data[0].primary))
+  );
+};
+
+export const formatTimestamp = (data: any[]): any[] => {
+  const info = data.reduce((prev, curr) => {
+    let value = 1;
+    const date = new Date(curr).toDateString();
+
+    if (date in prev) {
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      value += prev[date];
+    }
+
+    return {
+      ...prev,
+      [date]: value,
+    };
+  }, {});
+
+  return (
+    Object.entries(info)
+      .reduce<any>((prev, [key, value]) => {
+        return [
+          ...prev,
+          {
+            primary: key,
+            secondary: value,
+          },
+        ];
+      }, [])
+      // @ts-expect-error
+      .sort((a, b) => new Date(a.primary) - new Date(b.primary))
+  );
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export async function getActivitiesStatistics(
+  businessId: string,
+  activity: string = '',
+) {
+  const collection = await getCollection(businessId);
+
+  let stats: any[] | undefined = [];
+  if (activity.length > 0) {
+    stats = await collection?.find({ activityId: activity });
+  } else {
+    stats = await collection?.find();
+  }
+  return {
+    activityVisited: formatStatistics(stats ?? []),
+    activityRegistered: formatStatistics(stats ?? [], 'activityRegistered'),
+  };
 }
