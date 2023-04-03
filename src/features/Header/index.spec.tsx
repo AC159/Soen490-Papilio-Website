@@ -36,4 +36,49 @@ describe('Header tests', () => {
 
     expect(await screen.findByText(/Admin Page/)).toBeInTheDocument();
   });
+
+  it('navigates back to the home page when visiting the pricing page', async () => {
+    render(
+      <MemoryRouter>
+        <Routes>
+          <Route path="" element={<Header />} />
+          <Route path="/" element={<p>Home Page</p>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await act(async () => userEvent.click(await screen.findByText(/Pricing/)));
+
+    expect(await screen.findByText(/Pricing/)).toBeInTheDocument();
+  });
+
+  it('navigates back to the home page when visiting the features page', async () => {
+    render(
+      <MemoryRouter>
+        <Routes>
+          <Route path="" element={<Header />} />
+          <Route path="/" element={<p>Home Page</p>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await act(async () => userEvent.click(await screen.findByText(/Features/)));
+
+    expect(await screen.findByText(/Features/)).toBeInTheDocument();
+  });
+
+  it('navigates back to the home page when visiting the blog page', async () => {
+    render(
+      <MemoryRouter>
+        <Routes>
+          <Route path="" element={<Header />} />
+          <Route path="/" element={<p>Home Page</p>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await act(async () => userEvent.click(await screen.findByText(/Blog/)));
+
+    expect(await screen.findByText(/Blog/)).toBeInTheDocument();
+  });
 });

@@ -391,6 +391,35 @@ describe('api test', () => {
     });
   });
 
+  describe('deleteActivities', () => {
+    const activityId = 'activityId';
+    const businessId = 'businessId';
+
+    it('calls for a a single activity to the right endpoint', async () => {
+      await API.deleteActivity(activityId, businessId);
+      expect(global.fetch).toHaveBeenCalledWith(
+        `/api/business/${businessId}/removeActivity/${activityId}`,
+        expect.any(Object),
+      );
+    });
+
+    it('calls for a single activity a delete method', async () => {
+      await API.deleteActivity(activityId, businessId);
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          method: 'DELETE',
+        }),
+      );
+    });
+
+    it('calls the delete endpoint for each activity to delete', async () => {
+      const activities = Array.from([1, 2, 3, 4], (num) => `Activity${num}`);
+      await API.deleteActivities(activities, businessId);
+      expect(global.fetch).toHaveBeenCalledTimes(4);
+    });
+  });
+
   describe('statistics', () => {
     let mockFind;
     const data = [
@@ -519,6 +548,12 @@ describe('api test', () => {
       mockFind = jest.fn().mockResolvedValue([]);
       await API.getActivitiesStatistics('ABC');
       expect(mockFind).toHaveBeenCalledWith();
+    });
+
+    it('find a specific document when an activity is selected', async () => {
+      mockFind = jest.fn().mockResolvedValue([]);
+      await API.getActivitiesStatistics('ABC', 'activityId');
+      expect(mockFind).toHaveBeenCalledWith({ activityId: 'activityId' });
     });
   });
 });

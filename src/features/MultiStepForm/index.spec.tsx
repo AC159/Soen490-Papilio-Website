@@ -111,4 +111,19 @@ describe('multi step form test', () => {
 
     expect(await screen.findByTestId('profile')).toBeInTheDocument();
   });
+
+  it('display a finish message when reaching the last page', async () => {
+    render(
+      <TestWrapper>
+        <MultiStepForm {...defaultProps} />
+      </TestWrapper>,
+    );
+
+    await act(async () => userEvent.click(await screen.findByRole('button')));
+    await act(async () =>
+      userEvent.click(await screen.findByText('next', { selector: 'button' })),
+    );
+
+    expect(await screen.findByTestId('last')).toBeInTheDocument();
+  });
 });

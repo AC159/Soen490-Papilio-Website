@@ -18,7 +18,8 @@ export const INPUT_ENDTIME_PLACEHOLDER = 'End Date (dd-mm-yyyy)';
 
 export const INPUT_DESCRIPTION = 'description';
 export const INPUT_DESCRIPTION_LABEL = 'Description';
-export const INPUT_DESCRIPTION_PLACEHOLDER = 'Enter a description for your activity';
+export const INPUT_DESCRIPTION_PLACEHOLDER =
+  'Enter a description for your activity';
 
 export const INPUT_COST_PER_INDV = 'costPerIndividual';
 export const INPUT_COST_PER_INDV_LABEL = 'Cost per Person';
@@ -36,4 +37,4 @@ export const INPUT_IMAGE = 'image';
 export const INPUT_IMAGE_LABEL = 'Choose an Image to Upload';
 export const INPUT_IMAGE_PLACEHOLDER = 'image url';
 
-export const BUTTON_TEXT = 'Add activity';
+export const BUTTON_TEXT = 'Create activity';

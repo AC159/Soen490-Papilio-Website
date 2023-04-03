@@ -131,7 +131,7 @@ const MultiStepForm = ({
     );
   } else {
     Body = (
-      <div>
+      <div data-testid="last">
         Finish Yeah!!!
         <Button text="submit" onClick={submit} />
       </div>
