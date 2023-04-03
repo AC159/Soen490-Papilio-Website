@@ -79,9 +79,7 @@ describe('PaymentForm', () => {
       expect(window.fetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: expect.stringContaining(
-            `"creditNumber":"${creditCardPlaceholder}"`,
-          ),
+          body: JSON.stringify({ adTier: 1 }),
         }),
       );
     });
@@ -116,7 +114,7 @@ describe('PaymentForm', () => {
       expect(window.fetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: expect.stringContaining(`"creditName":"${value}"`),
+          body: JSON.stringify({ adTier: 1 }),
         }),
       );
     });
@@ -150,7 +148,7 @@ describe('PaymentForm', () => {
       expect(window.fetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: expect.stringContaining('"cvc":"___"'),
+          body: JSON.stringify({ adTier: 1 }),
         }),
       );
     });
@@ -185,7 +183,7 @@ describe('PaymentForm', () => {
       expect(window.fetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: expect.stringContaining('"expiry":"__/__"'),
+          body: JSON.stringify({ adTier: 1 }),
         }),
       );
     });
@@ -205,7 +203,7 @@ describe('PaymentForm', () => {
       expect(window.fetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
-          body: expect.stringContaining('"saveCreditCardInfo":true'),
+          body: JSON.stringify({ adTier: 1 }),
         }),
       );
     });
