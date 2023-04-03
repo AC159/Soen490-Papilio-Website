@@ -14,6 +14,26 @@ const HomePage = (): JSX.Element => {
         <div>
           <div className="absolute -z-10">
             <img src={imgBg} />
+            <footer className="bg-[#053F5C] bg-opacity-50">
+              <div className="w-full mx-auto max-w-screen-xl p-10 md:flex md:items-center md:justify-between">
+                <span className="text-md text-white sm:text-center dark:text-gray-400">© 2022 <a href="" className="hover:underline">Papilio™</a>. All Rights Reserved.
+                </span>
+                <ul className="flex flex-wrap items-center mt-3 text-md font-medium text-white dark:text-gray-400 sm:mt-0">
+                  <li>
+                    <a href="#" className="mr-4 hover:underline md:mr-6 ">About</a>
+                  </li>
+                  <li>
+                    <a href="#" className="mr-4 hover:underline md:mr-6">Privacy Policy</a>
+                  </li>
+                  <li>
+                    <a href="#" className="mr-4 hover:underline md:mr-6">Android App</a>
+                  </li>
+                  <li>
+                    <a href="#" className="hover:underline">Contact</a>
+                  </li>
+                </ul>
+              </div>
+            </footer>
           </div>
           <div className="welcome">
             <div className="flex">
