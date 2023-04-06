@@ -26,9 +26,7 @@ enum Section {
   Edit,
 }
 
-const tabs: ITab[] = [
-  { label: constant.ALL_ACTIVITY_LABEL },
-];
+const tabs: ITab[] = [{ label: constant.ALL_ACTIVITY_LABEL }];
 
 const Box = (): JSX.Element => (
   <div className="border rounded-sm w-36 p-1.5 border-gray-300 flex flex-row items-center bg-gray-300 text-white">
@@ -38,7 +36,18 @@ const Box = (): JSX.Element => (
   </div>
 );
 
+const formatDate = (date: string): string => {
+  const parts = date.split('-');
+  const result = new Date(
+    parseInt(parts[2]),
+    parseInt(parts[1]) - 1,
+    parseInt(parts[0]),
+  ).toString();
+  return result;
+};
+
 const ActivityDashboard = (): JSX.Element => {
+  const [refreshToken, setRefreshToken] = useState(true);
   const { businessId } = useParams();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [currentSection, setCurrentSection] = useState(Section.Table);
@@ -49,8 +58,8 @@ const ActivityDashboard = (): JSX.Element => {
       activity: {
         title: data.title,
         address: data.address,
-        startTime: data.startTime,
-        endTime: data.endTime,
+        startTime: formatDate(data.startTime),
+        endTime: formatDate(data.endTime),
         description: data.description,
         costPerIndividual: data.costPerIndividual,
         costPerGroup: data.costPerGroup,
@@ -58,9 +67,13 @@ const ActivityDashboard = (): JSX.Element => {
       },
     };
 
-    await addActivity(businessId ?? '', reqData).then(() => {
-      setCurrentSection(Section.Table);
-    });
+    await addActivity(businessId ?? '', reqData)
+      .then(() => {
+        setCurrentSection(Section.Table);
+      })
+      .then(() => {
+        setRefreshToken(!refreshToken);
+      });
   };
 
   const handleActivityDeletion = async (
@@ -70,10 +83,14 @@ const ActivityDashboard = (): JSX.Element => {
       setActivities(
         activities.filter((activity) => !activityIds.includes(activity.id)),
       );
+      setCurrentSection(Section.Table);
     });
   };
 
-  const handleEditActivity = async (activityId: string, data: Activity): Promise<void> => {
+  const handleEditActivity = async (
+    activityId: string,
+    data: Activity,
+  ): Promise<void> => {
     const reqData: UpdateActivityData = {
       update: {
         title: data.title,
@@ -86,9 +103,13 @@ const ActivityDashboard = (): JSX.Element => {
         groupSize: data.groupSize,
       },
     };
-    await updateActivity(activityId ?? '', reqData).then(() => {
-      setCurrentSection(Section.Table);
-    });
+    await updateActivity(activityId ?? '', reqData)
+      .then(() => {
+        setCurrentSection(Section.Table);
+      })
+      .then(() => {
+        setRefreshToken(!refreshToken);
+      });
   };
 
   const handleEdit = (activity: Activity): void => {
@@ -102,40 +123,49 @@ const ActivityDashboard = (): JSX.Element => {
   };
 
   const ActionList = (): JSX.Element => {
-    return (
-      <div className="flex space-x-2">
-        <Button
-          text={constant.ADD_ACTIVITY_BUTTON}
-          hasIcon={true}
-          icon={IconNames.ADD}
-          iconPosition="lhs"
-          variant="outline"
-          onClick={() => {
-            if (currentSection !== Section.Add) {
-              setCurrentSection(Section.Add);
-            } else {
-              setCurrentSection(Section.Table);
-            }
-          }}
-          size="sm"
-        />
-        <Button
-          text={constant.DELETE_ACTIVITY_BUTTON}
-          hasIcon={true}
-          icon={IconNames.DELETE}
-          iconPosition="lhs"
-          variant="outline"
-          onClick={() => {
-            if (currentSection !== Section.Delete) {
-              setCurrentSection(Section.Delete);
-            } else {
-              setCurrentSection(Section.Table);
-            }
-          }}
-          size="sm"
-        />
-      </div>
-    );
+    switch (currentSection) {
+      case Section.Add:
+      case Section.Delete:
+      case Section.Edit:
+        return (
+          <Button
+            text="Close"
+            icon={IconNames.CLOSE}
+            iconPosition="lhs"
+            variant="outline"
+            onClick={() => setCurrentSection(Section.Table)}
+            size="sm"
+            hasIcon
+          />
+        );
+      default:
+        return (
+          <div className="flex space-x-2">
+            <Button
+              text={constant.ADD_ACTIVITY_BUTTON}
+              hasIcon={true}
+              icon={IconNames.ADD}
+              iconPosition="lhs"
+              variant="outline"
+              onClick={() => {
+                setCurrentSection(Section.Add);
+              }}
+              size="sm"
+            />
+            <Button
+              text={constant.DELETE_ACTIVITY_BUTTON}
+              hasIcon={true}
+              icon={IconNames.DELETE}
+              iconPosition="lhs"
+              variant="outline"
+              onClick={() => {
+                setCurrentSection(Section.Delete);
+              }}
+              size="sm"
+            />
+          </div>
+        );
+    }
   };
 
   useEffect(() => {
@@ -149,7 +179,7 @@ const ActivityDashboard = (): JSX.Element => {
           }
         });
     })();
-  }, [businessId]);
+  }, [businessId, refreshToken]);
 
   let currentForm: JSX.Element = <></>;
   if (currentSection === Section.Delete) {
@@ -159,10 +189,19 @@ const ActivityDashboard = (): JSX.Element => {
   } else if (currentSection === Section.Add) {
     currentForm = <AddForm onSubmit={handleActivityCreation} />;
   } else if (currentSection === Section.Edit) {
-    currentForm = <EditForm onSubmit={handleEditActivity} activity={currentActivity as Activity}/>;
+    currentForm = (
+      <EditForm
+        onSubmit={handleEditActivity}
+        activity={currentActivity as Activity}
+      />
+    );
   } else {
     currentForm = (
-      <Table activities={activities} headerContent={activityTableHeader} onEdit={handleEdit}/>
+      <Table
+        activities={activities}
+        headerContent={activityTableHeader}
+        onEdit={handleEdit}
+      />
     );
   }
 
