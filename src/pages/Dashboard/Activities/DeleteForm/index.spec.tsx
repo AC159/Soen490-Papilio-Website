@@ -16,63 +16,70 @@ const oneActivity = [
     id: 'a',
     title: 'A name',
     description: 'Some description',
-    costPerIndividual: 7.00,
-    costPerGroup: 25.00,
+    costPerIndividual: 7.0,
+    costPerGroup: 25.0,
     groupSize: 4,
     startTime: 'Oct 10 2022',
     endTime: 'Nov 10 2022',
-    address: '123 address'
+    address: '123 address',
   },
 ];
 
-  it('displays the form headline', () => {
-    render(<DeleteForm {...defaultProps} />);
-    expect(screen.getByText(constant.FORM_HEADLINE)).toBeInTheDocument();
-  });
+const renderWithPortal = (component: React.ReactElement): any =>
+  render(<div id="portalRoot">{component}</div>);
 
-  it('displays a button to delete the activities', () => {
-    render(<DeleteForm {...defaultProps} />);
-    expect(screen.getByText(constant.BUTTON_TEXT)).toBeInTheDocument();
-  });
+it('displays the form headline', () => {
+  render(<DeleteForm {...defaultProps} />);
+  expect(screen.getByText(constant.FORM_HEADLINE)).toBeInTheDocument();
+});
 
-  it('calls onSubmit when the user clicks the delete button', async () => {
-    const mockOnSubmit = jest.fn();
-    render(<DeleteForm {...defaultProps} onSubmit={mockOnSubmit} />);
+it('displays a button to delete the activities', () => {
+  render(<DeleteForm {...defaultProps} />);
+  expect(screen.getByText(constant.BUTTON_TEXT)).toBeInTheDocument();
+});
 
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+it('calls onSubmit when the user clicks the delete button', async () => {
+  const mockOnSubmit = jest.fn();
+  renderWithPortal(<DeleteForm {...defaultProps} onSubmit={mockOnSubmit} />);
 
-    expect(mockOnSubmit).toHaveBeenCalled();
-  });
+  userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+  userEvent.click(await screen.findByText(/^Delete$/));
 
-  it('passes the activities to the table components', () => {
-    jest.spyOn(Table, 'default');
+  expect(mockOnSubmit).toHaveBeenCalled();
+});
 
-    render(<DeleteForm {...defaultProps} activities={oneActivity} />);
+it('passes the activities to the table components', () => {
+  jest.spyOn(Table, 'default');
 
-    expect(Table.default).toHaveBeenCalledWith(
-      expect.objectContaining({
-        activities: oneActivity,
-      }),
-      expect.anything(),
-    );
-  });
+  render(<DeleteForm {...defaultProps} activities={oneActivity} />);
 
-  it('insert the ids of deleted activities when click on user row', () => {
-    const mockOnSubmit = jest.fn();
-    render(<DeleteForm activities={oneActivity} onSubmit={mockOnSubmit} />);
+  expect(Table.default).toHaveBeenCalledWith(
+    expect.objectContaining({
+      activities: oneActivity,
+    }),
+    expect.anything(),
+  );
+});
 
-    userEvent.click(screen.getByRole('checkbox'));
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+it('insert the ids of deleted activities when click on user row', async () => {
+  const mockOnSubmit = jest.fn();
+  renderWithPortal(
+    <DeleteForm activities={oneActivity} onSubmit={mockOnSubmit} />,
+  );
 
-    expect(mockOnSubmit).toHaveBeenCalledWith(['a']);
-  });
+  userEvent.click(screen.getByRole('checkbox'));
+  userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+  userEvent.click(await screen.findByText(/^Delete$/));
 
-  it('removes the id of the deleted activity when double click on user row', () => {
-    const mockOnSubmit = jest.fn();
-    render(<DeleteForm activities={oneActivity} onSubmit={mockOnSubmit} />);
+  expect(mockOnSubmit).toHaveBeenCalledWith(['a']);
+});
 
-    userEvent.dblClick(screen.getByRole('checkbox'));
-    userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+it('removes the id of the deleted activity when double click on user row', () => {
+  const mockOnSubmit = jest.fn();
+  render(<DeleteForm activities={oneActivity} onSubmit={mockOnSubmit} />);
 
-    expect(mockOnSubmit).toHaveBeenCalledWith([]);
+  userEvent.dblClick(screen.getByRole('checkbox'));
+  userEvent.click(screen.getByText(constant.BUTTON_TEXT));
+
+  expect(screen.queryByText(/^Delete$/)).not.toBeInTheDocument();
 });

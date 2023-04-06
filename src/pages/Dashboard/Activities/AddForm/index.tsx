@@ -1,4 +1,5 @@
 import Button from '../../../../components/Button';
+import ErrorMessage from '../../../../components/ErrorMessage';
 import Input from '../../../../components/Input';
 import useFormData from '../../../../hooks/useFormData';
 import UploadImage from '../UploadImage';
@@ -34,8 +35,10 @@ const initialState: IFormData = {
 
 const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_unused1, _unused2, _unused3, register, submit] =
-    useFormData<IFormData>({ initialState, onSubmit });
+  const [_unused1, loading, error, register, submit] = useFormData<IFormData>({
+    initialState,
+    onSubmit,
+  });
 
   return (
     <div>
@@ -43,10 +46,14 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
         {constant.FORM_HEADLINE}
       </h2>
       <Input
-        {...register(constant.INPUT_TITLE)}
+        {...register(constant.INPUT_TITLE, { required: true })}
         placeholder={constant.INPUT_TITLE_PLACEHOLDER}
         label={constant.INPUT_TITLE_LABEL}
         hasLabel
+      />
+      <ErrorMessage
+        isError={!!error[constant.INPUT_TITLE]}
+        message={error[constant.INPUT_TITLE]}
       />
       <Input
         {...register(constant.INPUT_ADDRESS)}
@@ -57,18 +64,36 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
       <div className="flex">
         <div className="pr-10">
           <Input
-            {...register(constant.INPUT_STARTTIME)}
+            {...register(constant.INPUT_STARTTIME, {
+              pattern: {
+                pattern: /\d{2}-\d{2}-\d{4}/,
+                message: 'Start date should be of the form: dd-mm-yyyy',
+              },
+            })}
             placeholder={constant.INPUT_STARTTIME_PLACEHOLDER}
             label={constant.INPUT_STARTTIME_LABEL}
             hasLabel
           />
+          <ErrorMessage
+            isError={!!error[constant.INPUT_STARTTIME]}
+            message={error[constant.INPUT_STARTTIME]}
+          />
         </div>
         <div>
           <Input
-            {...register(constant.INPUT_ENDTIME)}
+            {...register(constant.INPUT_ENDTIME, {
+              pattern: {
+                pattern: /\d{2}-\d{2}-\d{4}/,
+                message: 'End date should be of the form: dd-mm-yyyy',
+              },
+            })}
             placeholder={constant.INPUT_ENDTIME_PLACEHOLDER}
             label={constant.INPUT_ENDTIME_LABEL}
             hasLabel
+          />
+          <ErrorMessage
+            isError={!!error[constant.INPUT_ENDTIME]}
+            message={error[constant.INPUT_ENDTIME]}
           />
         </div>
       </div>
@@ -106,7 +131,7 @@ const AddForm = ({ onSubmit }: AddFormInterface): JSX.Element => {
       </div>
       <UploadImage />
       <br />
-      <Button text={constant.BUTTON_TEXT} onClick={submit} />
+      <Button disabled={loading} text={constant.BUTTON_TEXT} onClick={submit} />
     </div>
   );
 };

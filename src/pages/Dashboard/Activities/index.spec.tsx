@@ -69,7 +69,10 @@ describe('Activity dashboard test', () => {
     (useParams as jest.MockedFunction<typeof useParams>).mockReturnValue({
       businessId: '',
     });
-    mockData = {};
+    mockData = {
+      startTime: '01-01-2022',
+      endTime: '01-01-2022',
+    };
   });
 
   afterEach(() => {
@@ -109,7 +112,8 @@ describe('Activity dashboard test', () => {
       costPerIndividual: 0.99,
       costPerGroup: 7.99,
       groupSize: 10,
-      startTime: '2022-13-16 10:05:00+00',
+      startTime: '2022-13-16',
+      endTime: '01-01-2022',
       address: '201 Main Street, Montreal, QC EXM PLE',
     };
 
@@ -132,7 +136,7 @@ describe('Activity dashboard test', () => {
         costPerIndividual: 0.99,
         costPerGroup: 7.99,
         groupSize: 10,
-        startTime: '2022-13-16 10:05:00+00',
+        startTime: expect.stringContaining('Sat Jul 15 1922 00:00:00'),
         address: '201 Main Street, Montreal, QC EXM PLE',
       }),
     });
@@ -140,6 +144,16 @@ describe('Activity dashboard test', () => {
   });
 
   it('close the add activity form after successfull submit', async () => {
+    mockData = {
+      title: 'Test Run Activity',
+      description: "Let's RUNNNNNNN",
+      costPerIndividual: 0.99,
+      costPerGroup: 7.99,
+      groupSize: 10,
+      startTime: '01-01-2022',
+      endTime: '01-01-2022',
+      address: '201 Main Street, Montreal, QC EXM PLE',
+    };
     render(
       <AuthProvider>
         <ActivityDashboard />
