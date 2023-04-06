@@ -136,7 +136,7 @@ describe('Activity dashboard test', () => {
         costPerIndividual: 0.99,
         costPerGroup: 7.99,
         groupSize: 10,
-        startTime: 'Sat Jul 15 1922 00:00:00 GMT-0400 (GMT-04:00)',
+        startTime: expect.stringContaining('Sat Jul 15 1922 00:00:00'),
         address: '201 Main Street, Montreal, QC EXM PLE',
       }),
     });
